@@ -9,13 +9,13 @@ const headers = {
 export interface Movie {
   id: number;
   title: string;
-  name?: string; // For TV shows
+  name?: string;
   overview: string;
   poster_path: string;
   backdrop_path: string;
   vote_average: number;
   release_date: string;
-  first_air_date?: string; // For TV shows
+  first_air_date?: string;
   media_type: string;
 }
 
@@ -35,7 +35,7 @@ export const tmdb = {
     const data = await response.json();
     return data.results.map((item: Movie) => ({
       ...item,
-      media_type: item.media_type || mediaType // Use existing media_type if available
+      media_type: item.media_type || mediaType
     }));
   },
 
@@ -57,6 +57,18 @@ export const tmdb = {
     }));
   },
 
+  getByGenre: async (mediaType: 'movie' | 'tv' = 'movie', genreId: number): Promise<Movie[]> => {
+    const response = await fetch(
+      `${BASE_URL}/discover/${mediaType}?with_genres=${genreId}`,
+      { headers }
+    );
+    const data = await response.json();
+    return data.results.map((item: Movie) => ({
+      ...item,
+      media_type: mediaType
+    }));
+  },
+
   search: async (query: string): Promise<Movie[]> => {
     if (!query) return [];
     const response = await fetch(
@@ -70,9 +82,6 @@ export const tmdb = {
   },
 
   getMovieDetails: async (id: number, mediaType: 'movie' | 'tv' = 'movie'): Promise<MovieDetails> => {
-    console.log(`Fetching details for ${mediaType} with ID ${id}`);
-    
-    // First try with the provided media type
     try {
       const response = await fetch(
         `${BASE_URL}/${mediaType}/${id}?append_to_response=videos`,
@@ -87,10 +96,7 @@ export const tmdb = {
         };
       }
       
-      // If the first attempt fails, try the other media type
       const otherType = mediaType === 'movie' ? 'tv' : 'movie';
-      console.log(`Retrying with ${otherType} type`);
-      
       const retryResponse = await fetch(
         `${BASE_URL}/${otherType}/${id}?append_to_response=videos`,
         { headers }

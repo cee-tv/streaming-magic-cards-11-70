@@ -23,6 +23,21 @@ const Index = () => {
     queryFn: () => tmdb.getTopRated(mediaType),
   });
 
+  const { data: actionMovies = [] } = useQuery({
+    queryKey: ["action", mediaType],
+    queryFn: () => tmdb.getByGenre(mediaType, 28), // 28 is the ID for Action genre
+  });
+
+  const { data: comedyMovies = [] } = useQuery({
+    queryKey: ["comedy", mediaType],
+    queryFn: () => tmdb.getByGenre(mediaType, 35), // 35 is the ID for Comedy genre
+  });
+
+  const { data: dramaMovies = [] } = useQuery({
+    queryKey: ["drama", mediaType],
+    queryFn: () => tmdb.getByGenre(mediaType, 18), // 18 is the ID for Drama genre
+  });
+
   const randomMovie = trending.length > 0 
     ? trending[Math.floor(Math.random() * trending.length)]
     : null;
@@ -39,6 +54,13 @@ const Index = () => {
         <MovieRow title="Trending Now" movies={trending} />
         <MovieRow title={`Popular ${mediaType === 'movie' ? 'Movies' : 'TV Shows'}`} movies={popular} />
         <MovieRow title="Top Rated" movies={topRated} />
+        {mediaType === 'movie' && (
+          <>
+            <MovieRow title="Action & Adventure" movies={actionMovies} />
+            <MovieRow title="Comedy" movies={comedyMovies} />
+            <MovieRow title="Drama" movies={dramaMovies} />
+          </>
+        )}
       </div>
     </div>
   );

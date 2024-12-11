@@ -1,12 +1,12 @@
-import { Film, Search, Tv, List, X } from "lucide-react";
+import { Film, Search, Tv } from "lucide-react";
 import { Button } from "./ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
-import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
 import { Dialog, DialogContent } from "./ui/dialog";
+import { MovieCard } from "./MovieCard";
 
 export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'movie' | 'tv') => void }) => {
   const isMobile = useIsMobile();
@@ -30,7 +30,6 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
     <>
       <nav className="fixed top-0 w-full z-50 bg-gradient-to-b from-black/80 to-transparent px-4 py-2">
         <div className="flex items-center justify-between">
-          {/* Logo */}
           <div className="flex items-center">
             <svg
               viewBox="0 0 111 30"
@@ -44,7 +43,6 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
             </svg>
           </div>
 
-          {/* Navigation Items */}
           {isMobile ? (
             <div className="flex items-center gap-2">
               <Button 
@@ -62,14 +60,6 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
                 onClick={() => handleMediaTypeChange('tv')}
               >
                 <Tv className="h-6 w-6" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="text-white"
-                onClick={() => navigate('/my-list')}
-              >
-                <List className="h-6 w-6" />
               </Button>
               <Button variant="ghost" size="icon" className="text-white" onClick={() => setOpen(true)}>
                 <Search className="h-6 w-6" />
@@ -90,13 +80,6 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
                 onClick={() => handleMediaTypeChange('tv')}
               >
                 TV Shows
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="text-white hover:bg-white/10"
-                onClick={() => navigate('/my-list')}
-              >
-                My List
               </Button>
               <Button 
                 variant="ghost" 
@@ -123,29 +106,10 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
                 className="w-full bg-transparent text-2xl text-white border-none outline-none"
                 autoFocus
               />
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setOpen(false)}
-                className="text-white"
-              >
-                <X className="h-6 w-6" />
-              </Button>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 overflow-y-auto max-h-[calc(90vh-100px)]">
               {searchResults?.map((result) => (
-                <div key={result.id} className="relative group cursor-pointer">
-                  <img
-                    src={`https://image.tmdb.org/t/p/w500${result.poster_path}`}
-                    alt={result.title || result.name}
-                    className="w-full rounded-md"
-                  />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <h3 className="text-white text-center p-2 text-sm">
-                      {result.title || result.name}
-                    </h3>
-                  </div>
-                </div>
+                <MovieCard key={result.id} movie={result} />
               ))}
             </div>
           </div>
