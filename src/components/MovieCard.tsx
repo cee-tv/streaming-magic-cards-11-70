@@ -8,7 +8,6 @@ import { tmdb } from "@/services/tmdb";
 
 interface MovieCardProps {
   movie: Movie;
-  mediaType?: 'movie' | 'tv';
 }
 
 export const MovieCard = ({ movie }: MovieCardProps) => {
@@ -35,14 +34,14 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
           className="rounded-md transition-transform duration-300 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md">
-          <div className="absolute inset-0 flex flex-col justify-between p-4">
-            <h3 className="text-white font-bold text-sm md:text-base">
+          <div className="absolute inset-0 flex flex-col justify-between p-3 md:p-4">
+            <h3 className="text-white font-bold text-xs md:text-sm line-clamp-2">
               {movie.title || movie.name}
             </h3>
             <div className="flex items-center gap-2">
               <Button 
                 size="icon" 
-                className="rounded-full bg-white hover:bg-white/90 text-black"
+                className="rounded-full bg-white hover:bg-white/90 text-black h-8 w-8 md:h-10 md:w-10"
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowPlayer(true);
@@ -53,13 +52,13 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
               <Button 
                 size="icon" 
                 variant="outline" 
-                className="rounded-full border-white/40 hover:border-white bg-black/30"
+                className="rounded-full border-white hover:border-white bg-black/30 h-8 w-8 md:h-10 md:w-10"
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowModal(true);
                 }}
               >
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className="h-4 w-4 text-white" />
               </Button>
             </div>
           </div>
