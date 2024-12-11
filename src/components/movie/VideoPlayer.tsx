@@ -77,7 +77,7 @@ export const VideoPlayer = ({
             className="text-white hover:bg-white/20"
             onClick={onClose}
           >
-            <X className="h-6 w-6" />
+            <X className="h-8 w-8" />
             <span className="sr-only">Close</span>
           </Button>
         </div>
