@@ -23,7 +23,7 @@ const channels: Channel[] = [
     category: "Entertainment",
     streamUrl: "https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/tv5_hd.mpd",
     drmConfig: {
-      licenseUrl: "https://clearkey.license.example.com",
+      licenseUrl: "https://clearkey-base64.herokuapp.com/api/",
       keyId: "2615129ef2c846a9bbd43a641c7303ef",
       key: "07c7f996b1734ea288641a68e1cfdc4d"
     }
@@ -52,12 +52,11 @@ const IPTVPage = () => {
         autostart: true,
         file: selectedChannel.streamUrl,
         type: "dash",
-        drm: {
-          clearkey: selectedChannel.drmConfig ? {
-            keyId: selectedChannel.drmConfig.keyId,
-            key: selectedChannel.drmConfig.key
-          } : undefined
-        }
+        drm: selectedChannel.drmConfig ? {
+          clearkey: {
+            url: `${selectedChannel.drmConfig.licenseUrl}${selectedChannel.drmConfig.keyId}/${selectedChannel.drmConfig.key}`,
+          }
+        } : undefined
       };
 
       console.log("Setting up player with config:", playerConfig);
@@ -83,7 +82,7 @@ const IPTVPage = () => {
         {categories.map((category) => {
           const categoryChannels = channels
             .filter((channel) => channel.category === category)
-            .slice(0, 10); // Limit to 10 channels per category
+            .slice(0, 10);
 
           if (categoryChannels.length === 0) return null;
 
