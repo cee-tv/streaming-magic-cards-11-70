@@ -33,8 +33,9 @@ export const MovieRow = ({ title, movies }: MovieRowProps) => {
 
   return (
     <div className="mb-8 relative group">
-      <h2 className="text-xl md:text-2xl font-bold text-white mb-4 px-4">{title}</h2>
+      <h2 className="text-2xl font-bold text-white mb-4 px-4">{title}</h2>
       
+      {/* Navigation Arrows - Desktop Only */}
       {!isMobile && (
         <>
           {showLeftArrow && (
@@ -58,16 +59,17 @@ export const MovieRow = ({ title, movies }: MovieRowProps) => {
         </>
       )}
 
+      {/* Scrollable Container */}
       <div
         ref={rowRef}
         onScroll={handleScroll}
-        className="flex overflow-x-auto scrollbar-hide gap-2 px-4"
+        className="flex overflow-x-auto scrollbar-hide gap-4 px-4"
         style={{ scrollSnapType: "x mandatory" }}
       >
         {movies.map((movie) => (
           <div
             key={movie.id}
-            className="flex-none w-[200px] md:w-[240px] lg:w-[280px] transition-transform duration-300 hover:scale-105"
+            className="flex-none w-[160px] md:w-[200px] lg:w-[240px] scroll-snap-align-start"
             style={{ scrollSnapAlign: "start" }}
           >
             <MovieCard movie={movie} />
