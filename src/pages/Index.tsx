@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Hero } from "@/components/Hero";
 import { MovieRow } from "@/components/MovieRow";
+import { Navigation } from "@/components/Navigation";
 import { tmdb } from "@/services/tmdb";
 
 const Index = () => {
@@ -25,6 +26,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-netflix-black">
+      <Navigation />
       <Hero movie={trending[0]} />
       <div className="container mx-auto px-4">
         <MovieRow title="Trending Now" movies={trending} />
