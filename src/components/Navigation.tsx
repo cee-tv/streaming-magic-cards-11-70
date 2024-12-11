@@ -2,7 +2,7 @@ import { Film, Search, Tv, Bookmark } from "lucide-react";
 import { Button } from "./ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
 import { Dialog, DialogContent } from "./ui/dialog";
@@ -13,7 +13,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
-  const [activeType, setActiveType] = useState<'movie' | 'tv'>('movie');
+  const location = useLocation();
 
   const { data: searchResults = [], isLoading } = useQuery({
     queryKey: ["search", searchQuery],
@@ -21,10 +21,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
     enabled: open && searchQuery.length > 0,
   });
 
-  const handleMediaTypeChange = (type: 'movie' | 'tv') => {
-    setActiveType(type);
-    onMediaTypeChange(type);
-  };
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <>
@@ -49,23 +46,23 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className={`text-white ${activeType === 'movie' ? 'bg-white/20' : ''}`}
-                onClick={() => handleMediaTypeChange('movie')}
+                className={`text-white ${isActive('/movies') ? 'bg-white/20' : ''}`}
+                onClick={() => navigate('/movies')}
               >
                 <Film className="h-6 w-6" />
               </Button>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className={`text-white ${activeType === 'tv' ? 'bg-white/20' : ''}`}
-                onClick={() => handleMediaTypeChange('tv')}
+                className={`text-white ${isActive('/tv') ? 'bg-white/20' : ''}`}
+                onClick={() => navigate('/tv')}
               >
                 <Tv className="h-6 w-6" />
               </Button>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="text-white"
+                className={`text-white ${isActive('/watchlist') ? 'bg-white/20' : ''}`}
                 onClick={() => navigate('/watchlist')}
               >
                 <Bookmark className="h-6 w-6" />
@@ -83,21 +80,21 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
             <div className="flex items-center gap-4">
               <Button 
                 variant="ghost" 
-                className={`text-white hover:bg-white/10 ${activeType === 'movie' ? 'bg-white/20' : ''}`}
-                onClick={() => handleMediaTypeChange('movie')}
+                className={`text-white hover:bg-white/10 ${isActive('/movies') ? 'bg-white/20' : ''}`}
+                onClick={() => navigate('/movies')}
               >
                 Movies
               </Button>
               <Button 
                 variant="ghost" 
-                className={`text-white hover:bg-white/10 ${activeType === 'tv' ? 'bg-white/20' : ''}`}
-                onClick={() => handleMediaTypeChange('tv')}
+                className={`text-white hover:bg-white/10 ${isActive('/tv') ? 'bg-white/20' : ''}`}
+                onClick={() => navigate('/tv')}
               >
                 TV Shows
               </Button>
               <Button 
                 variant="ghost" 
-                className="text-white hover:bg-white/10"
+                className={`text-white hover:bg-white/10 ${isActive('/watchlist') ? 'bg-white/20' : ''}`}
                 onClick={() => navigate('/watchlist')}
               >
                 <Bookmark className="h-4 w-4 mr-2" />
