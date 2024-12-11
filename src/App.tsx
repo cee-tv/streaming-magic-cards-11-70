@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { WatchlistProvider } from "./contexts/WatchlistContext";
 import Index from "./pages/Index";
-import Watchlist from "./pages/Watchlist";
+import Watchlist from "./components/Watchlist";
 
 const queryClient = new QueryClient();
 
