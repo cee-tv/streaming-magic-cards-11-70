@@ -23,8 +23,6 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
     setSearchQuery(value);
     if (value.trim()) {
       navigate(`/search?q=${encodeURIComponent(value.trim())}`);
-    } else {
-      navigate('/');
     }
   };
 
@@ -78,14 +76,28 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
               >
                 <Bookmark className="h-6 w-6" />
               </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="text-white hover:bg-white/10" 
-                onClick={() => setShowSearch(!showSearch)}
-              >
-                <Search className="h-6 w-6" />
-              </Button>
+              <div className="flex flex-col items-end">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-white hover:bg-white/10" 
+                  onClick={() => setShowSearch(!showSearch)}
+                >
+                  <Search className="h-6 w-6" />
+                </Button>
+                {showSearch && (
+                  <form onSubmit={handleSearch} className="absolute mt-12">
+                    <input
+                      type="text"
+                      placeholder="Search..."
+                      value={searchQuery}
+                      onChange={handleSearchInputChange}
+                      className="w-40 h-8 bg-black/50 text-sm text-white border border-white/20 rounded-md px-2 py-1 focus:outline-none focus:border-white/40"
+                      autoFocus
+                    />
+                  </form>
+                )}
+              </div>
             </div>
           ) : (
             <div className="flex items-center gap-4">
@@ -111,28 +123,29 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
                 <Bookmark className="h-4 w-4 mr-2" />
                 Watchlist
               </Button>
-              <Button 
-                variant="ghost" 
-                className="text-white hover:bg-white/10"
-                onClick={() => setShowSearch(!showSearch)}
-              >
-                <Search className="h-4 w-4 mr-2" />
-                Search
-              </Button>
+              <div className="flex flex-col items-end">
+                <Button 
+                  variant="ghost" 
+                  className="text-white hover:bg-white/10"
+                  onClick={() => setShowSearch(!showSearch)}
+                >
+                  <Search className="h-4 w-4 mr-2" />
+                  Search
+                </Button>
+                {showSearch && (
+                  <form onSubmit={handleSearch} className="absolute mt-12">
+                    <input
+                      type="text"
+                      placeholder="Search..."
+                      value={searchQuery}
+                      onChange={handleSearchInputChange}
+                      className="w-48 h-8 bg-black/50 text-sm text-white border border-white/20 rounded-md px-2 py-1 focus:outline-none focus:border-white/40"
+                      autoFocus
+                    />
+                  </form>
+                )}
+              </div>
             </div>
-          )}
-          
-          {showSearch && (
-            <form onSubmit={handleSearch} className="relative">
-              <input
-                type="text"
-                placeholder="Search movies and TV shows..."
-                value={searchQuery}
-                onChange={handleSearchInputChange}
-                className="w-48 h-8 bg-black/50 text-sm text-white border border-white/20 rounded-md px-2 py-1 focus:outline-none focus:border-white/40"
-                autoFocus
-              />
-            </form>
           )}
         </div>
       </div>
