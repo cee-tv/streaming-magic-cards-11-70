@@ -3,10 +3,7 @@ import { Button } from "./ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { tmdb } from "@/services/tmdb";
 import { Dialog, DialogContent } from "./ui/dialog";
-import { MovieCard } from "./MovieCard";
 
 export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'movie' | 'tv') => void }) => {
   const isMobile = useIsMobile();
@@ -15,11 +12,14 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { data: searchResults = [], isLoading } = useQuery({
-    queryKey: ["search", searchQuery],
-    queryFn: () => tmdb.search(searchQuery),
-    enabled: open && searchQuery.length > 0,
-  });
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setOpen(false);
+      setSearchQuery("");
+    }
+  };
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -120,7 +120,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-full h-screen p-0 bg-netflix-black/95">
           <div className="p-6 h-full">
-            <div className="flex items-center justify-between mb-8">
+            <form onSubmit={handleSearch} className="flex items-center justify-between mb-8">
               <div className="flex-1 flex items-center gap-4">
                 <Search className="h-6 w-6 text-white" />
                 <input
@@ -140,12 +140,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
               >
                 <X className="h-6 w-6" />
               </Button>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 overflow-y-auto max-h-[calc(100vh-200px)]">
-              {searchResults?.map((result) => (
-                <MovieCard key={result.id} movie={result} />
-              ))}
-            </div>
+            </form>
           </div>
         </DialogContent>
       </Dialog>

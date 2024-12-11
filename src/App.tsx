@@ -7,6 +7,7 @@ import { WatchlistProvider } from "./contexts/WatchlistContext";
 import Index from "./pages/Index";
 import MoviesPage from "./pages/MoviesPage";
 import TVShowsPage from "./pages/TVShowsPage";
+import SearchPage from "./pages/SearchPage";
 import Watchlist from "./components/Watchlist";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/movies" element={<MoviesPage />} />
             <Route path="/tv" element={<TVShowsPage />} />
+            <Route path="/search" element={<SearchPage />} />
             <Route path="/watchlist" element={<Watchlist />} />
           </Routes>
         </BrowserRouter>
