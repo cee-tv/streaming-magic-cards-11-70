@@ -16,6 +16,16 @@ export interface Movie {
   release_date: string;
 }
 
+export interface MovieDetails extends Movie {
+  videos: {
+    results: Array<{
+      key: string;
+      site: string;
+      type: string;
+    }>;
+  };
+}
+
 export const tmdb = {
   getTrending: async (): Promise<Movie[]> => {
     const response = await fetch(`${BASE_URL}/trending/movie/week`, { headers });
@@ -44,4 +54,21 @@ export const tmdb = {
     const data = await response.json();
     return data.results;
   },
+
+  getMovieDetails: async (movieId: number): Promise<MovieDetails> => {
+    const response = await fetch(
+      `${BASE_URL}/movie/${movieId}?append_to_response=videos`,
+      { headers }
+    );
+    const data = await response.json();
+    return data;
+  },
+
+  getTrailerKey: (videos: MovieDetails['videos']): string | null => {
+    const trailer = videos.results.find(
+      (video) => video.site === "YouTube" && 
+      (video.type === "Trailer" || video.type === "Teaser")
+    );
+    return trailer ? trailer.key : null;
+  }
 };

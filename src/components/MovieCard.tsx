@@ -3,6 +3,8 @@ import { Play, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
+import { useQuery } from "@tanstack/react-query";
+import { tmdb } from "@/services/tmdb";
 
 interface MovieCardProps {
   movie: Movie;
@@ -12,13 +14,18 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
   const [showModal, setShowModal] = useState(false);
   const [showPlayer, setShowPlayer] = useState(false);
 
+  const { data: movieDetails } = useQuery({
+    queryKey: ["movie", movie.id],
+    queryFn: () => tmdb.getMovieDetails(movie.id),
+    enabled: showModal || showPlayer,
+  });
+
+  const trailerKey = movieDetails?.videos ? tmdb.getTrailerKey(movieDetails.videos) : null;
+
   const handlePlay = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowPlayer(true);
   };
-
-  // Example trailer ID - in production this should come from your API
-  const trailerVideoId = "dQw4w9WgXcQ"; // Replace with actual trailer ID
 
   return (
     <>
@@ -62,14 +69,16 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
       <Dialog open={showModal} onOpenChange={setShowModal}>
         <DialogContent className="max-w-3xl h-[80vh] p-0 bg-netflix-black overflow-hidden">
           <DialogTitle className="sr-only">{movie.title}</DialogTitle>
-          <div className="relative w-full aspect-video">
-            <iframe
-              className="w-full h-full"
-              src={`https://www.youtube.com/embed/${trailerVideoId}?autoplay=1&mute=1`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
+          {trailerKey && (
+            <div className="relative w-full aspect-video">
+              <iframe
+                className="w-full h-full"
+                src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          )}
           <div className="p-6">
             <div className="flex items-center gap-4 mb-6">
               <Button 
@@ -90,12 +99,14 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
       <Dialog open={showPlayer} onOpenChange={setShowPlayer}>
         <DialogContent className="max-w-none w-screen h-screen p-0 bg-black">
           <DialogTitle className="sr-only">Play {movie.title}</DialogTitle>
-          <iframe
-            className="w-full h-full"
-            src={`https://www.youtube.com/embed/${trailerVideoId}?autoplay=1`}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
+          {trailerKey && (
+            <iframe
+              className="w-full h-full"
+              src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          )}
         </DialogContent>
       </Dialog>
     </>
