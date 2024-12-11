@@ -7,7 +7,6 @@ import { Dialog, DialogContent } from "./ui/dialog";
 
 export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'movie' | 'tv') => void }) => {
   const isMobile = useIsMobile();
-  const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
@@ -107,49 +106,30 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
                 </Button>
               </>
             )}
-            <Button 
-              variant="ghost" 
-              size={isMobile ? "icon" : "default"}
-              className="text-white hover:bg-white/10 h-8 px-3 text-sm"
-              onClick={() => setOpen(true)}
-            >
-              <Search className={`${isMobile ? 'h-5 w-5' : 'h-4 w-4 mr-1'}`} />
-              {!isMobile && "Search"}
-            </Button>
+            <form onSubmit={handleSearch} className="flex items-center gap-2 bg-black/20 rounded-full px-3 py-1">
+              <Search className="h-4 w-4 text-white" />
+              <input
+                type="text"
+                placeholder="Search movies and TV shows..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-40 bg-transparent text-sm text-white border-none outline-none placeholder:text-gray-400"
+              />
+              {searchQuery && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6 text-white hover:bg-white/10"
+                  onClick={() => setSearchQuery("")}
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              )}
+            </form>
           </div>
         </div>
       </nav>
-
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-[300px] mx-auto h-auto p-0 bg-transparent fixed right-4 top-16">
-          <div className="p-3">
-            <form onSubmit={handleSearch} className="flex items-center justify-between">
-              <div className="flex-1 flex items-center gap-2">
-                <Search className="h-3 w-3 text-white" />
-                <input
-                  type="text"
-                  placeholder="Search movies and TV shows..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-transparent text-sm text-white border-none outline-none placeholder:text-gray-400 h-8"
-                  autoFocus
-                />
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-white hover:bg-white/10 h-6 w-6"
-                onClick={() => {
-                  setSearchQuery("");
-                  setOpen(false);
-                }}
-              >
-                <X className="h-3 w-3" />
-              </Button>
-            </form>
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 };
