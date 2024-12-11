@@ -62,14 +62,10 @@ export const IPTVPlayer = ({ isOpen, onClose, channel }: IPTVPlayerProps) => {
 
         // Enhanced DRM configuration
         if (channel.drmConfig?.clearkey) {
-          const [keyId, key] = channel.drmConfig.clearkey.split(':');
           playerConfig.drm = {
             clearkey: {
-              keyId,
-              key,
-            },
-            widevine: {
-              url: channel.drmConfig.licenseUrl
+              keyId: channel.drmConfig.clearkey.keyId,
+              key: channel.drmConfig.clearkey.key,
             }
           };
         }
@@ -97,11 +93,6 @@ export const IPTVPlayer = ({ isOpen, onClose, channel }: IPTVPlayerProps) => {
             title: "Ready",
             description: "Stream loaded successfully",
           });
-        });
-
-        // Add quality level change listener
-        playerInstance.on('levels', (event: any) => {
-          console.log('Available quality levels:', event.levels);
         });
 
         return () => {
