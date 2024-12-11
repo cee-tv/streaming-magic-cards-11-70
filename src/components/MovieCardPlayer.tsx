@@ -2,7 +2,6 @@ import { Movie } from "@/services/tmdb";
 import { X } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dialog";
 import { Button } from "./ui/button";
-import { useState } from "react";
 
 interface MovieCardPlayerProps {
   movie: Movie;
@@ -11,12 +10,9 @@ interface MovieCardPlayerProps {
 }
 
 export const MovieCardPlayer = ({ movie, showPlayer, setShowPlayer }: MovieCardPlayerProps) => {
-  const [selectedSeason, setSelectedSeason] = useState(1);
-  const [selectedEpisode, setSelectedEpisode] = useState(1);
-
   const embedUrl = movie.media_type === 'movie' 
     ? `https://embed.su/embed/movie/${movie.id}`
-    : `https://embed.su/embed/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
+    : `https://embed.su/embed/tv/${movie.id}/1/1`;
 
   return (
     <Dialog open={showPlayer} onOpenChange={setShowPlayer}>

@@ -14,12 +14,21 @@ interface SeasonListProps {
 
 export const SeasonList = ({ tvShowId, seasons, setShowModal, setShowPlayer }: SeasonListProps) => {
   const [expandedSeason, setExpandedSeason] = useState<number | null>(null);
+  const [selectedSeason, setSelectedSeason] = useState(1);
+  const [selectedEpisode, setSelectedEpisode] = useState(1);
 
   const { data: seasonDetails } = useQuery({
     queryKey: ["season", tvShowId, expandedSeason],
     queryFn: () => expandedSeason !== null ? tmdb.getSeasonDetails(tvShowId, expandedSeason) : null,
     enabled: expandedSeason !== null,
   });
+
+  const handleEpisodePlay = (seasonNumber: number, episodeNumber: number) => {
+    setSelectedSeason(seasonNumber);
+    setSelectedEpisode(episodeNumber);
+    setShowModal(false);
+    setShowPlayer(true);
+  };
 
   return (
     <div className="space-y-4">
@@ -64,16 +73,13 @@ export const SeasonList = ({ tvShowId, seasons, setShowModal, setShowPlayer }: S
                       <h5 className="text-white text-sm font-medium">
                         {episode.episode_number}. {episode.name}
                       </h5>
-                      <p className="text-gray-400 text-xs">{episode.overview}</p>
+                      <p className="text-gray-400 text-xs line-clamp-1">{episode.overview}</p>
                     </div>
                     <Button
                       variant="ghost"
                       size="sm"
                       className="text-white hover:bg-white/10"
-                      onClick={() => {
-                        setShowModal(false);
-                        setShowPlayer(true);
-                      }}
+                      onClick={() => handleEpisodePlay(season.season_number, episode.episode_number)}
                     >
                       <Play className="h-4 w-4" />
                     </Button>
