@@ -15,7 +15,6 @@ export const IPTVPlayer = ({ isOpen, onClose, channel }: IPTVPlayerProps) => {
 
   useEffect(() => {
     if (isOpen) {
-      // Check if JW Player is available
       if (typeof (window as any).jwplayer === 'undefined') {
         toast({
           variant: "destructive",
@@ -28,9 +27,9 @@ export const IPTVPlayer = ({ isOpen, onClose, channel }: IPTVPlayerProps) => {
       try {
         const playerInstance = (window as any).jwplayer("jwplayer-container");
         
-        // Determine stream type based on URL extension
-        const isHLS = channel.streamUrl.includes('.m3u8');
-        const isDASH = channel.streamUrl.includes('.mpd');
+        // Enhanced stream type detection
+        const isHLS = channel.streamUrl.toLowerCase().includes('.m3u8');
+        const isDASH = channel.streamUrl.toLowerCase().includes('.mpd');
         
         const playerConfig: any = {
           file: channel.streamUrl,
@@ -38,19 +37,39 @@ export const IPTVPlayer = ({ isOpen, onClose, channel }: IPTVPlayerProps) => {
           width: '100%',
           height: '100%',
           autostart: true,
-          hlshtml: true, // Force HLS playback in HTML5
           primary: 'html5',
-          // Enable cross-origin resource sharing
+          hlshtml: true,
+          stretching: 'uniform',
+          playbackRateControls: true,
+          preload: 'auto',
+          mute: false,
+          cast: {},
+          // Enhanced streaming settings
+          streaming: {
+            bufferWhilePaused: true,
+            forceNative: false,
+            lowLatency: true,
+            rebufferingTimeout: 10,
+            retryOnError: true,
+            stallTimeout: 10,
+            startQualityLevel: -1,
+            strictCasting: true,
+          },
+          // Cross-origin settings
           cors: true,
+          withCredentials: true,
         };
 
-        // Add DRM configuration if present
+        // Enhanced DRM configuration
         if (channel.drmConfig?.clearkey) {
           const [keyId, key] = channel.drmConfig.clearkey.split(':');
           playerConfig.drm = {
             clearkey: {
               keyId,
               key,
+            },
+            widevine: {
+              url: channel.drmConfig.licenseUrl
             }
           };
         }
@@ -60,14 +79,29 @@ export const IPTVPlayer = ({ isOpen, onClose, channel }: IPTVPlayerProps) => {
         playerInstance.setup(playerConfig);
         setPlayerInitialized(true);
 
-        // Add error event listener
+        // Enhanced error handling
         playerInstance.on('error', (e: any) => {
           console.error('JW Player error:', e);
+          const errorMessage = e.message || 'Unknown playback error';
           toast({
             variant: "destructive",
             title: "Playback Error",
-            description: `Failed to play stream: ${e.message}`,
+            description: `Failed to play stream: ${errorMessage}`,
           });
+        });
+
+        // Add success event listener
+        playerInstance.on('ready', () => {
+          console.log('Player ready');
+          toast({
+            title: "Ready",
+            description: "Stream loaded successfully",
+          });
+        });
+
+        // Add quality level change listener
+        playerInstance.on('levels', (event: any) => {
+          console.log('Available quality levels:', event.levels);
         });
 
         return () => {
