@@ -48,7 +48,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
 
         <div className="flex flex-col items-end gap-2">
           {isMobile ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               <Button 
                 variant="ghost" 
                 size="icon" 
@@ -83,7 +83,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
               </Button>
             </div>
           ) : (
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
               <Button 
                 variant="ghost" 
                 className={`text-white hover:bg-white/10 ${isActive('/movies') ? 'bg-white/20' : ''}`}
