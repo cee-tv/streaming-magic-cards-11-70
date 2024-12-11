@@ -23,18 +23,23 @@ const Index = () => {
     queryFn: () => tmdb.getTopRated(mediaType),
   });
 
-  if (trending.length === 0) {
+  // Get a random movie for the hero section
+  const randomMovie = trending.length > 0 
+    ? trending[Math.floor(Math.random() * trending.length)]
+    : null;
+
+  if (!randomMovie) {
     return <div className="text-white">Loading...</div>;
   }
 
   return (
     <div className="min-h-screen bg-netflix-black">
       <Navigation onMediaTypeChange={setMediaType} />
-      <Hero movie={trending[0]} mediaType={mediaType} />
-      <div className="container mx-auto px-4">
-        <MovieRow title="Trending Now" movies={trending} mediaType={mediaType} />
-        <MovieRow title={`Popular ${mediaType === 'movie' ? 'Movies' : 'TV Shows'}`} movies={popular} mediaType={mediaType} />
-        <MovieRow title="Top Rated" movies={topRated} mediaType={mediaType} />
+      <Hero movie={randomMovie} mediaType={mediaType} />
+      <div className="container mx-auto px-4 space-y-8">
+        <MovieRow title="Trending Now" movies={trending} />
+        <MovieRow title={`Popular ${mediaType === 'movie' ? 'Movies' : 'TV Shows'}`} movies={popular} />
+        <MovieRow title="Top Rated" movies={topRated} />
       </div>
     </div>
   );
