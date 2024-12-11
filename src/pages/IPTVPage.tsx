@@ -1,44 +1,128 @@
 import { Navigation } from "@/components/Navigation";
-import { Movies } from "@/components/Movies";
-import { Hero } from "@/components/Hero";
-import { useQuery } from "@tanstack/react-query";
-import { tmdb } from "@/services/tmdb";
 import { useEffect, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tv } from "lucide-react";
+
+interface Channel {
+  id: string;
+  name: string;
+  logo?: string;
+  category: string;
+  streamUrl: string;
+  drmConfig?: {
+    licenseUrl: string;
+    keyId: string;
+    key: string;
+  };
+}
+
+const channels: Channel[] = [
+  {
+    id: "1",
+    name: "News Channel 1",
+    category: "News",
+    streamUrl: "https://example.com/stream1.mpd",
+    drmConfig: {
+      licenseUrl: "https://license.example.com/clearkey",
+      keyId: "your-key-id-1",
+      key: "your-key-1"
+    }
+  },
+  // Add more channels here following the same structure
+];
+
+const categories = ["News", "Sports", "Entertainment", "Movies"];
 
 const IPTVPage = () => {
-  const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
-
-  const { data: trending = [] } = useQuery({
-    queryKey: ["trending", "movie"],
-    queryFn: () => tmdb.getTrending("movie"),
-  });
+  const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
+  const [jwPlayer, setJwPlayer] = useState<any>(null);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (trending.length > 0) {
-        setCurrentMovieIndex((prev) => 
-          prev === trending.length - 1 ? 0 : prev + 1
-        );
-      }
-    }, 4000);
+    // Initialize JW Player
+    if (window.jwplayer && !jwPlayer) {
+      const player = window.jwplayer("jwplayer-container");
+      player.setup({
+        file: selectedChannel?.streamUrl || "",
+        type: "dash",
+        drm: {
+          clearkey: selectedChannel?.drmConfig ? {
+            url: selectedChannel.drmConfig.licenseUrl,
+            keys: {
+              [selectedChannel.drmConfig.keyId]: selectedChannel.drmConfig.key
+            }
+          } : undefined
+        }
+      });
+      setJwPlayer(player);
+    }
+  }, [selectedChannel]);
 
-    return () => clearInterval(interval);
-  }, [trending.length]);
-
-  const randomMovie = trending.length > 0 
-    ? trending[currentMovieIndex]
-    : null;
-
-  if (!randomMovie) {
-    return <div className="text-white">Loading...</div>;
-  }
+  const handleChannelSelect = (channel: Channel) => {
+    setSelectedChannel(channel);
+    if (jwPlayer) {
+      jwPlayer.load({
+        file: channel.streamUrl,
+        type: "dash",
+        drm: {
+          clearkey: channel.drmConfig ? {
+            url: channel.drmConfig.licenseUrl,
+            keys: {
+              [channel.drmConfig.keyId]: channel.drmConfig.key
+            }
+          } : undefined
+        }
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-netflix-black">
       <Navigation onMediaTypeChange={() => {}} />
-      <Hero movie={randomMovie} />
-      <div className="pt-4">
-        <Movies />
+      
+      <div className="container mx-auto px-4 py-8">
+        {/* JW Player Container */}
+        <div className="w-full aspect-video bg-black mb-8">
+          <div id="jwplayer-container"></div>
+        </div>
+
+        {/* Channel Categories */}
+        {categories.map((category) => {
+          const categoryChannels = channels
+            .filter((channel) => channel.category === category)
+            .slice(0, 10); // Limit to 10 channels per category
+
+          if (categoryChannels.length === 0) return null;
+
+          return (
+            <div key={category} className="mb-8">
+              <h2 className="text-white text-2xl font-bold mb-4">{category}</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                {categoryChannels.map((channel) => (
+                  <Card
+                    key={channel.id}
+                    className={`cursor-pointer transition-transform hover:scale-105 ${
+                      selectedChannel?.id === channel.id ? 'ring-2 ring-primary' : ''
+                    }`}
+                    onClick={() => handleChannelSelect(channel)}
+                  >
+                    <CardContent className="p-4 flex flex-col items-center justify-center">
+                      {channel.logo ? (
+                        <img
+                          src={channel.logo}
+                          alt={channel.name}
+                          className="w-16 h-16 object-contain mb-2"
+                        />
+                      ) : (
+                        <Tv className="w-16 h-16 mb-2" />
+                      )}
+                      <p className="text-center font-medium">{channel.name}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
