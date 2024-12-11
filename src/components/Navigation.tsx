@@ -15,7 +15,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (searchQuery.trim()) {
-        navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`, { replace: true });
+        navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
       }
     }, 300);
 
@@ -26,6 +26,8 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setOpen(false);
+      setSearchQuery("");
     }
   };
 
@@ -121,7 +123,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
       </nav>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-[300px] mx-auto h-auto p-0 bg-transparent fixed right-4 top-16">
+        <DialogContent className="max-w-[300px] mx-auto h-auto p-0 bg-black/80 fixed right-4 top-16">
           <div className="p-3">
             <form onSubmit={handleSearch} className="flex items-center justify-between">
               <div className="flex-1 flex items-center gap-2">
@@ -139,10 +141,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
                 variant="ghost"
                 size="icon"
                 className="text-white hover:bg-white/10 h-6 w-6"
-                onClick={() => {
-                  setSearchQuery("");
-                  setOpen(false);
-                }}
+                onClick={() => setOpen(false)}
               >
                 <X className="h-3 w-3" />
               </Button>
