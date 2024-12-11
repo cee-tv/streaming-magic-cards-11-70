@@ -132,7 +132,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
               </Button>
               <Button
                 variant="outline"
-                className="rounded-full border-white hover:border-white bg-black/30"
+                className="rounded-full border-white hover:border-white bg-black/30 text-white"
                 onClick={handleWatchlistToggle}
               >
                 {isInWatchlist(movie.id) ? (
