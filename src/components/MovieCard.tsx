@@ -1,10 +1,12 @@
 import { Movie } from "@/services/tmdb";
-import { Play, ChevronDown, X } from "lucide-react";
+import { Play, ChevronDown, X, Plus, Check } from "lucide-react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
+import { useWatchlist } from "@/contexts/WatchlistContext";
+import { toast } from "sonner";
 
 interface MovieCardProps {
   movie: Movie;
@@ -13,6 +15,7 @@ interface MovieCardProps {
 export const MovieCard = ({ movie }: MovieCardProps) => {
   const [showModal, setShowModal] = useState(false);
   const [showPlayer, setShowPlayer] = useState(false);
+  const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
 
   const { data: movieDetails } = useQuery({
     queryKey: ["movie", movie.id, movie.media_type],
@@ -23,7 +26,17 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
   const trailerKey = movieDetails?.videos ? tmdb.getTrailerKey(movieDetails.videos) : null;
   const embedUrl = movie.media_type === 'movie' 
     ? `https://embed.su/embed/movie/${movie.id}`
-    : `https://embed.su/embed/tv/${movie.id}/1/1`; // Default to S01E01 for TV shows
+    : `https://embed.su/embed/tv/${movie.id}/1/1`;
+
+  const handleWatchlistToggle = () => {
+    if (isInWatchlist(movie.id)) {
+      removeFromWatchlist(movie.id);
+      toast.success("Removed from watchlist");
+    } else {
+      addToWatchlist(movie);
+      toast.success("Added to watchlist");
+    }
+  };
 
   return (
     <>
@@ -60,12 +73,27 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
               >
                 <ChevronDown className="h-4 w-4 text-white" />
               </Button>
+              <Button
+                size="icon"
+                variant="outline"
+                className="rounded-full border-white hover:border-white bg-black/30 h-8 w-8 md:h-10 md:w-10"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleWatchlistToggle();
+                }}
+              >
+                {isInWatchlist(movie.id) ? (
+                  <Check className="h-4 w-4 text-white" />
+                ) : (
+                  <Plus className="h-4 w-4 text-white" />
+                )}
+              </Button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* More Info Modal with YouTube Trailer */}
+      {/* More Info Modal */}
       <Dialog open={showModal} onOpenChange={setShowModal}>
         <DialogContent className="max-w-3xl h-[70vh] p-0 bg-black overflow-hidden">
           <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
@@ -101,6 +129,23 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
               >
                 <Play className="h-4 w-4 mr-2" />
                 Play
+              </Button>
+              <Button
+                variant="outline"
+                className="rounded-full border-white hover:border-white bg-black/30"
+                onClick={handleWatchlistToggle}
+              >
+                {isInWatchlist(movie.id) ? (
+                  <>
+                    <Check className="h-4 w-4 mr-2" />
+                    Remove from Watchlist
+                  </>
+                ) : (
+                  <>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add to Watchlist
+                  </>
+                )}
               </Button>
             </div>
             <h2 className="text-2xl font-bold mb-4 text-white">{movie.title || movie.name}</h2>
