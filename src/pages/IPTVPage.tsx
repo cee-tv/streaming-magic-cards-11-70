@@ -28,7 +28,17 @@ const channels: Channel[] = [
       key: "07c7f996b1734ea288641a68e1cfdc4d"
     }
   },
-  // Add more channels here following the same structure
+  {
+    id: "2",
+    name: "A2Z",
+    category: "Entertainment",
+    streamUrl: "https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/cg_a2z.mpd",
+    drmConfig: {
+      licenseUrl: "https://clearkey-base64.herokuapp.com/api/",
+      keyId: "f703e4c8ec9041eeb5028ab4248fa094",
+      key: "c22f2162e176eee6273a5d0b68d19530"
+    }
+  }
 ];
 
 const categories = ["News", "Sports", "Entertainment", "Movies"];
