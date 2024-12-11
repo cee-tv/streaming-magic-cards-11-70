@@ -56,17 +56,32 @@ const IPTVPage = () => {
 
   useEffect(() => {
     if (jwPlayer && selectedChannel) {
+      const clearKeyString = `${selectedChannel.drmConfig?.keyId}:${selectedChannel.drmConfig?.key}`;
+      
       const playerConfig = {
         width: "100%",
         height: "100%",
         autostart: true,
+        controls: true,
+        stretching: "uniform",
         file: selectedChannel.streamUrl,
         type: "dash",
-        drm: selectedChannel.drmConfig ? {
+        drm: {
           clearkey: {
-            url: `${selectedChannel.drmConfig.licenseUrl}${selectedChannel.drmConfig.keyId}/${selectedChannel.drmConfig.key}`,
+            keyId: selectedChannel.drmConfig?.keyId,
+            key: selectedChannel.drmConfig?.key
           }
-        } : undefined
+        },
+        // Add player controls and UI customization
+        skin: {
+          name: "netflix"
+        },
+        mute: false,
+        volume: 90,
+        displaytitle: true,
+        displaydescription: true,
+        playbackRateControls: true,
+        repeat: false
       };
 
       console.log("Setting up player with config:", playerConfig);
@@ -84,7 +99,7 @@ const IPTVPage = () => {
       
       <div className="container mx-auto px-4 py-8">
         {/* JW Player Container */}
-        <div className="w-full aspect-video bg-black mb-8">
+        <div className="w-full aspect-video bg-black mb-8 rounded-lg overflow-hidden">
           <div id="jwplayer-container"></div>
         </div>
 
