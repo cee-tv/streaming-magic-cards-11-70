@@ -19,7 +19,23 @@ export interface Movie {
   media_type: string;
 }
 
-interface Season {
+export interface Episode {
+  id: number;
+  name: string;
+  overview: string;
+  episode_number: number;
+  still_path: string | null;
+}
+
+export interface SeasonDetails {
+  id: number;
+  name: string;
+  overview: string;
+  season_number: number;
+  episodes: Episode[];
+}
+
+export interface Season {
   id: number;
   name: string;
   season_number: number;
@@ -133,5 +149,14 @@ export const tmdb = {
       (video.type === "Trailer" || video.type === "Teaser")
     );
     return trailer ? trailer.key : null;
+  },
+
+  getSeasonDetails: async (tvShowId: number, seasonNumber: number): Promise<SeasonDetails> => {
+    const response = await fetch(
+      `${BASE_URL}/tv/${tvShowId}/season/${seasonNumber}`,
+      { headers }
+    );
+    const data = await response.json();
+    return data;
   }
 };
