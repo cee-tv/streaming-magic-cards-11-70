@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "./ui/button";
+import { VideoPlayer } from "./movie/VideoPlayer";
 
 interface HeroProps {
   movie: Movie;
@@ -23,7 +24,10 @@ export const Hero = ({ movie }: HeroProps) => {
   const trailerKey = movieDetails?.videos ? tmdb.getTrailerKey(movieDetails.videos) : null;
   const embedUrl = movie.media_type === 'movie' 
     ? `https://embed.su/embed/movie/${movie.id}`
-    : `https://embed.su/embed/tv/${movie.id}/1/1`; // Default to S01E01 for TV shows
+    : `https://embed.su/embed/tv/${movie.id}/1/1`;
+  const multiEmbedUrl = movie.media_type === 'movie'
+    ? `https://multiembed.mov/?video_id=${movie.id}&tmdb=1`
+    : `https://multiembed.mov/?video_id=${movie.id}&tmdb=1&s=1&e=1`;
 
   return (
     <>
@@ -102,28 +106,14 @@ export const Hero = ({ movie }: HeroProps) => {
         </DialogContent>
       </Dialog>
 
-      {/* Fullscreen Player Modal */}
-      <Dialog open={showPlayer} onOpenChange={setShowPlayer}>
-        <DialogContent className="max-w-none w-screen h-screen p-0 bg-black">
-          <DialogTitle className="sr-only">Play {movie.title || movie.name}</DialogTitle>
-          <DialogDescription className="sr-only">Video player for {movie.title || movie.name}</DialogDescription>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute left-4 top-4 z-50 text-white hover:bg-white/20"
-            onClick={() => setShowPlayer(false)}
-          >
-            <ArrowLeft className="h-4 w-4" />
-            <span className="sr-only">Return</span>
-          </Button>
-          <iframe
-            className="w-full h-full"
-            src={embedUrl}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        </DialogContent>
-      </Dialog>
+      {/* Video Player */}
+      <VideoPlayer
+        isOpen={showPlayer}
+        onClose={() => setShowPlayer(false)}
+        title={movie.title || movie.name}
+        embedUrl={embedUrl}
+        multiEmbedUrl={multiEmbedUrl}
+      />
     </>
   );
 };

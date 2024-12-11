@@ -1,12 +1,14 @@
 import { Movie } from "@/services/tmdb";
-import { Play, ChevronDown, ArrowLeft, Plus, Check } from "lucide-react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
+import { ArrowLeft, Play, Plus, Check } from "lucide-react";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { toast } from "sonner";
+import { MovieButtons } from "./movie/MovieButtons";
+import { VideoPlayer } from "./movie/VideoPlayer";
 
 interface MovieCardProps {
   movie: Movie;
@@ -29,6 +31,9 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
   const embedUrl = movie.media_type === 'movie' 
     ? `https://embed.su/embed/movie/${movie.id}`
     : `https://embed.su/embed/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
+  const multiEmbedUrl = movie.media_type === 'movie'
+    ? `https://multiembed.mov/?video_id=${movie.id}&tmdb=1`
+    : `https://multiembed.mov/?video_id=${movie.id}&tmdb=1&s=${selectedSeason}&e=${selectedEpisode}`;
 
   const handleWatchlistToggle = () => {
     if (isInWatchlist(movie.id)) {
@@ -53,44 +58,13 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
             <h3 className="text-white font-bold text-xs md:text-sm line-clamp-2">
               {movie.title || movie.name}
             </h3>
-            <div className="flex items-center gap-2">
-              <Button 
-                size="icon" 
-                className="rounded-full bg-white hover:bg-white/90 text-black h-8 w-8 md:h-10 md:w-10"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowPlayer(true);
-                }}
-              >
-                <Play className="h-4 w-4" />
-              </Button>
-              <Button 
-                size="icon" 
-                variant="outline" 
-                className="rounded-full border-white hover:border-white bg-black/30 h-8 w-8 md:h-10 md:w-10"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowModal(true);
-                }}
-              >
-                <ChevronDown className="h-4 w-4 text-white" />
-              </Button>
-              <Button
-                size="icon"
-                variant="outline"
-                className="rounded-full border-white hover:border-white bg-black/30 h-8 w-8 md:h-10 md:w-10"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleWatchlistToggle();
-                }}
-              >
-                {isInWatchlist(movie.id) ? (
-                  <Check className="h-4 w-4 text-white" />
-                ) : (
-                  <Plus className="h-4 w-4 text-white" />
-                )}
-              </Button>
-            </div>
+            <MovieButtons
+              movie={movie}
+              onPlay={() => setShowPlayer(true)}
+              onMoreInfo={() => setShowModal(true)}
+              onWatchlistToggle={handleWatchlistToggle}
+              isInWatchlist={isInWatchlist(movie.id)}
+            />
           </div>
         </div>
       </div>
@@ -195,28 +169,14 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
         </DialogContent>
       </Dialog>
 
-      {/* Fullscreen Player Modal */}
-      <Dialog open={showPlayer} onOpenChange={setShowPlayer}>
-        <DialogContent className="max-w-none w-screen h-screen p-0 bg-black">
-          <DialogTitle className="sr-only">Play {movie.title || movie.name}</DialogTitle>
-          <DialogDescription className="sr-only">Video player for {movie.title || movie.name}</DialogDescription>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute left-4 top-4 z-50 text-white hover:bg-white/20"
-            onClick={() => setShowPlayer(false)}
-          >
-            <ArrowLeft className="h-4 w-4" />
-            <span className="sr-only">Return</span>
-          </Button>
-          <iframe
-            className="w-full h-full"
-            src={embedUrl}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        </DialogContent>
-      </Dialog>
+      {/* Video Player */}
+      <VideoPlayer
+        isOpen={showPlayer}
+        onClose={() => setShowPlayer(false)}
+        title={movie.title || movie.name}
+        embedUrl={embedUrl}
+        multiEmbedUrl={multiEmbedUrl}
+      />
     </>
   );
 };
