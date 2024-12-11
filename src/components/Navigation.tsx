@@ -1,4 +1,4 @@
-import { Film, Search, Tv, List, X, Home, ChevronDown } from "lucide-react";
+import { Film, Search, Tv, List, X, Home } from "lucide-react";
 import { Button } from "./ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
