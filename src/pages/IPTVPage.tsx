@@ -23,7 +23,7 @@ const channels: Channel[] = [
     category: "Entertainment",
     streamUrl: "https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/tv5_hd.mpd",
     drmConfig: {
-      licenseUrl: "https://license.example.com/clearkey",
+      licenseUrl: "https://clearkey.license.example.com",
       keyId: "2615129ef2c846a9bbd43a641c7303ef",
       key: "07c7f996b1734ea288641a68e1cfdc4d"
     }
@@ -38,41 +38,35 @@ const IPTVPage = () => {
   const [jwPlayer, setJwPlayer] = useState<any>(null);
 
   useEffect(() => {
-    // Initialize JW Player
     if (window.jwplayer && !jwPlayer) {
       const player = window.jwplayer("jwplayer-container");
-      player.setup({
-        file: selectedChannel?.streamUrl || "",
-        type: "dash",
-        drm: {
-          clearkey: selectedChannel?.drmConfig ? {
-            url: selectedChannel.drmConfig.licenseUrl,
-            keys: {
-              [selectedChannel.drmConfig.keyId]: selectedChannel.drmConfig.key
-            }
-          } : undefined
-        }
-      });
       setJwPlayer(player);
     }
-  }, [selectedChannel]);
+  }, []);
+
+  useEffect(() => {
+    if (jwPlayer && selectedChannel) {
+      const playerConfig = {
+        width: "100%",
+        height: "100%",
+        autostart: true,
+        file: selectedChannel.streamUrl,
+        type: "dash",
+        drm: {
+          clearkey: selectedChannel.drmConfig ? {
+            keyId: selectedChannel.drmConfig.keyId,
+            key: selectedChannel.drmConfig.key
+          } : undefined
+        }
+      };
+
+      console.log("Setting up player with config:", playerConfig);
+      jwPlayer.setup(playerConfig);
+    }
+  }, [selectedChannel, jwPlayer]);
 
   const handleChannelSelect = (channel: Channel) => {
     setSelectedChannel(channel);
-    if (jwPlayer) {
-      jwPlayer.load({
-        file: channel.streamUrl,
-        type: "dash",
-        drm: {
-          clearkey: channel.drmConfig ? {
-            url: channel.drmConfig.licenseUrl,
-            keys: {
-              [channel.drmConfig.keyId]: channel.drmConfig.key
-            }
-          } : undefined
-        }
-      });
-    }
   };
 
   return (
