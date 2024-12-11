@@ -1,7 +1,7 @@
 import { Movie } from "@/services/tmdb";
 import { Play, ChevronDown } from "lucide-react";
 import { useState } from "react";
-import { Dialog, DialogContent } from "./ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
 
 interface MovieCardProps {
@@ -10,6 +10,15 @@ interface MovieCardProps {
 
 export const MovieCard = ({ movie }: MovieCardProps) => {
   const [showModal, setShowModal] = useState(false);
+  const [showPlayer, setShowPlayer] = useState(false);
+
+  const handlePlay = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowPlayer(true);
+  };
+
+  // Example trailer ID - in production this should come from your API
+  const trailerVideoId = "dQw4w9WgXcQ"; // Replace with actual trailer ID
 
   return (
     <>
@@ -25,10 +34,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
               <Button 
                 size="icon" 
                 className="rounded-full bg-white hover:bg-white/90 text-black"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // Play functionality to be implemented
-                }}
+                onClick={handlePlay}
               >
                 <Play className="h-4 w-4" />
               </Button>
@@ -52,28 +58,44 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
         </div>
       </div>
 
+      {/* More Info Modal */}
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="max-w-4xl h-[90vh] p-0">
+        <DialogContent className="max-w-3xl h-[80vh] p-0 bg-netflix-black overflow-hidden">
+          <DialogTitle className="sr-only">{movie.title}</DialogTitle>
           <div className="relative w-full aspect-video">
-            <div className="absolute inset-0 bg-netflix-black">
-              <img
-                src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
-                alt={movie.title}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-netflix-black" />
-            </div>
+            <iframe
+              className="w-full h-full"
+              src={`https://www.youtube.com/embed/${trailerVideoId}?autoplay=1&mute=1`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
           </div>
           <div className="p-6">
             <div className="flex items-center gap-4 mb-6">
-              <Button className="rounded-full bg-white hover:bg-white/90 text-black">
+              <Button 
+                className="rounded-full bg-white hover:bg-white/90 text-black"
+                onClick={handlePlay}
+              >
                 <Play className="h-4 w-4 mr-2" />
                 Play
               </Button>
             </div>
-            <h2 className="text-2xl font-bold mb-4">{movie.title}</h2>
+            <h2 className="text-2xl font-bold mb-4 text-white">{movie.title}</h2>
             <p className="text-gray-400">{movie.overview}</p>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Fullscreen Player Modal */}
+      <Dialog open={showPlayer} onOpenChange={setShowPlayer}>
+        <DialogContent className="max-w-none w-screen h-screen p-0 bg-black">
+          <DialogTitle className="sr-only">Play {movie.title}</DialogTitle>
+          <iframe
+            className="w-full h-full"
+            src={`https://www.youtube.com/embed/${trailerVideoId}?autoplay=1`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
         </DialogContent>
       </Dialog>
     </>
