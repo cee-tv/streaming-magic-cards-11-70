@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { WatchlistProvider } from "./contexts/WatchlistContext";
 import Index from "./pages/Index";
-import Watchlist from "./pages/Watchlist";
 
 const queryClient = new QueryClient();
 
@@ -18,7 +17,6 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/watchlist" element={<Watchlist />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

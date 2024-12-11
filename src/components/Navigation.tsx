@@ -1,4 +1,4 @@
-import { Film, Search, Tv, Bookmark } from "lucide-react";
+import { Film, Search, Tv } from "lucide-react";
 import { Button } from "./ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
@@ -66,14 +66,6 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
                 variant="ghost" 
                 size="icon" 
                 className="text-white" 
-                onClick={() => navigate('/watchlist')}
-              >
-                <Bookmark className="h-6 w-6" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="text-white" 
                 onClick={() => setOpen(true)}
               >
                 <Search className="h-6 w-6" />
@@ -94,14 +86,6 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
                 onClick={() => handleMediaTypeChange('tv')}
               >
                 TV Shows
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="text-white hover:bg-white/10"
-                onClick={() => navigate('/watchlist')}
-              >
-                <Bookmark className="h-4 w-4 mr-2" />
-                Watchlist
               </Button>
               <Button 
                 variant="ghost" 
