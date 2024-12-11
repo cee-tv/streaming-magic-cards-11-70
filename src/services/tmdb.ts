@@ -57,9 +57,9 @@ export const tmdb = {
     return data.results;
   },
 
-  getMovieDetails: async (movieId: number): Promise<MovieDetails> => {
+  getMovieDetails: async (id: number, mediaType: 'movie' | 'tv' = 'movie'): Promise<MovieDetails> => {
     const response = await fetch(
-      `${BASE_URL}/movie/${movieId}?append_to_response=videos`,
+      `${BASE_URL}/${mediaType}/${id}?append_to_response=videos`,
       { headers }
     );
     const data = await response.json();

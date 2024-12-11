@@ -16,8 +16,8 @@ export const Hero = ({ movie, mediaType = 'movie' }: HeroProps) => {
   const [showPlayer, setShowPlayer] = useState(false);
 
   const { data: movieDetails } = useQuery({
-    queryKey: ["movie", movie.id],
-    queryFn: () => tmdb.getMovieDetails(movie.id),
+    queryKey: ["movie", movie.id, mediaType],
+    queryFn: () => tmdb.getMovieDetails(movie.id, mediaType),
     enabled: showModal || showPlayer,
   });
 
