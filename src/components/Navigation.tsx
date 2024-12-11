@@ -12,7 +12,6 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedResult, setSelectedResult] = useState<any>(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -23,10 +22,6 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
   });
 
   const isActive = (path: string) => location.pathname === path;
-
-  const handleResultClick = (result: any) => {
-    setSelectedResult(result);
-  };
 
   return (
     <>
@@ -141,34 +136,16 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
                 variant="ghost"
                 size="icon"
                 className="text-white hover:bg-white/10"
-                onClick={() => {
-                  setOpen(false);
-                  setSelectedResult(null);
-                  setSearchQuery("");
-                }}
+                onClick={() => setOpen(false)}
               >
                 <X className="h-6 w-6" />
               </Button>
             </div>
-            {selectedResult ? (
-              <div className="flex justify-center items-center h-[calc(100vh-200px)]">
-                <div className="w-[300px]">
-                  <MovieCard movie={selectedResult} />
-                </div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 overflow-y-auto max-h-[calc(100vh-200px)]">
-                {searchResults?.map((result) => (
-                  <div
-                    key={result.id}
-                    onClick={() => handleResultClick(result)}
-                    className="cursor-pointer"
-                  >
-                    <MovieCard movie={result} />
-                  </div>
-                ))}
-              </div>
-            )}
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 overflow-y-auto max-h-[calc(100vh-200px)]">
+              {searchResults?.map((result) => (
+                <MovieCard key={result.id} movie={result} />
+              ))}
+            </div>
           </div>
         </DialogContent>
       </Dialog>
