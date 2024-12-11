@@ -28,26 +28,47 @@ export const IPTVPlayer = ({ isOpen, onClose, channel }: IPTVPlayerProps) => {
       try {
         const playerInstance = (window as any).jwplayer("jwplayer-container");
         
+        // Determine stream type based on URL extension
+        const isHLS = channel.streamUrl.includes('.m3u8');
+        const isDASH = channel.streamUrl.includes('.mpd');
+        
         const playerConfig: any = {
           file: channel.streamUrl,
-          type: channel.streamUrl.endsWith('.mpd') ? 'dash' : 'hls',
+          type: isDASH ? 'dash' : (isHLS ? 'hls' : 'mp4'),
           width: '100%',
           height: '100%',
           autostart: true,
+          hlshtml: true, // Force HLS playback in HTML5
+          primary: 'html5',
+          // Enable cross-origin resource sharing
+          cors: true,
         };
 
         // Add DRM configuration if present
-        if (channel.drmConfig) {
+        if (channel.drmConfig?.clearkey) {
+          const [keyId, key] = channel.drmConfig.clearkey.split(':');
           playerConfig.drm = {
             clearkey: {
-              keyId: channel.drmConfig.clearkey.split(':')[0],
-              key: channel.drmConfig.clearkey.split(':')[1]
+              keyId,
+              key,
             }
           };
         }
 
+        console.log('Player configuration:', playerConfig);
+        
         playerInstance.setup(playerConfig);
         setPlayerInitialized(true);
+
+        // Add error event listener
+        playerInstance.on('error', (e: any) => {
+          console.error('JW Player error:', e);
+          toast({
+            variant: "destructive",
+            title: "Playback Error",
+            description: `Failed to play stream: ${e.message}`,
+          });
+        });
 
         return () => {
           if (playerInitialized) {
