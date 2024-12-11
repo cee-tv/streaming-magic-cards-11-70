@@ -87,9 +87,6 @@ export const VideoPlayer = ({
           className="w-full h-full"
           src={getCurrentUrl()}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          sandbox="allow-same-origin allow-scripts allow-forms allow-presentation"
-          loading="lazy"
-          referrerPolicy="no-referrer"
           allowFullScreen
         />
       </DialogContent>
