@@ -78,13 +78,14 @@ export const Navigation = () => {
       </nav>
 
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <Command>
+        <Command className="rounded-lg border-none bg-netflix-black/90">
           <CommandInput 
             placeholder="Search movies and TV shows..." 
             value={searchQuery}
             onValueChange={setSearchQuery}
+            className="h-14 text-lg border-b border-white/20"
           />
-          <CommandList>
+          <CommandList className="h-[80vh] py-4">
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
               {searchResults?.map((result) => (
@@ -94,8 +95,21 @@ export const Navigation = () => {
                     setOpen(false);
                     // Navigate to movie detail page when implemented
                   }}
+                  className="p-2 hover:bg-white/10"
                 >
-                  {result.title}
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={`https://image.tmdb.org/t/p/w92${result.poster_path}`}
+                      alt={result.title}
+                      className="w-16 h-24 object-cover rounded"
+                    />
+                    <div>
+                      <h4 className="font-semibold">{result.title}</h4>
+                      <p className="text-sm text-gray-400">
+                        {new Date(result.release_date).getFullYear()}
+                      </p>
+                    </div>
+                  </div>
                 </CommandItem>
               ))}
             </CommandGroup>
