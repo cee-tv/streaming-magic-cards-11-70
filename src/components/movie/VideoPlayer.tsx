@@ -30,9 +30,9 @@ export const VideoPlayer = ({
 
   const getVidsrcUrl = () => {
     if (mediaType === 'movie') {
-      return `https://vidsrc.to/embed/movie/tmdb-${movieId}`;
+      return `https://vidsrc.to/embed/movie/${movieId}`;
     }
-    return `https://vidsrc.to/embed/tv/tmdb-${movieId}/${season}/${episode}`;
+    return `https://vidsrc.to/embed/tv/${movieId}/${season}/${episode}`;
   };
 
   const getCurrentUrl = () => {
