@@ -1,16 +1,17 @@
 import { Movie } from "@/services/tmdb";
 import { Play, ChevronDown } from "lucide-react";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
 
 interface MovieCardProps {
   movie: Movie;
+  mediaType?: 'movie' | 'tv';
 }
 
-export const MovieCard = ({ movie }: MovieCardProps) => {
+export const MovieCard = ({ movie, mediaType = 'movie' }: MovieCardProps) => {
   const [showModal, setShowModal] = useState(false);
   const [showPlayer, setShowPlayer] = useState(false);
 
@@ -20,12 +21,9 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
     enabled: showModal || showPlayer,
   });
 
-  const trailerKey = movieDetails?.videos ? tmdb.getTrailerKey(movieDetails.videos) : null;
-
-  const handlePlay = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setShowPlayer(true);
-  };
+  const embedUrl = mediaType === 'movie' 
+    ? `https://embed.su/embed/movie/${movie.id}`
+    : `https://embed.su/embed/tv/${movie.id}/1/1`; // Default to S01E01 for TV shows
 
   return (
     <>
@@ -36,12 +34,16 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
           className="rounded-md transition-transform duration-300 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md">
-          <div className="absolute bottom-0 p-4 w-full">
-            <div className="flex items-center gap-2 mb-2">
+          <div className="absolute inset-0 flex flex-col justify-between p-4">
+            <h3 className="text-white font-bold">{movie.title}</h3>
+            <div className="flex items-center gap-2">
               <Button 
                 size="icon" 
                 className="rounded-full bg-white hover:bg-white/90 text-black"
-                onClick={handlePlay}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowPlayer(true);
+                }}
               >
                 <Play className="h-4 w-4" />
               </Button>
@@ -57,33 +59,29 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
                 <ChevronDown className="h-4 w-4" />
               </Button>
             </div>
-            <h3 className="text-white font-bold">{movie.title}</h3>
-            <p className="text-white/80 text-sm mt-1">
-              ⭐ {movie.vote_average.toFixed(1)}
-            </p>
           </div>
         </div>
       </div>
 
       {/* More Info Modal */}
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="max-w-3xl h-[80vh] p-0 bg-netflix-black overflow-hidden">
+        <DialogContent className="max-w-3xl h-[70vh] p-0 bg-black overflow-hidden">
           <DialogTitle className="sr-only">{movie.title}</DialogTitle>
-          {trailerKey && (
-            <div className="relative w-full aspect-video">
-              <iframe
-                className="w-full h-full"
-                src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1`}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
-          )}
+          <DialogDescription className="sr-only">Movie details for {movie.title}</DialogDescription>
+          <iframe
+            className="w-full aspect-video"
+            src={embedUrl}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
           <div className="p-6">
             <div className="flex items-center gap-4 mb-6">
               <Button 
                 className="rounded-full bg-white hover:bg-white/90 text-black"
-                onClick={handlePlay}
+                onClick={() => {
+                  setShowModal(false);
+                  setShowPlayer(true);
+                }}
               >
                 <Play className="h-4 w-4 mr-2" />
                 Play
@@ -99,14 +97,13 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
       <Dialog open={showPlayer} onOpenChange={setShowPlayer}>
         <DialogContent className="max-w-none w-screen h-screen p-0 bg-black">
           <DialogTitle className="sr-only">Play {movie.title}</DialogTitle>
-          {trailerKey && (
-            <iframe
-              className="w-full h-full"
-              src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          )}
+          <DialogDescription className="sr-only">Video player for {movie.title}</DialogDescription>
+          <iframe
+            className="w-full h-full"
+            src={embedUrl}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
         </DialogContent>
       </Dialog>
     </>

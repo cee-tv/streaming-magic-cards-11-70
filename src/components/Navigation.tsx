@@ -7,17 +7,23 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
 
-export const Navigation = () => {
+export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'movie' | 'tv') => void }) => {
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+  const [activeType, setActiveType] = useState<'movie' | 'tv'>('movie');
 
   const { data: searchResults = [], isLoading } = useQuery({
     queryKey: ["search", searchQuery],
     queryFn: () => tmdb.search(searchQuery),
     enabled: open && searchQuery.length > 0,
   });
+
+  const handleMediaTypeChange = (type: 'movie' | 'tv') => {
+    setActiveType(type);
+    onMediaTypeChange(type);
+  };
 
   return (
     <>
@@ -39,15 +45,29 @@ export const Navigation = () => {
 
           {/* Navigation Items */}
           {isMobile ? (
-            // Mobile Navigation
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" className="text-white">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className={`text-white ${activeType === 'movie' ? 'bg-white/20' : ''}`}
+                onClick={() => handleMediaTypeChange('movie')}
+              >
                 <Film className="h-6 w-6" />
               </Button>
-              <Button variant="ghost" size="icon" className="text-white">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className={`text-white ${activeType === 'tv' ? 'bg-white/20' : ''}`}
+                onClick={() => handleMediaTypeChange('tv')}
+              >
                 <Tv className="h-6 w-6" />
               </Button>
-              <Button variant="ghost" size="icon" className="text-white">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="text-white"
+                onClick={() => navigate('/my-list')}
+              >
                 <List className="h-6 w-6" />
               </Button>
               <Button variant="ghost" size="icon" className="text-white" onClick={() => setOpen(true)}>
@@ -55,21 +75,26 @@ export const Navigation = () => {
               </Button>
             </div>
           ) : (
-            // Desktop Navigation
             <div className="flex items-center gap-4">
-              <Button variant="ghost" className="text-white hover:bg-white/10">
-                Home
-              </Button>
-              <Button variant="ghost" className="text-white hover:bg-white/10">
-                TV Shows
-              </Button>
-              <Button variant="ghost" className="text-white hover:bg-white/10">
+              <Button 
+                variant="ghost" 
+                className={`text-white hover:bg-white/10 ${activeType === 'movie' ? 'bg-white/20' : ''}`}
+                onClick={() => handleMediaTypeChange('movie')}
+              >
                 Movies
               </Button>
-              <Button variant="ghost" className="text-white hover:bg-white/10">
-                New & Popular
+              <Button 
+                variant="ghost" 
+                className={`text-white hover:bg-white/10 ${activeType === 'tv' ? 'bg-white/20' : ''}`}
+                onClick={() => handleMediaTypeChange('tv')}
+              >
+                TV Shows
               </Button>
-              <Button variant="ghost" className="text-white hover:bg-white/10">
+              <Button 
+                variant="ghost" 
+                className="text-white hover:bg-white/10"
+                onClick={() => navigate('/my-list')}
+              >
                 My List
               </Button>
             </div>
@@ -93,7 +118,6 @@ export const Navigation = () => {
                   key={result.id}
                   onSelect={() => {
                     setOpen(false);
-                    // Navigate to movie detail page when implemented
                   }}
                   className="p-2 hover:bg-white/10"
                 >

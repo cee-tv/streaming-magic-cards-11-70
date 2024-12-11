@@ -9,11 +9,13 @@ const headers = {
 export interface Movie {
   id: number;
   title: string;
+  name?: string; // For TV shows
   overview: string;
   poster_path: string;
   backdrop_path: string;
   vote_average: number;
   release_date: string;
+  first_air_date?: string; // For TV shows
 }
 
 export interface MovieDetails extends Movie {
@@ -27,20 +29,20 @@ export interface MovieDetails extends Movie {
 }
 
 export const tmdb = {
-  getTrending: async (): Promise<Movie[]> => {
-    const response = await fetch(`${BASE_URL}/trending/movie/week`, { headers });
+  getTrending: async (mediaType: 'movie' | 'tv' = 'movie'): Promise<Movie[]> => {
+    const response = await fetch(`${BASE_URL}/trending/${mediaType}/week`, { headers });
     const data = await response.json();
     return data.results;
   },
 
-  getPopular: async (): Promise<Movie[]> => {
-    const response = await fetch(`${BASE_URL}/movie/popular`, { headers });
+  getPopular: async (mediaType: 'movie' | 'tv' = 'movie'): Promise<Movie[]> => {
+    const response = await fetch(`${BASE_URL}/${mediaType}/popular`, { headers });
     const data = await response.json();
     return data.results;
   },
 
-  getTopRated: async (): Promise<Movie[]> => {
-    const response = await fetch(`${BASE_URL}/movie/top_rated`, { headers });
+  getTopRated: async (mediaType: 'movie' | 'tv' = 'movie'): Promise<Movie[]> => {
+    const response = await fetch(`${BASE_URL}/${mediaType}/top_rated`, { headers });
     const data = await response.json();
     return data.results;
   },
@@ -48,7 +50,7 @@ export const tmdb = {
   search: async (query: string): Promise<Movie[]> => {
     if (!query) return [];
     const response = await fetch(
-      `${BASE_URL}/search/movie?query=${encodeURIComponent(query)}`,
+      `${BASE_URL}/search/multi?query=${encodeURIComponent(query)}`,
       { headers }
     );
     const data = await response.json();
