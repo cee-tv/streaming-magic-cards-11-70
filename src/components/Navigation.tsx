@@ -58,103 +58,79 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
             </svg>
           </div>
 
-          {isMobile ? (
-            <div className="flex items-center gap-2">
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className={`text-white hover:bg-white/10 ${isActive('/movies') ? 'bg-white/20' : ''}`}
-                onClick={() => navigate('/movies')}
-              >
-                <Film className="h-5 w-5" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className={`text-white hover:bg-white/10 ${isActive('/tv') ? 'bg-white/20' : ''}`}
-                onClick={() => navigate('/tv')}
-              >
-                <Tv className="h-5 w-5" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className={`text-white hover:bg-white/10 ${isActive('/watchlist') ? 'bg-white/20' : ''}`}
-                onClick={() => navigate('/watchlist')}
-              >
-                <Bookmark className="h-5 w-5" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="text-white hover:bg-white/10" 
-                onClick={() => setShowSearch(!showSearch)}
-              >
-                <Search className="h-5 w-5" />
-              </Button>
-            </div>
-          ) : (
-            <div className="flex items-center gap-4">
-              <Button 
-                variant="ghost" 
-                className={`text-white hover:bg-white/10 h-8 px-3 text-sm ${isActive('/movies') ? 'bg-white/20' : ''}`}
-                onClick={() => navigate('/movies')}
-              >
-                Movies
-              </Button>
-              <Button 
-                variant="ghost" 
-                className={`text-white hover:bg-white/10 h-8 px-3 text-sm ${isActive('/tv') ? 'bg-white/20' : ''}`}
-                onClick={() => navigate('/tv')}
-              >
-                TV Shows
-              </Button>
-              <Button 
-                variant="ghost" 
-                className={`text-white hover:bg-white/10 h-8 px-3 text-sm ${isActive('/watchlist') ? 'bg-white/20' : ''}`}
-                onClick={() => navigate('/watchlist')}
-              >
-                <Bookmark className="h-4 w-4 mr-1" />
-                Watchlist
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="text-white hover:bg-white/10 h-8 px-3 text-sm"
-                onClick={() => setShowSearch(!showSearch)}
-              >
-                <Search className="h-4 w-4 mr-1" />
-                Search
-              </Button>
-            </div>
-          )}
-        </div>
+          <div className="flex items-center gap-4">
+            {!isMobile && (
+              <>
+                <Button 
+                  variant="ghost" 
+                  className={`text-white hover:bg-white/10 h-8 px-3 text-sm ${isActive('/movies') ? 'bg-white/20' : ''}`}
+                  onClick={() => navigate('/movies')}
+                >
+                  Movies
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className={`text-white hover:bg-white/10 h-8 px-3 text-sm ${isActive('/tv') ? 'bg-white/20' : ''}`}
+                  onClick={() => navigate('/tv')}
+                >
+                  TV Shows
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className={`text-white hover:bg-white/10 h-8 px-3 text-sm ${isActive('/watchlist') ? 'bg-white/20' : ''}`}
+                  onClick={() => navigate('/watchlist')}
+                >
+                  <Bookmark className="h-4 w-4 mr-1" />
+                  Watchlist
+                </Button>
+              </>
+            )}
 
-        {/* Floating Search Input */}
-        {showSearch && (
-          <div className="absolute top-16 left-4 w-1/3 bg-netflix-black/95 rounded-md p-2 shadow-lg border border-white/10">
-            <form onSubmit={handleSearch} className="flex items-center justify-between">
-              <div className="flex-1 flex items-center gap-2">
-                <Search className="h-3 w-3 text-white" />
-                <input
-                  type="text"
-                  placeholder="Search movies and TV shows..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-transparent text-sm text-white border-none outline-none placeholder:text-gray-400 h-8"
-                  autoFocus
-                />
+            <div className="relative">
+              <form onSubmit={handleSearch} className="flex items-center">
+                <div className="relative flex items-center">
+                  <input
+                    type="text"
+                    placeholder="Search movies and TV shows..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-[300px] bg-black/50 text-sm text-white border border-white/10 rounded-md pl-8 pr-3 py-1.5 placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-white/20"
+                  />
+                  <Search className="absolute left-2.5 h-4 w-4 text-gray-400" />
+                </div>
+              </form>
+            </div>
+
+            {isMobile && (
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className={`text-white hover:bg-white/10 ${isActive('/movies') ? 'bg-white/20' : ''}`}
+                  onClick={() => navigate('/movies')}
+                >
+                  <Film className="h-5 w-5" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className={`text-white hover:bg-white/10 ${isActive('/tv') ? 'bg-white/20' : ''}`}
+                  onClick={() => navigate('/tv')}
+                >
+                  <Tv className="h-5 w-5" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className={`text-white hover:bg-white/10 ${isActive('/watchlist') ? 'bg-white/20' : ''}`}
+                  onClick={() => navigate('/watchlist')}
+                >
+                  <Bookmark className="h-5 w-5" />
+                </Button>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-white hover:bg-white/10 h-6 w-6"
-                onClick={() => setShowSearch(false)}
-              >
-                <X className="h-3 w-3" />
-              </Button>
-            </form>
+            )}
           </div>
-        )}
+        </div>
       </nav>
 
       <Dialog open={open} onOpenChange={setOpen}>
