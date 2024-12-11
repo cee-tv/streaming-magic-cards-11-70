@@ -1,4 +1,4 @@
-import { Movie } from "@/types";
+import { Movie } from "@/services/tmdb";
 import { Play, ChevronDown, X, Plus, Check } from "lucide-react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dialog";
@@ -20,8 +20,8 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
   const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
 
   const { data: movieDetails } = useQuery({
-    queryKey: ["movie", movie.id],
-    queryFn: () => movie.media_type === 'tv' ? tmdb.getTVShowDetails(movie.id) : tmdb.getMovieDetails(movie.id),
+    queryKey: ["movie", movie.id, movie.media_type],
+    queryFn: () => tmdb.getMovieDetails(movie.id, movie.media_type as 'movie' | 'tv'),
     enabled: showModal || showPlayer,
   });
 

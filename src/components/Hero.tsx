@@ -1,4 +1,4 @@
-import { Movie } from "@/types";
+import { Movie } from "@/services/tmdb";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dialog";
 import { useQuery } from "@tanstack/react-query";
@@ -15,10 +15,8 @@ export const Hero = ({ movie }: HeroProps) => {
   const [showPlayer, setShowPlayer] = useState(false);
 
   const { data: movieDetails } = useQuery({
-    queryKey: ["movie", movie.id],
-    queryFn: () => movie.media_type === 'movie' 
-      ? tmdb.getMovieDetails(movie.id.toString())
-      : tmdb.getTVShowDetails(movie.id.toString()),
+    queryKey: ["movie", movie.id, movie.media_type],
+    queryFn: () => tmdb.getMovieDetails(movie.id, movie.media_type as 'movie' | 'tv'),
     enabled: showModal || showPlayer,
   });
 
