@@ -1,11 +1,3 @@
-const BASE_URL = "https://api.themoviedb.org/3";
-const API_KEY = "72ba10c429914157380d27104ed18fa";
-
-const headers = {
-  Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MmJhMTBjNDI5OTE0MTU3MzgwOGQyNzEwNGVkMThmYSIsInN1YiI6IjY0ZjVhNTUwMTIxOTdlMDBmZWE5MzdmMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.84b7vWpVEilAbly4RpS01E9tyirHdhSXjcpfmTczI3Q",
-  "Content-Type": "application/json",
-};
-
 export interface Movie {
   id: number;
   title: string;
@@ -20,14 +12,29 @@ export interface Movie {
 }
 
 export interface MovieDetails extends Movie {
-  videos: {
+  videos?: {
     results: Array<{
       key: string;
       site: string;
       type: string;
     }>;
   };
+  seasons?: Array<{
+    id: number;
+    name: string;
+    episode_count: number;
+    season_number: number;
+    poster_path: string | null;
+  }>;
 }
+
+const BASE_URL = "https://api.themoviedb.org/3";
+const TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MmJhMTBjNDI5OTE0MTU3MzgwOGQyNzEwNGVkMThmYSIsInN1YiI6IjY0ZjVhNTUwMTIxOTdlMDBmZWE5MzdmMSIsInNjb3BlcyI6WyJhcGl"];
+
+const headers = {
+  Authorization: `Bearer ${TOKEN}`,
+  "Content-Type": "application/json",
+};
 
 export const tmdb = {
   getTrending: async (mediaType: 'movie' | 'tv' = 'movie'): Promise<Movie[]> => {
@@ -44,7 +51,7 @@ export const tmdb = {
     const data = await response.json();
     return data.results.map((item: Movie) => ({
       ...item,
-      media_type: item.media_type || mediaType
+      media_type: mediaType
     }));
   },
 
@@ -53,7 +60,7 @@ export const tmdb = {
     const data = await response.json();
     return data.results.map((item: Movie) => ({
       ...item,
-      media_type: item.media_type || mediaType
+      media_type: mediaType
     }));
   },
 
@@ -69,7 +76,7 @@ export const tmdb = {
     }));
   },
 
-  search: async (query: string): Promise<Movie[]> => {
+  searchMulti: async (query: string): Promise<Movie[]> => {
     if (!query) return [];
     const response = await fetch(
       `${BASE_URL}/search/multi?query=${encodeURIComponent(query)}`,
@@ -82,39 +89,15 @@ export const tmdb = {
   },
 
   getMovieDetails: async (id: number, mediaType: 'movie' | 'tv' = 'movie'): Promise<MovieDetails> => {
-    try {
-      const response = await fetch(
-        `${BASE_URL}/${mediaType}/${id}?append_to_response=videos`,
-        { headers }
-      );
-      
-      if (response.ok) {
-        const data = await response.json();
-        return {
-          ...data,
-          media_type: mediaType
-        };
-      }
-      
-      const otherType = mediaType === 'movie' ? 'tv' : 'movie';
-      const retryResponse = await fetch(
-        `${BASE_URL}/${otherType}/${id}?append_to_response=videos`,
-        { headers }
-      );
-      
-      if (retryResponse.ok) {
-        const data = await retryResponse.json();
-        return {
-          ...data,
-          media_type: otherType
-        };
-      }
-      
-      throw new Error(`Failed to fetch details for ID ${id}`);
-    } catch (error) {
-      console.error(`Error fetching details for ID ${id}:`, error);
-      throw error;
-    }
+    const response = await fetch(
+      `${BASE_URL}/${mediaType}/${id}?append_to_response=videos`,
+      { headers }
+    );
+    const data = await response.json();
+    return {
+      ...data,
+      media_type: mediaType
+    };
   },
 
   getTrailerKey: (videos: MovieDetails['videos']): string | null => {
