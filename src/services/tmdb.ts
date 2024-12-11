@@ -19,6 +19,14 @@ export interface Movie {
   media_type: string;
 }
 
+interface Season {
+  id: number;
+  name: string;
+  season_number: number;
+  episode_count: number;
+  poster_path: string | null;
+}
+
 export interface MovieDetails extends Movie {
   videos: {
     results: Array<{
@@ -27,6 +35,7 @@ export interface MovieDetails extends Movie {
       type: string;
     }>;
   };
+  seasons?: Season[];
 }
 
 export const tmdb = {
