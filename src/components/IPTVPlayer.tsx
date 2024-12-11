@@ -36,6 +36,7 @@ export const IPTVPlayer = ({ isOpen, onClose, channel }: IPTVPlayerProps) => {
           type: isDASH ? 'dash' : (isHLS ? 'hls' : 'mp4'),
           width: '100%',
           height: '100%',
+          aspectratio: '16:9',
           autostart: true,
           primary: 'html5',
           hlshtml: true,
