@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 
 const TVShowsPage = () => {
   const [currentShowIndex, setCurrentShowIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   const { data: trending = [] } = useQuery({
     queryKey: ["trending", "tv"],
@@ -14,16 +15,18 @@ const TVShowsPage = () => {
   });
 
   useEffect(() => {
+    if (isPaused) return;
+
     const interval = setInterval(() => {
       if (trending.length > 0) {
         setCurrentShowIndex((prev) => 
           prev === trending.length - 1 ? 0 : prev + 1
         );
       }
-    }, 4000);
+    }, 10000); // Changed to 10 seconds
 
     return () => clearInterval(interval);
-  }, [trending.length]);
+  }, [trending.length, isPaused]);
 
   const randomShow = trending.length > 0 
     ? trending[currentShowIndex]
@@ -36,7 +39,11 @@ const TVShowsPage = () => {
   return (
     <div className="min-h-screen bg-netflix-black">
       <Navigation onMediaTypeChange={() => {}} />
-      <Hero movie={randomShow} />
+      <Hero 
+        movie={randomShow} 
+        onModalOpen={() => setIsPaused(true)}
+        onModalClose={() => setIsPaused(false)}
+      />
       <div className="pt-4">
         <TVShows />
       </div>

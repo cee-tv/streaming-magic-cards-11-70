@@ -9,9 +9,11 @@ import { VideoPlayer } from "./movie/VideoPlayer";
 
 interface HeroProps {
   movie: Movie;
+  onModalOpen?: () => void;
+  onModalClose?: () => void;
 }
 
-export const Hero = ({ movie }: HeroProps) => {
+export const Hero = ({ movie, onModalOpen, onModalClose }: HeroProps) => {
   const [showModal, setShowModal] = useState(false);
   const [showPlayer, setShowPlayer] = useState(false);
 
@@ -29,6 +31,15 @@ export const Hero = ({ movie }: HeroProps) => {
   const multiEmbedUrl = movie.media_type === 'movie'
     ? `https://multiembed.mov/?video_id=${movie.id}&tmdb=1`
     : `https://multiembed.mov/?video_id=${movie.id}&tmdb=1&s=1&e=1`;
+
+  const handleModalOpen = (open: boolean) => {
+    setShowModal(open);
+    if (open && onModalOpen) {
+      onModalOpen();
+    } else if (!open && onModalClose) {
+      onModalClose();
+    }
+  };
 
   return (
     <>
@@ -57,7 +68,7 @@ export const Hero = ({ movie }: HeroProps) => {
             </button>
             <button 
               className="bg-gray-500/50 text-white px-4 md:px-6 py-2 rounded-md font-bold hover:bg-gray-500/70 transition text-sm md:text-base"
-              onClick={() => setShowModal(true)}
+              onClick={() => handleModalOpen(true)}
             >
               ℹ More Info
             </button>
@@ -66,7 +77,7 @@ export const Hero = ({ movie }: HeroProps) => {
       </div>
 
       {/* More Info Modal */}
-      <Dialog open={showModal} onOpenChange={setShowModal}>
+      <Dialog open={showModal} onOpenChange={handleModalOpen}>
         <DialogContent className="max-w-3xl h-[80vh] p-0 bg-black overflow-hidden">
           <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
           <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
@@ -74,7 +85,7 @@ export const Hero = ({ movie }: HeroProps) => {
             variant="ghost"
             size="icon"
             className="absolute left-4 top-4 z-50 text-white hover:bg-white/20"
-            onClick={() => setShowModal(false)}
+            onClick={() => handleModalOpen(false)}
           >
             <ArrowLeft className="h-4 w-4" />
             <span className="sr-only">Return</span>
@@ -94,7 +105,7 @@ export const Hero = ({ movie }: HeroProps) => {
               <button 
                 className="bg-white text-netflix-black px-6 py-2 rounded-md font-bold hover:bg-white/80 transition flex items-center gap-2"
                 onClick={() => {
-                  setShowModal(false);
+                  handleModalOpen(false);
                   setShowPlayer(true);
                 }}
               >
@@ -108,7 +119,6 @@ export const Hero = ({ movie }: HeroProps) => {
       </Dialog>
 
       {/* Video Player */}
-
       <VideoPlayer
         isOpen={showPlayer}
         onClose={() => setShowPlayer(false)}
