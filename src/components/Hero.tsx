@@ -13,9 +13,17 @@ interface HeroProps {
   movie: Movie;
   onModalOpen?: () => void;
   onModalClose?: () => void;
+  onPlayStart?: () => void;
+  onPlayEnd?: () => void;
 }
 
-export const Hero = ({ movie, onModalOpen, onModalClose }: HeroProps) => {
+export const Hero = ({ 
+  movie, 
+  onModalOpen, 
+  onModalClose,
+  onPlayStart,
+  onPlayEnd 
+}: HeroProps) => {
   const [showModal, setShowModal] = useState(false);
   const [showPlayer, setShowPlayer] = useState(false);
   const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
@@ -54,6 +62,16 @@ export const Hero = ({ movie, onModalOpen, onModalClose }: HeroProps) => {
     }
   };
 
+  const handlePlayerOpen = () => {
+    setShowPlayer(true);
+    if (onPlayStart) onPlayStart();
+  };
+
+  const handlePlayerClose = () => {
+    setShowPlayer(false);
+    if (onPlayEnd) onPlayEnd();
+  };
+
   return (
     <>
       <div className="relative h-[50vh] md:h-[70vh] mb-8">
@@ -75,7 +93,7 @@ export const Hero = ({ movie, onModalOpen, onModalClose }: HeroProps) => {
           <div className="flex gap-2 md:gap-4">
             <button 
               className="bg-white text-netflix-black px-4 md:px-6 py-2 rounded-md font-bold hover:bg-white/80 transition text-sm md:text-base"
-              onClick={() => setShowPlayer(true)}
+              onClick={handlePlayerOpen}
             >
               ▶ Play
             </button>
@@ -154,7 +172,7 @@ export const Hero = ({ movie, onModalOpen, onModalClose }: HeroProps) => {
       {/* Video Player */}
       <VideoPlayer
         isOpen={showPlayer}
-        onClose={() => setShowPlayer(false)}
+        onClose={handlePlayerClose}
         title={movie.title || movie.name}
         embedUrl={embedUrl}
         multiEmbedUrl={multiEmbedUrl}
