@@ -21,11 +21,6 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchQuery(value);
-    if (value.trim()) {
-      navigate(`/search?q=${encodeURIComponent(value.trim())}`);
-    } else {
-      navigate('/');
-    }
   };
 
   const isActive = (path: string) => location.pathname === path;
