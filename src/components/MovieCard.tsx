@@ -40,7 +40,10 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
 
   return (
     <>
-      <div className="relative group cursor-pointer">
+      <div 
+        className="relative group cursor-pointer"
+        onClick={() => setShowModal(true)}
+      >
         <img
           src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
           alt={movie.title || movie.name}
@@ -51,75 +54,44 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
             <h3 className="text-white font-bold text-xs md:text-sm line-clamp-2">
               {movie.title || movie.name}
             </h3>
-            <div className="flex items-center gap-2">
-              <Button 
-                size="icon" 
-                className="rounded-full bg-white hover:bg-white/90 text-black h-8 w-8 md:h-10 md:w-10"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowPlayer(true);
-                }}
-              >
-                <Play className="h-4 w-4" />
-              </Button>
-              <Button 
-                size="icon" 
-                variant="outline" 
-                className="rounded-full border-white hover:border-white bg-black/30 h-8 w-8 md:h-10 md:w-10"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowModal(true);
-                }}
-              >
-                <ChevronDown className="h-4 w-4 text-white" />
-              </Button>
-              <Button
-                size="icon"
-                variant="outline"
-                className="rounded-full border-white hover:border-white bg-black/30 h-8 w-8 md:h-10 md:w-10"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleWatchlistToggle();
-                }}
-              >
-                {isInWatchlist(movie.id) ? (
-                  <Check className="h-4 w-4 text-white" />
-                ) : (
-                  <Plus className="h-4 w-4 text-white" />
-                )}
-              </Button>
-            </div>
           </div>
         </div>
       </div>
 
-      {/* More Info Modal */}
+      {/* Fullscreen Modal */}
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="max-w-3xl h-[70vh] p-0 bg-black overflow-hidden">
+        <DialogContent className="max-w-7xl w-full h-[90vh] p-0 bg-zinc-900 border-none">
           <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
-          <DialogDescription className="sr-only">Movie details for {movie.title || movie.name}</DialogDescription>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute right-4 top-4 z-50 text-white hover:bg-white/20"
-            onClick={() => setShowModal(false)}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-          {trailerKey ? (
-            <iframe
-              className="w-full aspect-video"
-              src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          ) : (
-            <div className="w-full aspect-video bg-gray-900 flex items-center justify-center">
-              <p className="text-white">No trailer available</p>
-            </div>
-          )}
-          <div className="p-6">
-            <div className="flex items-center gap-4 mb-6">
+          <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
+          
+          <div className="relative w-full aspect-video">
+            {trailerKey ? (
+              <iframe
+                className="w-full h-full"
+                src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : (
+              <img
+                src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
+                alt={movie.title || movie.name}
+                className="w-full h-full object-cover"
+              />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent" />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-4 top-4 z-50 text-white hover:bg-white/20"
+              onClick={() => setShowModal(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+
+          <div className="p-6 space-y-6">
+            <div className="flex items-center gap-4">
               <Button 
                 className="rounded-full bg-white hover:bg-white/90 text-black"
                 onClick={() => {
@@ -148,8 +120,11 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
                 )}
               </Button>
             </div>
-            <h2 className="text-2xl font-bold mb-4 text-white">{movie.title || movie.name}</h2>
-            <p className="text-gray-400">{movie.overview}</p>
+
+            <div className="space-y-4">
+              <h2 className="text-3xl font-bold text-white">{movie.title || movie.name}</h2>
+              <p className="text-lg text-gray-300">{movie.overview}</p>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

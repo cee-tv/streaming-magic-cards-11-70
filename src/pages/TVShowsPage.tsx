@@ -14,13 +14,17 @@ const TVShowsPage = () => {
     ? trending[Math.floor(Math.random() * trending.length)]
     : null;
 
+  const handleMediaTypeChange = (type: "movie" | "tv") => {
+    // Handle media type change if needed
+  };
+
   if (!randomShow) {
     return <div className="text-white">Loading...</div>;
   }
 
   return (
     <div className="min-h-screen bg-netflix-black">
-      <Navigation onMediaTypeChange={() => {}} />
+      <Navigation onMediaTypeChange={handleMediaTypeChange} />
       <Hero movie={randomShow} />
       <div className="pt-4">
         <TVShows />
