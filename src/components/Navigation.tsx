@@ -1,7 +1,7 @@
 import { Film, Search, Tv, Bookmark, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Dialog, DialogContent } from "./ui/dialog";
 
@@ -12,23 +12,10 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Add debounce effect for search
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (searchQuery.trim()) {
-        navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-      }
-    }, 300); // 300ms delay
-
-    return () => clearTimeout(timeoutId);
-  }, [searchQuery, navigate]);
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-      setOpen(false);
-      setSearchQuery("");
     }
   };
 
@@ -129,7 +116,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
       </nav>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-md mx-auto h-auto p-0 bg-netflix-black/95">
+        <DialogContent className="max-w-[300px] absolute right-0 top-16 mx-4 p-0">
           <div className="p-3">
             <form onSubmit={handleSearch} className="flex items-center justify-between">
               <div className="flex-1 flex items-center gap-2">
