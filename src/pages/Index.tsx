@@ -1,9 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
 import { Hero } from "@/components/Hero";
-import { MovieRow } from "@/components/MovieRow";
 import { Navigation } from "@/components/Navigation";
-import { tmdb } from "@/services/tmdb";
+import { Movies } from "@/components/Movies";
+import { TVShows } from "@/components/TVShows";
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { tmdb } from "@/services/tmdb";
 
 const Index = () => {
   const [mediaType, setMediaType] = useState<'movie' | 'tv'>('movie');
@@ -12,31 +13,6 @@ const Index = () => {
   const { data: trending = [] } = useQuery({
     queryKey: ["trending", mediaType],
     queryFn: () => tmdb.getTrending(mediaType),
-  });
-
-  const { data: popular = [] } = useQuery({
-    queryKey: ["popular", mediaType],
-    queryFn: () => tmdb.getPopular(mediaType),
-  });
-
-  const { data: topRated = [] } = useQuery({
-    queryKey: ["topRated", mediaType],
-    queryFn: () => tmdb.getTopRated(mediaType),
-  });
-
-  const { data: actionMovies = [] } = useQuery({
-    queryKey: ["action", mediaType],
-    queryFn: () => tmdb.getByGenre(mediaType, 28),
-  });
-
-  const { data: comedyMovies = [] } = useQuery({
-    queryKey: ["comedy", mediaType],
-    queryFn: () => tmdb.getByGenre(mediaType, 35),
-  });
-
-  const { data: dramaMovies = [] } = useQuery({
-    queryKey: ["drama", mediaType],
-    queryFn: () => tmdb.getByGenre(mediaType, 18),
   });
 
   useEffect(() => {
@@ -63,18 +39,7 @@ const Index = () => {
     <div className="min-h-screen bg-netflix-black">
       <Navigation onMediaTypeChange={setMediaType} />
       <Hero movie={randomMovie} />
-      <div className="container mx-auto px-4 space-y-8">
-        <MovieRow title="Trending Now" movies={trending} />
-        <MovieRow title={`Popular ${mediaType === 'movie' ? 'Movies' : 'TV Shows'}`} movies={popular} />
-        <MovieRow title="Top Rated" movies={topRated} />
-        {mediaType === 'movie' && (
-          <>
-            <MovieRow title="Action & Adventure" movies={actionMovies} />
-            <MovieRow title="Comedy" movies={comedyMovies} />
-            <MovieRow title="Drama" movies={dramaMovies} />
-          </>
-        )}
-      </div>
+      {mediaType === 'movie' ? <Movies /> : <TVShows />}
     </div>
   );
 };
