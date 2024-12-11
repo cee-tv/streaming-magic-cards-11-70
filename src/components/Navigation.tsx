@@ -2,7 +2,7 @@ import { Film, Search, Tv, List } from "lucide-react";
 import { Button } from "./ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
-import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
+import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
@@ -10,12 +10,13 @@ import { tmdb } from "@/services/tmdb";
 export const Navigation = () => {
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
-  const { data: searchResults = [] } = useQuery({
-    queryKey: ["search", open],
-    queryFn: () => tmdb.search(""),
-    enabled: open,
+  const { data: searchResults = [], isLoading } = useQuery({
+    queryKey: ["search", searchQuery],
+    queryFn: () => tmdb.search(searchQuery),
+    enabled: open && searchQuery.length > 0,
   });
 
   return (
@@ -78,21 +79,27 @@ export const Navigation = () => {
 
       <CommandDialog open={open} onOpenChange={setOpen}>
         <Command>
-          <CommandInput placeholder="Search movies and TV shows..." />
-          <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup>
-            {searchResults.map((result) => (
-              <CommandItem
-                key={result.id}
-                onSelect={() => {
-                  setOpen(false);
-                  // Navigate to movie detail page when implemented
-                }}
-              >
-                {result.title}
-              </CommandItem>
-            ))}
-          </CommandGroup>
+          <CommandInput 
+            placeholder="Search movies and TV shows..." 
+            value={searchQuery}
+            onValueChange={setSearchQuery}
+          />
+          <CommandList>
+            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup>
+              {searchResults?.map((result) => (
+                <CommandItem
+                  key={result.id}
+                  onSelect={() => {
+                    setOpen(false);
+                    // Navigate to movie detail page when implemented
+                  }}
+                >
+                  {result.title}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
         </Command>
       </CommandDialog>
     </>
