@@ -15,7 +15,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (searchQuery.trim()) {
-        navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+        navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`, { replace: true });
       }
     }, 300);
 
@@ -26,8 +26,6 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-      setOpen(false);
-      setSearchQuery("");
     }
   };
 
@@ -141,7 +139,10 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
                 variant="ghost"
                 size="icon"
                 className="text-white hover:bg-white/10 h-6 w-6"
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  setSearchQuery("");
+                  setOpen(false);
+                }}
               >
                 <X className="h-3 w-3" />
               </Button>
