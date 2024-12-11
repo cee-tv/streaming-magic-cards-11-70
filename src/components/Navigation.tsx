@@ -6,14 +6,11 @@ import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, Comma
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
-import { MovieModal } from "./MovieModal";
-import { Movie } from "@/services/tmdb";
 
 export const Navigation = () => {
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const navigate = useNavigate();
 
   const { data: searchResults = [], isLoading } = useQuery({
@@ -21,28 +18,6 @@ export const Navigation = () => {
     queryFn: () => tmdb.search(searchQuery),
     enabled: open && searchQuery.length > 0,
   });
-
-  const { data: movies = [] } = useQuery({
-    queryKey: ["movies"],
-    queryFn: tmdb.getPopular,
-  });
-
-  const { data: tvShows = [] } = useQuery({
-    queryKey: ["tvShows"],
-    queryFn: tmdb.getTopRated,
-  });
-
-  const handleMovieClick = () => {
-    if (movies.length > 0) {
-      setSelectedMovie(movies[0]);
-    }
-  };
-
-  const handleTvClick = () => {
-    if (tvShows.length > 0) {
-      setSelectedMovie(tvShows[0]);
-    }
-  };
 
   return (
     <>
@@ -66,10 +41,10 @@ export const Navigation = () => {
           {isMobile ? (
             // Mobile Navigation
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" className="text-white" onClick={handleMovieClick}>
+              <Button variant="ghost" size="icon" className="text-white">
                 <Film className="h-6 w-6" />
               </Button>
-              <Button variant="ghost" size="icon" className="text-white" onClick={handleTvClick}>
+              <Button variant="ghost" size="icon" className="text-white">
                 <Tv className="h-6 w-6" />
               </Button>
               <Button variant="ghost" size="icon" className="text-white">
@@ -85,10 +60,10 @@ export const Navigation = () => {
               <Button variant="ghost" className="text-white hover:bg-white/10">
                 Home
               </Button>
-              <Button variant="ghost" className="text-white hover:bg-white/10" onClick={handleTvClick}>
+              <Button variant="ghost" className="text-white hover:bg-white/10">
                 TV Shows
               </Button>
-              <Button variant="ghost" className="text-white hover:bg-white/10" onClick={handleMovieClick}>
+              <Button variant="ghost" className="text-white hover:bg-white/10">
                 Movies
               </Button>
               <Button variant="ghost" className="text-white hover:bg-white/10">
@@ -97,59 +72,36 @@ export const Navigation = () => {
               <Button variant="ghost" className="text-white hover:bg-white/10">
                 My List
               </Button>
-              <Button variant="ghost" size="icon" className="text-white" onClick={() => setOpen(true)}>
-                <Search className="h-6 w-6" />
-              </Button>
             </div>
           )}
         </div>
       </nav>
 
-      <CommandDialog open={open} onOpenChange={setOpen} className="max-w-4xl w-full">
-        <Command className="bg-netflix-black border-none">
+      <CommandDialog open={open} onOpenChange={setOpen}>
+        <Command>
           <CommandInput 
             placeholder="Search movies and TV shows..." 
             value={searchQuery}
             onValueChange={setSearchQuery}
-            className="text-white"
           />
-          <CommandList className="max-h-[70vh]">
+          <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
               {searchResults?.map((result) => (
                 <CommandItem
                   key={result.id}
                   onSelect={() => {
-                    setSelectedMovie(result);
                     setOpen(false);
+                    // Navigate to movie detail page when implemented
                   }}
-                  className="text-white hover:bg-white/10"
                 >
-                  <div className="flex items-center gap-4">
-                    <img
-                      src={`https://image.tmdb.org/t/p/w92${result.poster_path}`}
-                      alt={result.title}
-                      className="w-12 h-18 object-cover rounded"
-                    />
-                    <div>
-                      <p className="font-semibold">{result.title}</p>
-                      <p className="text-sm text-white/60">
-                        {new Date(result.release_date).getFullYear()}
-                      </p>
-                    </div>
-                  </div>
+                  {result.title}
                 </CommandItem>
               ))}
             </CommandGroup>
           </CommandList>
         </Command>
       </CommandDialog>
-
-      <MovieModal
-        movie={selectedMovie}
-        isOpen={!!selectedMovie}
-        onClose={() => setSelectedMovie(null)}
-      />
     </>
   );
 };
