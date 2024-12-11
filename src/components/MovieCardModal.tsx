@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
 import { SeasonList } from "./SeasonList";
+import { useState } from "react";
 
 interface MovieCardModalProps {
   movie: Movie;
@@ -23,6 +24,9 @@ export const MovieCardModal = ({
   handleWatchlistToggle,
   isInWatchlist 
 }: MovieCardModalProps) => {
+  const [selectedSeason, setSelectedSeason] = useState(1);
+  const [selectedEpisode, setSelectedEpisode] = useState(1);
+
   const { data: movieDetails } = useQuery({
     queryKey: ["movie", movie.id, movie.media_type],
     queryFn: () => tmdb.getMovieDetails(movie.id, movie.media_type as 'movie' | 'tv'),
@@ -95,6 +99,10 @@ export const MovieCardModal = ({
               seasons={movieDetails.seasons}
               setShowModal={setShowModal}
               setShowPlayer={setShowPlayer}
+              onEpisodeSelect={(season, episode) => {
+                setSelectedSeason(season);
+                setSelectedEpisode(episode);
+              }}
             />
           )}
         </div>

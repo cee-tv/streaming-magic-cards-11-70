@@ -10,12 +10,17 @@ interface SeasonListProps {
   seasons: Season[];
   setShowModal: (show: boolean) => void;
   setShowPlayer: (show: boolean) => void;
+  onEpisodeSelect: (season: number, episode: number) => void;
 }
 
-export const SeasonList = ({ tvShowId, seasons, setShowModal, setShowPlayer }: SeasonListProps) => {
+export const SeasonList = ({ 
+  tvShowId, 
+  seasons, 
+  setShowModal, 
+  setShowPlayer,
+  onEpisodeSelect 
+}: SeasonListProps) => {
   const [expandedSeason, setExpandedSeason] = useState<number | null>(null);
-  const [selectedSeason, setSelectedSeason] = useState(1);
-  const [selectedEpisode, setSelectedEpisode] = useState(1);
 
   const { data: seasonDetails } = useQuery({
     queryKey: ["season", tvShowId, expandedSeason],
@@ -24,8 +29,7 @@ export const SeasonList = ({ tvShowId, seasons, setShowModal, setShowPlayer }: S
   });
 
   const handleEpisodePlay = (seasonNumber: number, episodeNumber: number) => {
-    setSelectedSeason(seasonNumber);
-    setSelectedEpisode(episodeNumber);
+    onEpisodeSelect(seasonNumber, episodeNumber);
     setShowModal(false);
     setShowPlayer(true);
   };

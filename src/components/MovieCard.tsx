@@ -15,6 +15,8 @@ interface MovieCardProps {
 export const MovieCard = ({ movie }: MovieCardProps) => {
   const [showModal, setShowModal] = useState(false);
   const [showPlayer, setShowPlayer] = useState(false);
+  const [selectedSeason, setSelectedSeason] = useState(1);
+  const [selectedEpisode, setSelectedEpisode] = useState(1);
   const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
 
   const handleWatchlistToggle = () => {
@@ -95,6 +97,8 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
         movie={movie}
         showPlayer={showPlayer}
         setShowPlayer={setShowPlayer}
+        selectedSeason={selectedSeason}
+        selectedEpisode={selectedEpisode}
       />
     </>
   );

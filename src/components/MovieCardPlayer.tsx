@@ -7,12 +7,20 @@ interface MovieCardPlayerProps {
   movie: Movie;
   showPlayer: boolean;
   setShowPlayer: (show: boolean) => void;
+  selectedSeason?: number;
+  selectedEpisode?: number;
 }
 
-export const MovieCardPlayer = ({ movie, showPlayer, setShowPlayer }: MovieCardPlayerProps) => {
+export const MovieCardPlayer = ({ 
+  movie, 
+  showPlayer, 
+  setShowPlayer,
+  selectedSeason = 1,
+  selectedEpisode = 1
+}: MovieCardPlayerProps) => {
   const embedUrl = movie.media_type === 'movie' 
     ? `https://embed.su/embed/movie/${movie.id}`
-    : `https://embed.su/embed/tv/${movie.id}/1/1`;
+    : `https://embed.su/embed/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
 
   return (
     <Dialog open={showPlayer} onOpenChange={setShowPlayer}>
