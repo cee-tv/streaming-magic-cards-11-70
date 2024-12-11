@@ -10,7 +10,7 @@ const SearchPage = () => {
 
   const { data: searchResults = [], isLoading } = useQuery({
     queryKey: ["search", query],
-    queryFn: () => tmdb.search(query),
+    queryFn: () => tmdb.searchMulti(query),
     enabled: query.length > 0,
   });
 

@@ -1,8 +1,6 @@
 import { Movie, MovieDetails } from "@/types";
 
-const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-const TMDB_ACCESS_TOKEN = import.meta.env.VITE_TMDB_ACCESS_TOKEN;
-const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+const TMDB_ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTljY2JkNDViNmY1MTJjN2E0YWZmMjZlNDMwMGJkOSIsInN1YiI6IjY1ZTY0ZDY4YzYxM2NlMDE4NjE2NmQ5MiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.O9eKqhzT9I-KKsxY5qKcpXBqXVDrD8-7DV3SJd2BJ8M";
 
 const headers = {
   Authorization: `Bearer ${TMDB_ACCESS_TOKEN}`,
@@ -12,50 +10,41 @@ const headers = {
 export const tmdb = {
   getTrending: async (mediaType: string): Promise<Movie[]> => {
     const response = await fetch(
-      `${TMDB_BASE_URL}/trending/${mediaType}/week?api_key=${TMDB_API_KEY}`,
+      `https://api.themoviedb.org/3/trending/${mediaType}/week`,
       { headers }
     );
     const data = await response.json();
     return data.results;
   },
 
-  getMovieDetails: async (id: string): Promise<MovieDetails> => {
+  getMovieDetails: async (id: number): Promise<MovieDetails> => {
     const response = await fetch(
-      `${TMDB_BASE_URL}/movie/${id}?api_key=${TMDB_API_KEY}&append_to_response=videos`,
+      `https://api.themoviedb.org/3/movie/${id}?append_to_response=videos`,
       { headers }
     );
     return await response.json();
   },
 
-  getTVShowDetails: async (id: string): Promise<MovieDetails> => {
+  getTVShowDetails: async (id: number): Promise<MovieDetails> => {
     const response = await fetch(
-      `${TMDB_BASE_URL}/tv/${id}?api_key=${TMDB_API_KEY}&append_to_response=videos`,
+      `https://api.themoviedb.org/3/tv/${id}?append_to_response=videos`,
       { headers }
     );
     return await response.json();
   },
 
-  getPopular: async (mediaType: string): Promise<Movie[]> => {
+  getPopularMovies: async (): Promise<Movie[]> => {
     const response = await fetch(
-      `${TMDB_BASE_URL}/${mediaType}/popular?api_key=${TMDB_API_KEY}`,
+      `https://api.themoviedb.org/3/movie/popular`,
       { headers }
     );
     const data = await response.json();
     return data.results;
   },
 
-  getTopRated: async (mediaType: string): Promise<Movie[]> => {
+  getPopularTVShows: async (): Promise<Movie[]> => {
     const response = await fetch(
-      `${TMDB_BASE_URL}/${mediaType}/top_rated?api_key=${TMDB_API_KEY}`,
-      { headers }
-    );
-    const data = await response.json();
-    return data.results;
-  },
-
-  getByGenre: async (mediaType: string, genreId: number): Promise<Movie[]> => {
-    const response = await fetch(
-      `${TMDB_BASE_URL}/discover/${mediaType}?api_key=${TMDB_API_KEY}&with_genres=${genreId}`,
+      `https://api.themoviedb.org/3/tv/popular`,
       { headers }
     );
     const data = await response.json();
@@ -64,7 +53,7 @@ export const tmdb = {
 
   searchMulti: async (query: string): Promise<Movie[]> => {
     const response = await fetch(
-      `${TMDB_BASE_URL}/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}`,
+      `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(query)}`,
       { headers }
     );
     const data = await response.json();
@@ -74,13 +63,11 @@ export const tmdb = {
   getTrailerKey: (videos: MovieDetails['videos']): string | null => {
     if (!videos?.results) return null;
     
-    // First try to find a YouTube trailer
     const youtubeTrailer = videos.results.find(
       video => video.site === 'YouTube' && video.type === 'Trailer'
     );
     if (youtubeTrailer) return youtubeTrailer.key;
 
-    // If no trailer, try to find any YouTube video
     const youtubeVideo = videos.results.find(
       video => video.site === 'YouTube'
     );
@@ -89,5 +76,3 @@ export const tmdb = {
     return null;
   }
 };
-
-export type { Movie, MovieDetails };
