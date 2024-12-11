@@ -37,8 +37,7 @@ const IPTVPage = () => {
         <IPTVPlayer
           isOpen={!!selectedChannel}
           onClose={() => setSelectedChannel(null)}
-          streamUrl={selectedChannel.streamUrl}
-          channelName={selectedChannel.name}
+          channel={selectedChannel}
         />
       )}
     </div>

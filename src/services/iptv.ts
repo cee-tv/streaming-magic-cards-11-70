@@ -4,27 +4,40 @@ export interface IPTVChannel {
   logo: string;
   streamUrl: string;
   category: string;
+  drmConfig?: {
+    licenseUrl: string;
+    clearkey: string;
+  };
 }
 
 const categories = [
-  "Sports",
-  "News",
-  "Entertainment",
+  "Local TV",
   "Movies",
-  "Kids"
+  "Entertainment",
+  "News",
+  "Sports"
 ];
 
-// Simulated IPTV data - replace with your actual IPTV data source
 const channels: IPTVChannel[] = [
-  // Add your channel data here
   {
     id: "1",
-    name: "Sports Channel",
-    logo: "/placeholder.svg",
-    streamUrl: "your-stream-url",
-    category: "Sports"
+    name: "TV5",
+    logo: "/placeholder.svg", // Replace with actual TV5 logo URL
+    streamUrl: "https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/tv5_hd.mpd",
+    category: "Local TV",
+    drmConfig: {
+      licenseUrl: "https://clearkey-base64-2-hex-json.herokuapp.com/api/",
+      clearkey: "2615129ef2c846a9bbd43a641c7303ef:07c7f996b1734ea288641a68e1cfdc4d"
+    }
   },
-  // ... more channels
+  {
+    id: "2",
+    name: "Cinema One",
+    logo: "/placeholder.svg", // Replace with actual Cinema One logo URL
+    streamUrl: "https://cinemaone-abscbn-ono.amagi.tv/index_3.m3u8",
+    category: "Movies"
+  },
+  // Add more channels here as needed
 ];
 
 export const iptvService = {

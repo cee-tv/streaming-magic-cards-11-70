@@ -1,6 +1,5 @@
 import { IPTVChannel } from "@/services/iptv";
 import { Card } from "./ui/card";
-import Image from "next/image";
 
 interface IPTVCardProps {
   channel: IPTVChannel;
