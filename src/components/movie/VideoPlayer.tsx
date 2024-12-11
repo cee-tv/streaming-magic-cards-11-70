@@ -9,10 +9,54 @@ interface VideoPlayerProps {
   title: string;
   embedUrl: string;
   multiEmbedUrl: string;
+  movieId: string | number;
+  mediaType: 'movie' | 'tv';
+  season?: number;
+  episode?: number;
 }
 
-export const VideoPlayer = ({ isOpen, onClose, title, embedUrl, multiEmbedUrl }: VideoPlayerProps) => {
-  const [currentProvider, setCurrentProvider] = useState<'embed' | 'multiembed'>('embed');
+export const VideoPlayer = ({ 
+  isOpen, 
+  onClose, 
+  title, 
+  embedUrl, 
+  multiEmbedUrl,
+  movieId,
+  mediaType,
+  season,
+  episode
+}: VideoPlayerProps) => {
+  const [currentProvider, setCurrentProvider] = useState<'embed' | 'multiembed' | 'vidsrc'>('embed');
+
+  const getVidsrcUrl = () => {
+    if (mediaType === 'movie') {
+      return `https://vidsrc.to/embed/movie/${movieId}`;
+    }
+    return `https://vidsrc.to/embed/tv/${movieId}/${season}/${episode}`;
+  };
+
+  const getCurrentUrl = () => {
+    switch (currentProvider) {
+      case 'embed':
+        return embedUrl;
+      case 'multiembed':
+        return multiEmbedUrl;
+      case 'vidsrc':
+        return getVidsrcUrl();
+      default:
+        return embedUrl;
+    }
+  };
+
+  const switchProvider = () => {
+    if (currentProvider === 'embed') {
+      setCurrentProvider('multiembed');
+    } else if (currentProvider === 'multiembed') {
+      setCurrentProvider('vidsrc');
+    } else {
+      setCurrentProvider('embed');
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -23,9 +67,9 @@ export const VideoPlayer = ({ isOpen, onClose, title, embedUrl, multiEmbedUrl }:
           <Button
             variant="ghost"
             className="text-white hover:bg-white/20"
-            onClick={() => setCurrentProvider(currentProvider === 'embed' ? 'multiembed' : 'embed')}
+            onClick={switchProvider}
           >
-            Switch Provider
+            Switch Provider ({currentProvider})
           </Button>
           <Button
             variant="ghost"
@@ -39,7 +83,7 @@ export const VideoPlayer = ({ isOpen, onClose, title, embedUrl, multiEmbedUrl }:
         </div>
         <iframe
           className="w-full h-full"
-          src={currentProvider === 'embed' ? embedUrl : multiEmbedUrl}
+          src={getCurrentUrl()}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         />

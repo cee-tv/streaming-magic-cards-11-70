@@ -176,6 +176,10 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
         title={movie.title || movie.name}
         embedUrl={embedUrl}
         multiEmbedUrl={multiEmbedUrl}
+        movieId={movie.id}
+        mediaType={movie.media_type as 'movie' | 'tv'}
+        season={selectedSeason}
+        episode={selectedEpisode}
       />
     </>
   );

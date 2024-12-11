@@ -22,6 +22,7 @@ export const Hero = ({ movie }: HeroProps) => {
   });
 
   const trailerKey = movieDetails?.videos ? tmdb.getTrailerKey(movieDetails.videos) : null;
+
   const embedUrl = movie.media_type === 'movie' 
     ? `https://embed.su/embed/movie/${movie.id}`
     : `https://embed.su/embed/tv/${movie.id}/1/1`;
@@ -107,12 +108,17 @@ export const Hero = ({ movie }: HeroProps) => {
       </Dialog>
 
       {/* Video Player */}
+
       <VideoPlayer
         isOpen={showPlayer}
         onClose={() => setShowPlayer(false)}
         title={movie.title || movie.name}
         embedUrl={embedUrl}
         multiEmbedUrl={multiEmbedUrl}
+        movieId={movie.id}
+        mediaType={movie.media_type as 'movie' | 'tv'}
+        season={1}
+        episode={1}
       />
     </>
   );
