@@ -1,4 +1,4 @@
-import { Film, Search, Tv, Bookmark } from "lucide-react";
+import { Film, Search, Tv, Bookmark, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
@@ -25,8 +25,12 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
 
   return (
     <>
-      <nav className="fixed top-0 w-full z-50 bg-gradient-to-b from-black/80 to-transparent px-4 py-2">
-        <div className="flex items-center justify-between">
+      <nav className="fixed top-0 w-full z-50 transition-all duration-300" 
+           style={{
+             background: 'linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 50%, transparent 100%)',
+             backdropFilter: 'blur(5px)'
+           }}>
+        <div className="flex items-center justify-between px-4 py-2">
           <div className="flex items-center">
             <svg
               viewBox="0 0 111 30"
@@ -46,7 +50,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className={`text-white ${isActive('/movies') ? 'bg-white/20' : ''}`}
+                className={`text-white hover:bg-white/10 ${isActive('/movies') ? 'bg-white/20' : ''}`}
                 onClick={() => navigate('/movies')}
               >
                 <Film className="h-6 w-6" />
@@ -54,7 +58,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className={`text-white ${isActive('/tv') ? 'bg-white/20' : ''}`}
+                className={`text-white hover:bg-white/10 ${isActive('/tv') ? 'bg-white/20' : ''}`}
                 onClick={() => navigate('/tv')}
               >
                 <Tv className="h-6 w-6" />
@@ -62,7 +66,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className={`text-white ${isActive('/watchlist') ? 'bg-white/20' : ''}`}
+                className={`text-white hover:bg-white/10 ${isActive('/watchlist') ? 'bg-white/20' : ''}`}
                 onClick={() => navigate('/watchlist')}
               >
                 <Bookmark className="h-6 w-6" />
@@ -70,7 +74,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="text-white" 
+                className="text-white hover:bg-white/10" 
                 onClick={() => setOpen(true)}
               >
                 <Search className="h-6 w-6" />
@@ -114,19 +118,30 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
       </nav>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-5xl h-[90vh] p-0 bg-netflix-black/90">
-          <div className="p-4">
-            <div className="flex items-center justify-between mb-4">
-              <input
-                type="text"
-                placeholder="Search movies and TV shows..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-transparent text-2xl text-white border-none outline-none"
-                autoFocus
-              />
+        <DialogContent className="max-w-full h-screen p-0 bg-netflix-black/95">
+          <div className="p-6 h-full">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex-1 flex items-center gap-4">
+                <Search className="h-6 w-6 text-white" />
+                <input
+                  type="text"
+                  placeholder="Search movies and TV shows..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-transparent text-3xl text-white border-none outline-none placeholder:text-gray-400"
+                  autoFocus
+                />
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-white hover:bg-white/10"
+                onClick={() => setOpen(false)}
+              >
+                <X className="h-6 w-6" />
+              </Button>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 overflow-y-auto max-h-[calc(90vh-100px)]">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 overflow-y-auto max-h-[calc(100vh-200px)]">
               {searchResults?.map((result) => (
                 <MovieCard key={result.id} movie={result} />
               ))}
