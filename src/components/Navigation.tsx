@@ -76,7 +76,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="text-white hover:bg-white/10" 
+                className={`text-white hover:bg-white/10 ${showSearch ? 'bg-white/20' : ''}`}
                 onClick={() => setShowSearch(!showSearch)}
               >
                 <Search className="h-6 w-6" />
@@ -108,7 +108,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
               </Button>
               <Button 
                 variant="ghost" 
-                className="text-white hover:bg-white/10"
+                className={`text-white hover:bg-white/10 ${showSearch ? 'bg-white/20' : ''}`}
                 onClick={() => setShowSearch(!showSearch)}
               >
                 <Search className="h-4 w-4 mr-2" />
@@ -118,13 +118,13 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
           )}
           
           {showSearch && (
-            <form onSubmit={handleSearch} className="relative">
+            <form onSubmit={handleSearch} className="absolute mt-12 right-4">
               <input
                 type="text"
                 placeholder="Search movies and TV shows..."
                 value={searchQuery}
                 onChange={handleSearchInputChange}
-                className="w-48 h-8 bg-black/50 text-sm text-white border border-white/20 rounded-md px-2 py-1 focus:outline-none focus:border-white/40"
+                className="w-40 h-8 bg-black/50 text-sm text-white border border-white/20 rounded-md px-2 py-1 focus:outline-none focus:border-white/40"
                 autoFocus
               />
             </form>
