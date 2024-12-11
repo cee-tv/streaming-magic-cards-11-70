@@ -1,7 +1,7 @@
 import { Film, Search, Tv, Bookmark, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Dialog, DialogContent } from "./ui/dialog";
 
@@ -11,6 +11,16 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (searchQuery.trim()) {
+        navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`, { replace: true });
+      }
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, navigate]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,8 +35,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
     <>
       <nav className="fixed top-0 w-full z-50 transition-all duration-300" 
            style={{
-             background: 'linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 50%, transparent 100%)',
-             backdropFilter: 'blur(5px)'
+             background: 'linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 50%, transparent 100%)'
            }}>
         <div className="flex items-center justify-between px-4 py-2">
           <div className="flex items-center">
@@ -43,80 +52,76 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
             </svg>
           </div>
 
-          {isMobile ? (
-            <div className="flex items-center gap-2">
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className={`text-white hover:bg-white/10 ${isActive('/movies') ? 'bg-white/20' : ''}`}
-                onClick={() => navigate('/movies')}
-              >
-                <Film className="h-5 w-5" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className={`text-white hover:bg-white/10 ${isActive('/tv') ? 'bg-white/20' : ''}`}
-                onClick={() => navigate('/tv')}
-              >
-                <Tv className="h-5 w-5" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className={`text-white hover:bg-white/10 ${isActive('/watchlist') ? 'bg-white/20' : ''}`}
-                onClick={() => navigate('/watchlist')}
-              >
-                <Bookmark className="h-5 w-5" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="text-white hover:bg-white/10" 
-                onClick={() => setOpen(true)}
-              >
-                <Search className="h-5 w-5" />
-              </Button>
-            </div>
-          ) : (
-            <div className="flex items-center gap-4">
-              <Button 
-                variant="ghost" 
-                className={`text-white hover:bg-white/10 h-8 px-3 text-sm ${isActive('/movies') ? 'bg-white/20' : ''}`}
-                onClick={() => navigate('/movies')}
-              >
-                Movies
-              </Button>
-              <Button 
-                variant="ghost" 
-                className={`text-white hover:bg-white/10 h-8 px-3 text-sm ${isActive('/tv') ? 'bg-white/20' : ''}`}
-                onClick={() => navigate('/tv')}
-              >
-                TV Shows
-              </Button>
-              <Button 
-                variant="ghost" 
-                className={`text-white hover:bg-white/10 h-8 px-3 text-sm ${isActive('/watchlist') ? 'bg-white/20' : ''}`}
-                onClick={() => navigate('/watchlist')}
-              >
-                <Bookmark className="h-4 w-4 mr-1" />
-                Watchlist
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="text-white hover:bg-white/10 h-8 px-3 text-sm"
-                onClick={() => setOpen(true)}
-              >
-                <Search className="h-4 w-4 mr-1" />
-                Search
-              </Button>
-            </div>
-          )}
+          <div className="flex items-center gap-4">
+            {!isMobile && (
+              <>
+                <Button 
+                  variant="ghost" 
+                  className={`text-white hover:bg-white/10 h-8 px-3 text-sm ${isActive('/movies') ? 'bg-white/20' : ''}`}
+                  onClick={() => navigate('/movies')}
+                >
+                  Movies
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className={`text-white hover:bg-white/10 h-8 px-3 text-sm ${isActive('/tv') ? 'bg-white/20' : ''}`}
+                  onClick={() => navigate('/tv')}
+                >
+                  TV Shows
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className={`text-white hover:bg-white/10 h-8 px-3 text-sm ${isActive('/watchlist') ? 'bg-white/20' : ''}`}
+                  onClick={() => navigate('/watchlist')}
+                >
+                  <Bookmark className="h-4 w-4 mr-1" />
+                  Watchlist
+                </Button>
+              </>
+            )}
+            {isMobile && (
+              <>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className={`text-white hover:bg-white/10 ${isActive('/movies') ? 'bg-white/20' : ''}`}
+                  onClick={() => navigate('/movies')}
+                >
+                  <Film className="h-5 w-5" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className={`text-white hover:bg-white/10 ${isActive('/tv') ? 'bg-white/20' : ''}`}
+                  onClick={() => navigate('/tv')}
+                >
+                  <Tv className="h-5 w-5" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className={`text-white hover:bg-white/10 ${isActive('/watchlist') ? 'bg-white/20' : ''}`}
+                  onClick={() => navigate('/watchlist')}
+                >
+                  <Bookmark className="h-5 w-5" />
+                </Button>
+              </>
+            )}
+            <Button 
+              variant="ghost" 
+              size={isMobile ? "icon" : "default"}
+              className="text-white hover:bg-white/10 h-8 px-3 text-sm"
+              onClick={() => setOpen(true)}
+            >
+              <Search className={`${isMobile ? 'h-5 w-5' : 'h-4 w-4 mr-1'}`} />
+              {!isMobile && "Search"}
+            </Button>
+          </div>
         </div>
       </nav>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-[300px] absolute right-0 top-16 mx-4 p-0">
+        <DialogContent className="max-w-[300px] mx-auto h-auto p-0 bg-transparent fixed right-4 top-16">
           <div className="p-3">
             <form onSubmit={handleSearch} className="flex items-center justify-between">
               <div className="flex-1 flex items-center gap-2">
@@ -134,7 +139,10 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
                 variant="ghost"
                 size="icon"
                 className="text-white hover:bg-white/10 h-6 w-6"
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  setSearchQuery("");
+                  setOpen(false);
+                }}
               >
                 <X className="h-3 w-3" />
               </Button>

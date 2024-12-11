@@ -1,153 +1,218 @@
+import { Movie } from "@/services/tmdb";
+import { Play, ChevronDown, X, Plus, Check } from "lucide-react";
 import { useState } from "react";
-import { Movie, MovieDetails, tmdb } from "@/services/tmdb";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { useQuery } from "@tanstack/react-query";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dialog";
 import { Button } from "./ui/button";
-import { Play, Plus } from "lucide-react";
-import { useToast } from "./ui/use-toast";
+import { useQuery } from "@tanstack/react-query";
+import { tmdb } from "@/services/tmdb";
 import { useWatchlist } from "@/contexts/WatchlistContext";
+import { toast } from "sonner";
 
 interface MovieCardProps {
   movie: Movie;
 }
 
 export const MovieCard = ({ movie }: MovieCardProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { toast } = useToast();
+  const [showModal, setShowModal] = useState(false);
+  const [showPlayer, setShowPlayer] = useState(false);
+  const [selectedSeason, setSelectedSeason] = useState(1);
+  const [selectedEpisode, setSelectedEpisode] = useState(1);
   const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
 
   const { data: movieDetails } = useQuery({
-    queryKey: ["movie", movie.id],
+    queryKey: ["movie", movie.id, movie.media_type],
     queryFn: () => tmdb.getMovieDetails(movie.id, movie.media_type as 'movie' | 'tv'),
-    enabled: isOpen,
+    enabled: showModal || showPlayer,
   });
 
-  const handleWatchlistClick = () => {
+  const trailerKey = movieDetails?.videos ? tmdb.getTrailerKey(movieDetails.videos) : null;
+  const embedUrl = movie.media_type === 'movie' 
+    ? `https://embed.su/embed/movie/${movie.id}`
+    : `https://embed.su/embed/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
+
+  const handleWatchlistToggle = () => {
     if (isInWatchlist(movie.id)) {
       removeFromWatchlist(movie.id);
-      toast({
-        title: "Removed from watchlist",
-        description: `${movie.title || movie.name} has been removed from your watchlist.`,
-      });
+      toast.success("Removed from watchlist");
     } else {
       addToWatchlist(movie);
-      toast({
-        title: "Added to watchlist",
-        description: `${movie.title || movie.name} has been added to your watchlist.`,
-      });
+      toast.success("Added to watchlist");
     }
   };
 
-  const trailerKey = movieDetails?.videos?.results?.find(
-    (video) => video.type === "Trailer"
-  )?.key;
-
   return (
     <>
-      <div
-        className="relative group cursor-pointer"
-        onClick={() => setIsOpen(true)}
-      >
-        <div className="relative aspect-[2/3] rounded-md overflow-hidden">
-          <img
-            src={
-              movie.poster_path
-                ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                : "/placeholder.svg"
-            }
-            alt={movie.title || movie.name}
-            className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-            <Play className="w-12 h-12 text-white" />
+      <div className="relative group cursor-pointer">
+        <img
+          src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+          alt={movie.title || movie.name}
+          className="rounded-md transition-transform duration-300 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md">
+          <div className="absolute inset-0 flex flex-col justify-between p-3 md:p-4">
+            <h3 className="text-white font-bold text-xs md:text-sm line-clamp-2">
+              {movie.title || movie.name}
+            </h3>
+            <div className="flex items-center gap-2">
+              <Button 
+                size="icon" 
+                className="rounded-full bg-white hover:bg-white/90 text-black h-8 w-8 md:h-10 md:w-10"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowPlayer(true);
+                }}
+              >
+                <Play className="h-4 w-4" />
+              </Button>
+              <Button 
+                size="icon" 
+                variant="outline" 
+                className="rounded-full border-white hover:border-white bg-black/30 h-8 w-8 md:h-10 md:w-10"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowModal(true);
+                }}
+              >
+                <ChevronDown className="h-4 w-4 text-white" />
+              </Button>
+              <Button
+                size="icon"
+                variant="outline"
+                className="rounded-full border-white hover:border-white bg-black/30 h-8 w-8 md:h-10 md:w-10"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleWatchlistToggle();
+                }}
+              >
+                {isInWatchlist(movie.id) ? (
+                  <Check className="h-4 w-4 text-white" />
+                ) : (
+                  <Plus className="h-4 w-4 text-white" />
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          {movieDetails && (
-            <>
-              <DialogHeader>
-                <DialogTitle className="text-2xl font-bold">
-                  {movie.title || movie.name}
-                </DialogTitle>
-                <DialogDescription className="text-lg">
-                  {movieDetails.overview}
-                </DialogDescription>
-              </DialogHeader>
-
-              <div className="space-y-4">
-                {trailerKey && (
-                  <div className="aspect-video">
-                    <iframe
-                      width="100%"
-                      height="100%"
-                      src={`https://www.youtube.com/embed/${trailerKey}`}
-                      title="Trailer"
-                      allowFullScreen
-                      className="rounded-lg"
-                    />
-                  </div>
-                )}
-
-                <div className="flex gap-2">
-                  {trailerKey && (
-                    <Button className="flex items-center gap-2">
-                      <Play className="w-4 h-4" /> Play
-                    </Button>
-                  )}
-                  <Button
-                    variant="outline"
-                    className="flex items-center gap-2"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleWatchlistClick();
-                    }}
-                  >
-                    <Plus className="w-4 h-4" />
-                    {isInWatchlist(movie.id)
-                      ? "Remove from Watchlist"
-                      : "Add to Watchlist"}
-                  </Button>
-                </div>
-
-                {movie.media_type === "tv" && movieDetails?.seasons && (
-                  <div className="mt-4">
-                    <h3 className="text-xl font-semibold mb-2">Seasons</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                      {movieDetails.seasons.map((season) => (
-                        <div
-                          key={season.id}
-                          className="bg-black/20 p-4 rounded-lg"
-                        >
-                          <img
-                            src={
-                              season.poster_path
-                                ? `https://image.tmdb.org/t/p/w200${season.poster_path}`
-                                : "/placeholder.svg"
-                            }
-                            alt={season.name}
-                            className="w-full h-auto rounded-md mb-2"
-                          />
-                          <h4 className="font-medium">{season.name}</h4>
-                          <p className="text-sm text-gray-400">
-                            {season.episode_count} episodes
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </>
+      {/* More Info Modal */}
+      <Dialog open={showModal} onOpenChange={setShowModal}>
+        <DialogContent className="max-w-3xl h-[70vh] p-0 bg-black overflow-y-auto">
+          <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
+          <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute right-4 top-4 z-50 text-white hover:bg-white/20"
+            onClick={() => setShowModal(false)}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+          {trailerKey ? (
+            <iframe
+              className="w-full aspect-video"
+              src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          ) : (
+            <div className="w-full aspect-video bg-gray-900 flex items-center justify-center">
+              <p className="text-white">No trailer available</p>
+            </div>
           )}
+          <div className="p-6">
+            <div className="flex items-center gap-4 mb-6">
+              <Button 
+                className="rounded-full bg-white hover:bg-white/90 text-black"
+                onClick={() => {
+                  setShowModal(false);
+                  setShowPlayer(true);
+                }}
+              >
+                <Play className="h-4 w-4 mr-2" />
+                Play
+              </Button>
+              <Button
+                variant="outline"
+                className="rounded-full border-white hover:border-white bg-black/30 text-white"
+                onClick={handleWatchlistToggle}
+              >
+                {isInWatchlist(movie.id) ? (
+                  <>
+                    <Check className="h-4 w-4 mr-2" />
+                    Remove from Watchlist
+                  </>
+                ) : (
+                  <>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add to Watchlist
+                  </>
+                )}
+              </Button>
+            </div>
+            <h2 className="text-2xl font-bold mb-4 text-white">{movie.title || movie.name}</h2>
+            <p className="text-gray-400 mb-6">{movie.overview}</p>
+
+            {movie.media_type === 'tv' && movieDetails?.seasons && (
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold text-white">Seasons</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {movieDetails.seasons.map((season) => (
+                    <div key={season.id} className="bg-gray-900 rounded-lg p-4">
+                      <div className="flex gap-4">
+                        {season.poster_path && (
+                          <img
+                            src={`https://image.tmdb.org/t/p/w200${season.poster_path}`}
+                            alt={season.name}
+                            className="w-24 h-36 object-cover rounded"
+                          />
+                        )}
+                        <div>
+                          <h4 className="text-white font-semibold">{season.name}</h4>
+                          <p className="text-gray-400 text-sm">{season.episode_count} episodes</p>
+                          <Button
+                            variant="ghost"
+                            className="mt-2 text-white hover:bg-white/10"
+                            onClick={() => {
+                              setSelectedSeason(season.season_number);
+                              setSelectedEpisode(1);
+                              setShowModal(false);
+                              setShowPlayer(true);
+                            }}
+                          >
+                            <Play className="h-4 w-4 mr-2" />
+                            Play
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Fullscreen Player Modal */}
+      <Dialog open={showPlayer} onOpenChange={setShowPlayer}>
+        <DialogContent className="max-w-none w-screen h-screen p-0 bg-black">
+          <DialogTitle className="sr-only">Play {movie.title || movie.name}</DialogTitle>
+          <DialogDescription className="sr-only">Video player for {movie.title || movie.name}</DialogDescription>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute right-4 top-4 z-50 text-white hover:bg-white/20"
+            onClick={() => setShowPlayer(false)}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+          <iframe
+            className="w-full h-full"
+            src={embedUrl}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
         </DialogContent>
       </Dialog>
     </>

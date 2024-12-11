@@ -35,7 +35,7 @@ export interface MovieDetails extends Movie {
       type: string;
     }>;
   };
-  seasons?: Season[];  // Added seasons property as optional since it only exists for TV shows
+  seasons?: Season[];  // Added seasons as optional property for TV shows
 }
 
 export const tmdb = {
