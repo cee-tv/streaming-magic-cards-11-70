@@ -37,8 +37,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
     <>
       <nav className="fixed top-0 w-full z-50 transition-all duration-300" 
            style={{
-             background: 'linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 50%, transparent 100%)',
-             backdropFilter: 'blur(5px)'
+             background: 'linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 50%, transparent 100%)'
            }}>
         <div className="flex items-center justify-between px-4 py-2">
           <div className="flex items-center">
@@ -124,7 +123,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
       </nav>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-sm mx-auto h-auto p-0 bg-netflix-black/95 fixed right-4 top-16">
+        <DialogContent className="max-w-[300px] mx-auto h-auto p-0 bg-black/80 fixed right-4 top-16">
           <div className="p-3">
             <form onSubmit={handleSearch} className="flex items-center justify-between">
               <div className="flex-1 flex items-center gap-2">
