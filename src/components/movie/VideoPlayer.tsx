@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { X } from "lucide-react";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "../ui/dialog";
 import { useState } from "react";
@@ -19,22 +19,22 @@ export const VideoPlayer = ({ isOpen, onClose, title, embedUrl, multiEmbedUrl }:
       <DialogContent className="max-w-none w-screen h-screen p-0 bg-black">
         <DialogTitle className="sr-only">Play {title}</DialogTitle>
         <DialogDescription className="sr-only">Video player for {title}</DialogDescription>
-        <div className="absolute left-4 top-4 z-50 flex gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-white hover:bg-white/20"
-            onClick={onClose}
-          >
-            <ArrowLeft className="h-4 w-4" />
-            <span className="sr-only">Return</span>
-          </Button>
+        <div className="absolute right-4 top-4 z-50 flex gap-2">
           <Button
             variant="ghost"
             className="text-white hover:bg-white/20"
             onClick={() => setCurrentProvider(currentProvider === 'embed' ? 'multiembed' : 'embed')}
           >
             Switch Provider
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-white hover:bg-white/20"
+            onClick={onClose}
+          >
+            <X className="h-6 w-6" />
+            <span className="sr-only">Close</span>
           </Button>
         </div>
         <iframe
