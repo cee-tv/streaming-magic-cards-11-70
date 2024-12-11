@@ -49,6 +49,8 @@ const IPTVPage = () => {
 
   useEffect(() => {
     if (window.jwplayer && !jwPlayer) {
+      // Set JW Player key
+      window.jwplayer.key = 'XSuP4qMl+9tK17QNb+4+th2Pm9AWgMO/cYH8CI0HGGr7bdjo';
       const player = window.jwplayer("jwplayer-container");
       setJwPlayer(player);
     }
@@ -56,8 +58,6 @@ const IPTVPage = () => {
 
   useEffect(() => {
     if (jwPlayer && selectedChannel) {
-      const clearKeyString = `${selectedChannel.drmConfig?.keyId}:${selectedChannel.drmConfig?.key}`;
-      
       const playerConfig = {
         width: "100%",
         height: "100%",
@@ -72,7 +72,7 @@ const IPTVPage = () => {
             key: selectedChannel.drmConfig?.key
           }
         },
-        // Add player controls and UI customization
+        // Player controls and UI customization
         skin: {
           name: "netflix"
         },
@@ -81,7 +81,24 @@ const IPTVPage = () => {
         displaytitle: true,
         displaydescription: true,
         playbackRateControls: true,
-        repeat: false
+        repeat: false,
+        // Additional control settings
+        controlbar: {
+          volumetooltip: true,
+          elements: [
+            "play",
+            "progress",
+            "current",
+            "duration",
+            "mute",
+            "volume",
+            "fullscreen"
+          ]
+        },
+        // Improved visualization
+        visualization: {
+          effect: "bars"
+        }
       };
 
       console.log("Setting up player with config:", playerConfig);
@@ -99,7 +116,7 @@ const IPTVPage = () => {
       
       <div className="container mx-auto px-4 py-8">
         {/* JW Player Container */}
-        <div className="w-full aspect-video bg-black mb-8 rounded-lg overflow-hidden">
+        <div className="w-full aspect-video bg-black mb-8 rounded-lg overflow-hidden shadow-lg">
           <div id="jwplayer-container"></div>
         </div>
 
