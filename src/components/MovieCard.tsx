@@ -24,7 +24,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
 
   const { data: movieDetails } = useQuery({
     queryKey: ["movie", movie.id],
-    queryFn: () => tmdb.getDetails(movie.id, movie.media_type),
+    queryFn: () => tmdb.getMovieDetails(movie.id, movie.media_type as 'movie' | 'tv'),
     enabled: isOpen,
   });
 
