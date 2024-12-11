@@ -8,21 +8,20 @@ import { Button } from "./ui/button";
 
 interface HeroProps {
   movie: Movie;
-  mediaType?: 'movie' | 'tv';
 }
 
-export const Hero = ({ movie, mediaType = 'movie' }: HeroProps) => {
+export const Hero = ({ movie }: HeroProps) => {
   const [showModal, setShowModal] = useState(false);
   const [showPlayer, setShowPlayer] = useState(false);
 
   const { data: movieDetails } = useQuery({
-    queryKey: ["movie", movie.id, mediaType],
-    queryFn: () => tmdb.getMovieDetails(movie.id, mediaType),
+    queryKey: ["movie", movie.id, movie.media_type],
+    queryFn: () => tmdb.getMovieDetails(movie.id, movie.media_type as 'movie' | 'tv'),
     enabled: showModal || showPlayer,
   });
 
   const trailerKey = movieDetails?.videos ? tmdb.getTrailerKey(movieDetails.videos) : null;
-  const embedUrl = mediaType === 'movie' 
+  const embedUrl = movie.media_type === 'movie' 
     ? `https://embed.su/embed/movie/${movie.id}`
     : `https://embed.su/embed/tv/${movie.id}/1/1`; // Default to S01E01 for TV shows
 

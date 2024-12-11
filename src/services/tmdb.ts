@@ -16,7 +16,7 @@ export interface Movie {
   vote_average: number;
   release_date: string;
   first_air_date?: string; // For TV shows
-  media_type?: string;
+  media_type: string;
 }
 
 export interface MovieDetails extends Movie {
@@ -35,7 +35,7 @@ export const tmdb = {
     const data = await response.json();
     return data.results.map((item: Movie) => ({
       ...item,
-      media_type: mediaType
+      media_type: item.media_type || mediaType // Use existing media_type if available
     }));
   },
 
@@ -44,7 +44,7 @@ export const tmdb = {
     const data = await response.json();
     return data.results.map((item: Movie) => ({
       ...item,
-      media_type: mediaType
+      media_type: item.media_type || mediaType
     }));
   },
 
@@ -53,7 +53,7 @@ export const tmdb = {
     const data = await response.json();
     return data.results.map((item: Movie) => ({
       ...item,
-      media_type: mediaType
+      media_type: item.media_type || mediaType
     }));
   },
 
@@ -70,28 +70,49 @@ export const tmdb = {
   },
 
   getMovieDetails: async (id: number, mediaType: 'movie' | 'tv' = 'movie'): Promise<MovieDetails> => {
-    console.log(`Fetching details for ${mediaType} with ID ${id}`); // Debug log
-    const response = await fetch(
-      `${BASE_URL}/${mediaType}/${id}?append_to_response=videos`,
-      { headers }
-    );
-    if (!response.ok) {
+    console.log(`Fetching details for ${mediaType} with ID ${id}`);
+    
+    // First try with the provided media type
+    try {
+      const response = await fetch(
+        `${BASE_URL}/${mediaType}/${id}?append_to_response=videos`,
+        { headers }
+      );
+      
+      if (response.ok) {
+        const data = await response.json();
+        return {
+          ...data,
+          media_type: mediaType
+        };
+      }
+      
       // If the first attempt fails, try the other media type
       const otherType = mediaType === 'movie' ? 'tv' : 'movie';
-      console.log(`Retrying with ${otherType} type`); // Debug log
+      console.log(`Retrying with ${otherType} type`);
+      
       const retryResponse = await fetch(
         `${BASE_URL}/${otherType}/${id}?append_to_response=videos`,
         { headers }
       );
-      if (!retryResponse.ok) {
-        throw new Error(`Failed to fetch ${mediaType} details for ID ${id}`);
+      
+      if (retryResponse.ok) {
+        const data = await retryResponse.json();
+        return {
+          ...data,
+          media_type: otherType
+        };
       }
-      return retryResponse.json();
+      
+      throw new Error(`Failed to fetch details for ID ${id}`);
+    } catch (error) {
+      console.error(`Error fetching details for ID ${id}:`, error);
+      throw error;
     }
-    return response.json();
   },
 
   getTrailerKey: (videos: MovieDetails['videos']): string | null => {
+    if (!videos?.results) return null;
     const trailer = videos.results.find(
       (video) => video.site === "YouTube" && 
       (video.type === "Trailer" || video.type === "Teaser")
