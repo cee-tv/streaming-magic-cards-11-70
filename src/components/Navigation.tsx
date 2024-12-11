@@ -9,6 +9,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showSearch, setShowSearch] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,6 +30,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
       navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
       setOpen(false);
       setSearchQuery("");
+      setShowSearch(false);
     }
   };
 
@@ -86,7 +88,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
                 variant="ghost" 
                 size="icon" 
                 className="text-white hover:bg-white/10" 
-                onClick={() => setOpen(true)}
+                onClick={() => setShowSearch(!showSearch)}
               >
                 <Search className="h-5 w-5" />
               </Button>
@@ -118,7 +120,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
               <Button 
                 variant="ghost" 
                 className="text-white hover:bg-white/10 h-8 px-3 text-sm"
-                onClick={() => setOpen(true)}
+                onClick={() => setShowSearch(!showSearch)}
               >
                 <Search className="h-4 w-4 mr-1" />
                 Search
@@ -126,6 +128,33 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
             </div>
           )}
         </div>
+
+        {/* Floating Search Input */}
+        {showSearch && (
+          <div className="absolute top-16 left-4 w-1/3 bg-netflix-black/95 rounded-md p-2 shadow-lg border border-white/10">
+            <form onSubmit={handleSearch} className="flex items-center justify-between">
+              <div className="flex-1 flex items-center gap-2">
+                <Search className="h-3 w-3 text-white" />
+                <input
+                  type="text"
+                  placeholder="Search movies and TV shows..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-transparent text-sm text-white border-none outline-none placeholder:text-gray-400 h-8"
+                  autoFocus
+                />
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-white hover:bg-white/10 h-6 w-6"
+                onClick={() => setShowSearch(false)}
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </form>
+          </div>
+        )}
       </nav>
 
       <Dialog open={open} onOpenChange={setOpen}>
