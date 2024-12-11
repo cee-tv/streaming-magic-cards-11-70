@@ -33,14 +33,26 @@ export const Movies = () => {
     queryFn: () => tmdb.getByGenre("movie", 18),
   });
 
+  const { data: horrorMovies = [] } = useQuery({
+    queryKey: ["horror", "movie"],
+    queryFn: () => tmdb.getByGenre("movie", 27),
+  });
+
+  const { data: sciFiMovies = [] } = useQuery({
+    queryKey: ["scifi", "movie"],
+    queryFn: () => tmdb.getByGenre("movie", 878),
+  });
+
   return (
-    <div className="container mx-auto px-4 space-y-8">
-      <MovieRow title="Trending Movies" movies={trending} />
-      <MovieRow title="Popular Movies" movies={popular} />
-      <MovieRow title="Top Rated Movies" movies={topRated} />
-      <MovieRow title="Action Movies" movies={actionMovies} />
+    <div className="space-y-8 pb-20">
+      <MovieRow title="Trending Now" movies={trending} />
+      <MovieRow title="Popular on Netflix" movies={popular} />
+      <MovieRow title="Top Rated" movies={topRated} />
+      <MovieRow title="Action Thrillers" movies={actionMovies} />
       <MovieRow title="Comedy Movies" movies={comedyMovies} />
-      <MovieRow title="Drama Movies" movies={dramaMovies} />
+      <MovieRow title="Drama" movies={dramaMovies} />
+      <MovieRow title="Horror" movies={horrorMovies} />
+      <MovieRow title="Sci-Fi" movies={sciFiMovies} />
     </div>
   );
 };

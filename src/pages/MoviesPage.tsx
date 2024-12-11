@@ -3,15 +3,30 @@ import { Movies } from "@/components/Movies";
 import { Hero } from "@/components/Hero";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
+import { useEffect, useState } from "react";
 
 const MoviesPage = () => {
+  const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
+
   const { data: trending = [] } = useQuery({
     queryKey: ["trending", "movie"],
     queryFn: () => tmdb.getTrending("movie"),
   });
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (trending.length > 0) {
+        setCurrentMovieIndex((prev) => 
+          prev === trending.length - 1 ? 0 : prev + 1
+        );
+      }
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [trending.length]);
+
   const randomMovie = trending.length > 0 
-    ? trending[Math.floor(Math.random() * trending.length)]
+    ? trending[currentMovieIndex]
     : null;
 
   if (!randomMovie) {
