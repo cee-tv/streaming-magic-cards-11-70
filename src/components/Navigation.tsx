@@ -1,7 +1,7 @@
 import { Film, Search, Tv, Bookmark, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Dialog, DialogContent } from "./ui/dialog";
 
@@ -12,16 +12,6 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
   const [showSearch, setShowSearch] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (searchQuery.trim()) {
-        navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-      }
-    }, 300);
-
-    return () => clearTimeout(timeoutId);
-  }, [searchQuery, navigate]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,46 +101,42 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
             )}
           </div>
 
-          {/* Search Input */}
+          {/* Search Button and Dialog */}
           <div className="relative flex items-center">
-            <form onSubmit={handleSearch} className="flex items-center">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search movies and TV shows..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className={`w-[300px] bg-black/20 text-sm text-white border border-white/10 rounded-md pl-8 pr-4 py-1.5 placeholder:text-gray-400 focus:outline-none focus:border-white/30 transition-all`}
-                />
-                <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              </div>
-            </form>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/10"
+              onClick={() => setOpen(true)}
+            >
+              <Search className="h-5 w-5" />
+            </Button>
           </div>
         </div>
       </nav>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-md mx-auto h-auto p-0 bg-netflix-black/95">
+        <DialogContent className="max-w-md mx-auto h-auto p-0 bg-black/95">
           <div className="p-3">
             <form onSubmit={handleSearch} className="flex items-center justify-between">
               <div className="flex-1 flex items-center gap-2">
-                <Search className="h-3 w-3 text-white" />
+                <Search className="h-4 w-4 text-white" />
                 <input
                   type="text"
                   placeholder="Search movies and TV shows..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-transparent text-sm text-white border-none outline-none placeholder:text-gray-400 h-8"
+                  className="w-full bg-transparent text-sm text-white border-none outline-none placeholder:text-gray-400"
                   autoFocus
                 />
               </div>
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-white hover:bg-white/10 h-6 w-6"
+                className="text-white hover:bg-white/10 h-8 w-8"
                 onClick={() => setOpen(false)}
               >
-                <X className="h-3 w-3" />
+                <X className="h-4 w-4" />
               </Button>
             </form>
           </div>
