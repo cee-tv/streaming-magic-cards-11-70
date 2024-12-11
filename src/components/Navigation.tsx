@@ -124,7 +124,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
       </nav>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-[300px] mx-auto h-auto p-0 bg-netflix-black/95 fixed right-4 top-16">
+        <DialogContent className="max-w-sm mx-auto h-auto p-0 bg-netflix-black/95 fixed right-4 top-16">
           <div className="p-3">
             <form onSubmit={handleSearch} className="flex items-center justify-between">
               <div className="flex-1 flex items-center gap-2">
