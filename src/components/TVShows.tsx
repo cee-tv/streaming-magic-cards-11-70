@@ -20,17 +20,17 @@ export const TVShows = () => {
 
   const { data: actionShows = [] } = useQuery({
     queryKey: ["action", "tv"],
-    queryFn: () => tmdb.getByGenre("tv", 28),
+    queryFn: () => tmdb.getByGenre("tv", 10759), // Action & Adventure TV genre ID
   });
 
   const { data: comedyShows = [] } = useQuery({
     queryKey: ["comedy", "tv"],
-    queryFn: () => tmdb.getByGenre("tv", 35),
+    queryFn: () => tmdb.getByGenre("tv", 35), // Comedy TV genre ID
   });
 
   const { data: dramaShows = [] } = useQuery({
     queryKey: ["drama", "tv"],
-    queryFn: () => tmdb.getByGenre("tv", 18),
+    queryFn: () => tmdb.getByGenre("tv", 18), // Drama TV genre ID
   });
 
   return (
@@ -38,7 +38,7 @@ export const TVShows = () => {
       <MovieRow title="Trending TV Shows" movies={trending} />
       <MovieRow title="Popular TV Shows" movies={popular} />
       <MovieRow title="Top Rated TV Shows" movies={topRated} />
-      <MovieRow title="Action TV Shows" movies={actionShows} />
+      <MovieRow title="Action & Adventure TV Shows" movies={actionShows} />
       <MovieRow title="Comedy TV Shows" movies={comedyShows} />
       <MovieRow title="Drama TV Shows" movies={dramaShows} />
     </div>
