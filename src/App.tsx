@@ -9,6 +9,7 @@ import MoviesPage from "./pages/MoviesPage";
 import TVShowsPage from "./pages/TVShowsPage";
 import SearchPage from "./pages/SearchPage";
 import Watchlist from "./components/Watchlist";
+import IPTVPage from "./pages/IPTVPage";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/tv" element={<TVShowsPage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/watchlist" element={<Watchlist />} />
+            <Route path="/iptv" element={<IPTVPage />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

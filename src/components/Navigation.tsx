@@ -1,4 +1,4 @@
-import { Film, Search, Tv, Bookmark, X } from "lucide-react";
+import { Film, Search, Tv, Bookmark, X, MonitorPlay } from "lucide-react";
 import { Button } from "./ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
@@ -68,6 +68,14 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
               <Button 
                 variant="ghost" 
                 size="icon" 
+                className={`text-white hover:bg-white/10 ${isActive('/iptv') ? 'bg-white/20' : ''}`}
+                onClick={() => navigate('/iptv')}
+              >
+                <MonitorPlay className="h-6 w-6" />
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="icon" 
                 className={`text-white hover:bg-white/10 ${isActive('/watchlist') ? 'bg-white/20' : ''}`}
                 onClick={() => navigate('/watchlist')}
               >
@@ -97,6 +105,14 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
                 onClick={() => navigate('/tv')}
               >
                 TV Shows
+              </Button>
+              <Button 
+                variant="ghost" 
+                className={`text-white hover:bg-white/10 ${isActive('/iptv') ? 'bg-white/20' : ''}`}
+                onClick={() => navigate('/iptv')}
+              >
+                <MonitorPlay className="h-4 w-4 mr-2" />
+                IPTV
               </Button>
               <Button 
                 variant="ghost" 
