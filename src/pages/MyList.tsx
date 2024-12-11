@@ -1,5 +1,6 @@
 import { Navigation } from "@/components/Navigation";
 import { MovieCard } from "@/components/MovieCard";
+import { Hero } from "@/components/Hero";
 import { useState } from "react";
 import { Movie } from "@/services/tmdb";
 
@@ -7,10 +8,14 @@ const MyList = () => {
   const [mediaType, setMediaType] = useState<'movie' | 'tv'>('movie');
   // This is a placeholder. In a real app, you'd fetch this from your backend or local storage
   const [favorites] = useState<Movie[]>([]);
+  
+  // Use the first favorite movie as the hero, or null if there are no favorites
+  const heroMovie = favorites[0] || null;
 
   return (
     <div className="min-h-screen bg-netflix-black">
       <Navigation onMediaTypeChange={setMediaType} />
+      {heroMovie && <Hero movie={heroMovie} />}
       <div className="container mx-auto px-4 pt-24">
         <h1 className="text-2xl md:text-4xl font-bold text-white mb-8">My List</h1>
         {favorites.length > 0 ? (
