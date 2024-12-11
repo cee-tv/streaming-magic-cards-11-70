@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dialog";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
-import { X } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "./ui/button";
 
 interface HeroProps {
@@ -68,10 +68,11 @@ export const Hero = ({ movie }: HeroProps) => {
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-4 top-4 z-50 text-white hover:bg-white/20"
+            className="absolute left-4 top-4 z-50 text-white hover:bg-white/20"
             onClick={() => setShowModal(false)}
           >
-            <X className="h-4 w-4" />
+            <ArrowLeft className="h-4 w-4" />
+            <span className="sr-only">Return</span>
           </Button>
           {trailerKey && (
             <div className="relative w-full aspect-video">
@@ -109,10 +110,11 @@ export const Hero = ({ movie }: HeroProps) => {
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-4 top-4 z-50 text-white hover:bg-white/20"
+            className="absolute left-4 top-4 z-50 text-white hover:bg-white/20"
             onClick={() => setShowPlayer(false)}
           >
-            <X className="h-4 w-4" />
+            <ArrowLeft className="h-4 w-4" />
+            <span className="sr-only">Return</span>
           </Button>
           <iframe
             className="w-full h-full"

@@ -1,5 +1,5 @@
 import { Movie } from "@/services/tmdb";
-import { Play, ChevronDown, X, Plus, Check } from "lucide-react";
+import { Play, ChevronDown, ArrowLeft, Plus, Check } from "lucide-react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dialog";
 import { Button } from "./ui/button";
@@ -103,10 +103,11 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-4 top-4 z-50 text-white hover:bg-white/20"
+            className="absolute left-4 top-4 z-50 text-white hover:bg-white/20"
             onClick={() => setShowModal(false)}
           >
-            <X className="h-4 w-4" />
+            <ArrowLeft className="h-4 w-4" />
+            <span className="sr-only">Return</span>
           </Button>
           {trailerKey ? (
             <iframe
@@ -202,10 +203,11 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-4 top-4 z-50 text-white hover:bg-white/20"
+            className="absolute left-4 top-4 z-50 text-white hover:bg-white/20"
             onClick={() => setShowPlayer(false)}
           >
-            <X className="h-4 w-4" />
+            <ArrowLeft className="h-4 w-4" />
+            <span className="sr-only">Return</span>
           </Button>
           <iframe
             className="w-full h-full"
