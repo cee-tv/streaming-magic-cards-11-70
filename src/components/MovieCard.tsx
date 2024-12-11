@@ -1,11 +1,10 @@
 import { Movie } from "@/services/tmdb";
-import { Play, ChevronDown } from "lucide-react";
+import { Play, ChevronDown, X } from "lucide-react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
-import { X } from "lucide-react";
 
 interface MovieCardProps {
   movie: Movie;
@@ -22,6 +21,7 @@ export const MovieCard = ({ movie, mediaType = 'movie' }: MovieCardProps) => {
     enabled: showModal || showPlayer,
   });
 
+  const trailerKey = movieDetails?.videos ? tmdb.getTrailerKey(movieDetails.videos) : null;
   const embedUrl = mediaType === 'movie' 
     ? `https://embed.su/embed/movie/${movie.id}`
     : `https://embed.su/embed/tv/${movie.id}/1/1`; // Default to S01E01 for TV shows
@@ -34,9 +34,11 @@ export const MovieCard = ({ movie, mediaType = 'movie' }: MovieCardProps) => {
           alt={movie.title || movie.name}
           className="rounded-md transition-transform duration-300 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md">
           <div className="absolute inset-0 flex flex-col justify-between p-4">
-            <h3 className="text-white font-bold">{movie.title || movie.name}</h3>
+            <h3 className="text-white font-bold text-sm md:text-base">
+              {movie.title || movie.name}
+            </h3>
             <div className="flex items-center gap-2">
               <Button 
                 size="icon" 
@@ -64,7 +66,7 @@ export const MovieCard = ({ movie, mediaType = 'movie' }: MovieCardProps) => {
         </div>
       </div>
 
-      {/* More Info Modal */}
+      {/* More Info Modal with YouTube Trailer */}
       <Dialog open={showModal} onOpenChange={setShowModal}>
         <DialogContent className="max-w-3xl h-[70vh] p-0 bg-black overflow-hidden">
           <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
@@ -77,12 +79,18 @@ export const MovieCard = ({ movie, mediaType = 'movie' }: MovieCardProps) => {
           >
             <X className="h-4 w-4" />
           </Button>
-          <iframe
-            className="w-full aspect-video"
-            src={embedUrl}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
+          {trailerKey ? (
+            <iframe
+              className="w-full aspect-video"
+              src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          ) : (
+            <div className="w-full aspect-video bg-gray-900 flex items-center justify-center">
+              <p className="text-white">No trailer available</p>
+            </div>
+          )}
           <div className="p-6">
             <div className="flex items-center gap-4 mb-6">
               <Button 

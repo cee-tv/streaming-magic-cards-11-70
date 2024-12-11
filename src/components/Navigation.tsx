@@ -1,4 +1,4 @@
-import { Film, Search, Tv, List } from "lucide-react";
+import { Film, Search, Tv, List, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
@@ -6,6 +6,7 @@ import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, Comma
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
+import { Dialog, DialogContent } from "./ui/dialog";
 
 export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'movie' | 'tv') => void }) => {
   const isMobile = useIsMobile();
@@ -97,49 +98,59 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
               >
                 My List
               </Button>
+              <Button 
+                variant="ghost" 
+                className="text-white hover:bg-white/10"
+                onClick={() => setOpen(true)}
+              >
+                <Search className="h-4 w-4 mr-2" />
+                Search
+              </Button>
             </div>
           )}
         </div>
       </nav>
 
-      <CommandDialog open={open} onOpenChange={setOpen}>
-        <Command className="rounded-lg border-none bg-netflix-black/90">
-          <CommandInput 
-            placeholder="Search movies and TV shows..." 
-            value={searchQuery}
-            onValueChange={setSearchQuery}
-            className="h-14 text-lg border-b border-white/20"
-          />
-          <CommandList className="h-[80vh] py-4">
-            <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-5xl h-[90vh] p-0 bg-netflix-black/90">
+          <div className="p-4">
+            <div className="flex items-center justify-between mb-4">
+              <input
+                type="text"
+                placeholder="Search movies and TV shows..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-transparent text-2xl text-white border-none outline-none"
+                autoFocus
+              />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setOpen(false)}
+                className="text-white"
+              >
+                <X className="h-6 w-6" />
+              </Button>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 overflow-y-auto max-h-[calc(90vh-100px)]">
               {searchResults?.map((result) => (
-                <CommandItem
-                  key={result.id}
-                  onSelect={() => {
-                    setOpen(false);
-                  }}
-                  className="p-2 hover:bg-white/10"
-                >
-                  <div className="flex items-center gap-4">
-                    <img
-                      src={`https://image.tmdb.org/t/p/w92${result.poster_path}`}
-                      alt={result.title}
-                      className="w-16 h-24 object-cover rounded"
-                    />
-                    <div>
-                      <h4 className="font-semibold">{result.title}</h4>
-                      <p className="text-sm text-gray-400">
-                        {new Date(result.release_date).getFullYear()}
-                      </p>
-                    </div>
+                <div key={result.id} className="relative group cursor-pointer">
+                  <img
+                    src={`https://image.tmdb.org/t/p/w500${result.poster_path}`}
+                    alt={result.title || result.name}
+                    className="w-full rounded-md"
+                  />
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <h3 className="text-white text-center p-2 text-sm">
+                      {result.title || result.name}
+                    </h3>
                   </div>
-                </CommandItem>
+                </div>
               ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </CommandDialog>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
