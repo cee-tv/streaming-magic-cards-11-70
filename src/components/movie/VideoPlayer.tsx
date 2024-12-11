@@ -60,10 +60,10 @@ export const VideoPlayer = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-none w-screen h-screen p-0 bg-black">
+      <DialogContent className="max-w-5xl h-[80vh] p-0 bg-black">
         <DialogTitle className="sr-only">Play {title}</DialogTitle>
         <DialogDescription className="sr-only">Video player for {title}</DialogDescription>
-        <div className="absolute right-4 top-4 z-50 flex gap-2">
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 flex gap-2">
           <Button
             variant="ghost"
             className="text-white hover:bg-white/20"
@@ -71,6 +71,8 @@ export const VideoPlayer = ({
           >
             Switch Provider ({currentProvider})
           </Button>
+        </div>
+        <div className="absolute right-4 top-4 z-50">
           <Button
             variant="ghost"
             size="icon"
