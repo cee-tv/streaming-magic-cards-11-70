@@ -114,7 +114,7 @@ const IPTVPage = () => {
     <div className="min-h-screen bg-netflix-black">
       <Navigation onMediaTypeChange={() => {}} />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 pt-20 pb-8"> {/* Added pt-20 for top padding */}
         {/* JW Player Container */}
         <div className="w-full aspect-video bg-black mb-8 rounded-lg overflow-hidden shadow-lg">
           <div id="jwplayer-container"></div>
