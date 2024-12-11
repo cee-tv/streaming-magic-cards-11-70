@@ -34,4 +34,14 @@ export const tmdb = {
     const data = await response.json();
     return data.results;
   },
+
+  search: async (query: string): Promise<Movie[]> => {
+    if (!query) return [];
+    const response = await fetch(
+      `${BASE_URL}/search/movie?query=${encodeURIComponent(query)}`,
+      { headers }
+    );
+    const data = await response.json();
+    return data.results;
+  },
 };
