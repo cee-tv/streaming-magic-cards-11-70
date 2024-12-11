@@ -10,7 +10,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "");
-  const debouncedSearch = useDebounce(searchTerm, 300);
+  const debouncedSearch = useDebounce(searchTerm, 3000); // Changed to 3000ms (3 seconds)
 
   const { data: searchResults = [], isLoading } = useQuery({
     queryKey: ["search", debouncedSearch],
