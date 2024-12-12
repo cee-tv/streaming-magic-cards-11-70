@@ -23,13 +23,13 @@ export const ChannelGrid = ({ category, channels, selectedChannel, onChannelSele
           {categoryChannels.map((channel, index) => (
             <Card
               key={channel.id || `${category}-${index}`}
-              className={`group flex-shrink-0 w-[120px] cursor-pointer transition-transform hover:scale-105 relative ${
+              className={`group flex-shrink-0 w-[120px] h-[120px] cursor-pointer transition-transform hover:scale-105 relative ${
                 selectedChannel?.name === channel.name ? 'ring-2 ring-primary' : ''
               }`}
               onClick={() => onChannelSelect(channel)}
             >
-              <CardContent className="p-2 flex flex-col items-center justify-center">
-                <div className="relative w-full aspect-square flex items-center justify-center">
+              <CardContent className="p-2 h-full flex flex-col items-center justify-center relative">
+                <div className="w-full h-full flex items-center justify-center">
                   {channel.logo ? (
                     <img
                       src={channel.logo}
@@ -46,9 +46,9 @@ export const ChannelGrid = ({ category, channels, selectedChannel, onChannelSele
                   </div>
                 </div>
                 {selectedChannel?.name === channel.name && (
-                  <div className="relative w-full mt-1 animate-[slideUp_0.3s_ease-out_forwards]">
+                  <div className="absolute bottom-0 left-0 right-0 animate-[slideUp_0.3s_ease-out_forwards]">
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                    <p className="text-center text-sm font-medium line-clamp-2 relative z-10 text-white">
+                    <p className="text-center text-sm font-medium line-clamp-2 relative z-10 text-white p-2">
                       {channel.name}
                     </p>
                   </div>
