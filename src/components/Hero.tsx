@@ -8,6 +8,7 @@ import { Button } from "./ui/button";
 import { VideoPlayer } from "./movie/VideoPlayer";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { toast } from "sonner";
+import { EpisodesList } from "./movie/EpisodesList";
 
 interface HeroProps {
   movie: Movie;
@@ -26,6 +27,8 @@ export const Hero = ({
 }: HeroProps) => {
   const [showModal, setShowModal] = useState(false);
   const [showPlayer, setShowPlayer] = useState(false);
+  const [selectedSeason, setSelectedSeason] = useState(1);
+  const [selectedEpisode, setSelectedEpisode] = useState(1);
   const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
 
   const { data: movieDetails } = useQuery({
@@ -34,14 +37,20 @@ export const Hero = ({
     enabled: showModal || showPlayer,
   });
 
+  const { data: seasonDetails } = useQuery({
+    queryKey: ["season", movie.id, selectedSeason],
+    queryFn: () => tmdb.getTVSeasonDetails(movie.id, selectedSeason),
+    enabled: showModal && movie.media_type === 'tv',
+  });
+
   const trailerKey = movieDetails?.videos ? tmdb.getTrailerKey(movieDetails.videos) : null;
 
   const embedUrl = movie.media_type === 'movie' 
     ? `https://embed.su/embed/movie/${movie.id}`
-    : `https://embed.su/embed/tv/${movie.id}/1/1`;
+    : `https://embed.su/embed/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
   const multiEmbedUrl = movie.media_type === 'movie'
     ? `https://multiembed.mov/?video_id=${movie.id}&tmdb=1`
-    : `https://multiembed.mov/?video_id=${movie.id}&tmdb=1&s=1&e=1`;
+    : `https://multiembed.mov/?video_id=${movie.id}&tmdb=1&s=${selectedSeason}&e=${selectedEpisode}`;
 
   const handleModalOpen = (open: boolean) => {
     setShowModal(open);
@@ -70,6 +79,11 @@ export const Hero = ({
   const handlePlayerClose = () => {
     setShowPlayer(false);
     if (onPlayEnd) onPlayEnd();
+  };
+
+  const handleSeasonChange = (value: string) => {
+    setSelectedSeason(parseInt(value));
+    setSelectedEpisode(1);
   };
 
   return (
@@ -109,7 +123,7 @@ export const Hero = ({
 
       {/* More Info Modal */}
       <Dialog open={showModal} onOpenChange={handleModalOpen}>
-        <DialogContent className="max-w-3xl h-[70vh] p-0 bg-black overflow-y-auto">
+        <DialogContent className="max-w-3xl h-[85vh] p-0 bg-black overflow-y-auto">
           <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
           <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
           <Button
@@ -121,51 +135,63 @@ export const Hero = ({
             <ArrowLeft className="h-4 w-4" />
             <span className="sr-only">Return</span>
           </Button>
-          {trailerKey ? (
-            <iframe
-              className="w-full aspect-video"
-              src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
+
+          {movie.media_type === 'tv' && movieDetails?.seasons ? (
+            <EpisodesList
+              seasons={movieDetails.seasons}
+              selectedSeason={selectedSeason}
+              onSeasonChange={handleSeasonChange}
+              episodes={seasonDetails?.episodes || []}
             />
           ) : (
-            <div className="w-full aspect-video bg-gray-900 flex items-center justify-center">
-              <p className="text-white">No trailer available</p>
-            </div>
+            <>
+              {trailerKey ? (
+                <iframe
+                  className="w-full aspect-video"
+                  src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1`}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : (
+                <div className="w-full aspect-video bg-gray-900 flex items-center justify-center">
+                  <p className="text-white">No trailer available</p>
+                </div>
+              )}
+              <div className="p-6">
+                <div className="flex items-center gap-4 mb-6">
+                  <Button 
+                    className="rounded-full bg-white hover:bg-white/90 text-black"
+                    onClick={() => {
+                      handleModalOpen(false);
+                      setShowPlayer(true);
+                    }}
+                  >
+                    <Play className="h-4 w-4 mr-2" />
+                    Play
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="rounded-full border-white hover:border-white bg-black/30 text-white"
+                    onClick={handleWatchlistToggle}
+                  >
+                    {isInWatchlist(movie.id) ? (
+                      <>
+                        <Check className="h-4 w-4 mr-2" />
+                        Remove from Watchlist
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add to Watchlist
+                      </>
+                    )}
+                  </Button>
+                </div>
+                <h2 className="text-2xl font-bold mb-4 text-white">{movie.title || movie.name}</h2>
+                <p className="text-gray-400">{movie.overview}</p>
+              </div>
+            </>
           )}
-          <div className="p-6">
-            <div className="flex items-center gap-4 mb-6">
-              <Button 
-                className="rounded-full bg-white hover:bg-white/90 text-black"
-                onClick={() => {
-                  handleModalOpen(false);
-                  setShowPlayer(true);
-                }}
-              >
-                <Play className="h-4 w-4 mr-2" />
-                Play
-              </Button>
-              <Button
-                variant="outline"
-                className="rounded-full border-white hover:border-white bg-black/30 text-white"
-                onClick={handleWatchlistToggle}
-              >
-                {isInWatchlist(movie.id) ? (
-                  <>
-                    <Check className="h-4 w-4 mr-2" />
-                    Remove from Watchlist
-                  </>
-                ) : (
-                  <>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add to Watchlist
-                  </>
-                )}
-              </Button>
-            </div>
-            <h2 className="text-2xl font-bold mb-4 text-white">{movie.title || movie.name}</h2>
-            <p className="text-gray-400">{movie.overview}</p>
-          </div>
         </DialogContent>
       </Dialog>
 
@@ -178,8 +204,8 @@ export const Hero = ({
         multiEmbedUrl={multiEmbedUrl}
         movieId={movie.id}
         mediaType={movie.media_type as 'movie' | 'tv'}
-        season={1}
-        episode={1}
+        season={selectedSeason}
+        episode={selectedEpisode}
       />
     </>
   );
