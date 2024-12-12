@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Tv } from "lucide-react";
+import { Play, Tv } from "lucide-react";
 import type { Channel } from "../data/channels";
 
 interface ChannelGridProps {
@@ -23,22 +23,32 @@ export const ChannelGrid = ({ category, channels, selectedChannel, onChannelSele
           {categoryChannels.map((channel, index) => (
             <Card
               key={channel.id || `${category}-${index}`}
-              className={`flex-shrink-0 w-[120px] cursor-pointer transition-transform hover:scale-105 ${
+              className={`group flex-shrink-0 w-[120px] cursor-pointer transition-transform hover:scale-105 relative ${
                 selectedChannel?.name === channel.name ? 'ring-2 ring-primary' : ''
               }`}
               onClick={() => onChannelSelect(channel)}
             >
               <CardContent className="p-2 flex flex-col items-center justify-center">
-                {channel.logo ? (
-                  <img
-                    src={channel.logo}
-                    alt={channel.name}
-                    className="w-12 h-12 object-contain mb-1"
-                  />
-                ) : (
-                  <Tv className="w-12 h-12 mb-1" />
-                )}
-                <p className="text-center text-sm font-medium line-clamp-2 w-full">{channel.name}</p>
+                <div className="relative w-full aspect-square flex items-center justify-center">
+                  {channel.logo ? (
+                    <img
+                      src={channel.logo}
+                      alt={channel.name}
+                      className="w-12 h-12 object-contain"
+                    />
+                  ) : (
+                    <Tv className="w-12 h-12" />
+                  )}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                    <Play className="w-8 h-8 text-white" />
+                  </div>
+                </div>
+                <div className="relative w-full mt-1">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                  <p className="text-center text-sm font-medium line-clamp-2 relative z-10 text-white">
+                    {channel.name}
+                  </p>
+                </div>
               </CardContent>
             </Card>
           ))}
