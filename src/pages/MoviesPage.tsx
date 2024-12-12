@@ -20,7 +20,7 @@ const MoviesPage = () => {
           prev === trending.length - 1 ? 0 : prev + 1
         );
       }
-    }, 4000);
+    }, 5000); // Changed from 4000 to 5000
 
     return () => clearInterval(interval);
   }, [trending.length]);

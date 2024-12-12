@@ -24,7 +24,7 @@ const TVShowsPage = () => {
           prev === trending.length - 1 ? 0 : prev + 1
         );
       }
-    }, 10000);
+    }, 5000); // Changed from 10000 to 5000
 
     return () => clearInterval(interval);
   }, [trending.length, isPaused, isPlaying]);
