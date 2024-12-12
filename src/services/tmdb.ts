@@ -6,6 +6,24 @@ const headers = {
   "Content-Type": "application/json",
 };
 
+export interface Episode {
+  id: number;
+  name: string;
+  overview: string;
+  episode_number: number;
+  still_path: string | null;
+  runtime: number;
+}
+
+export interface Season {
+  id: number;
+  name: string;
+  season_number: number;
+  episode_count: number;
+  poster_path: string | null;
+  episodes?: Episode[];
+}
+
 export interface Movie {
   id: number;
   title: string;
@@ -17,14 +35,6 @@ export interface Movie {
   release_date: string;
   first_air_date?: string;
   media_type: string;
-}
-
-interface Season {
-  id: number;
-  name: string;
-  season_number: number;
-  episode_count: number;
-  poster_path: string | null;
 }
 
 export interface MovieDetails extends Movie {
@@ -124,6 +134,17 @@ export const tmdb = {
       console.error(`Error fetching details for ID ${id}:`, error);
       throw error;
     }
+  },
+
+  getTVSeasonDetails: async (tvId: number, seasonNumber: number): Promise<Season> => {
+    const response = await fetch(
+      `${BASE_URL}/tv/${tvId}/season/${seasonNumber}`,
+      { headers }
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to fetch season details for TV show ${tvId}, season ${seasonNumber}`);
+    }
+    return response.json();
   },
 
   getTrailerKey: (videos: MovieDetails['videos']): string | null => {

@@ -9,6 +9,7 @@ import { useWatchlist } from "@/contexts/WatchlistContext";
 import { toast } from "sonner";
 import { MovieButtons } from "./movie/MovieButtons";
 import { VideoPlayer } from "./movie/VideoPlayer";
+import { EpisodesList } from "./movie/EpisodesList";
 
 interface MovieCardProps {
   movie: Movie;
@@ -27,6 +28,12 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
     enabled: showModal || showPlayer,
   });
 
+  const { data: seasonDetails } = useQuery({
+    queryKey: ["season", movie.id, selectedSeason],
+    queryFn: () => tmdb.getTVSeasonDetails(movie.id, selectedSeason),
+    enabled: showModal && movie.media_type === 'tv',
+  });
+
   const trailerKey = movieDetails?.videos ? tmdb.getTrailerKey(movieDetails.videos) : null;
   const embedUrl = movie.media_type === 'movie' 
     ? `https://embed.su/embed/movie/${movie.id}`
@@ -43,6 +50,11 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
       addToWatchlist(movie);
       toast.success("Added to watchlist");
     }
+  };
+
+  const handleSeasonChange = (season: string) => {
+    setSelectedSeason(parseInt(season));
+    setSelectedEpisode(1);
   };
 
   return (
@@ -71,7 +83,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
 
       {/* More Info Modal */}
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="max-w-3xl h-[70vh] p-0 bg-black overflow-y-auto">
+        <DialogContent className="max-w-3xl h-[90vh] p-0 bg-black overflow-y-auto">
           <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
           <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
           <Button
@@ -128,42 +140,18 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
             <h2 className="text-2xl font-bold mb-4 text-white">{movie.title || movie.name}</h2>
             <p className="text-gray-400 mb-6">{movie.overview}</p>
 
-            {movie.media_type === 'tv' && movieDetails?.seasons && (
-              <div className="space-y-4">
-                <h3 className="text-xl font-semibold text-white">Seasons</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {movieDetails.seasons.map((season) => (
-                    <div key={season.id} className="bg-gray-900 rounded-lg p-4">
-                      <div className="flex gap-4">
-                        {season.poster_path && (
-                          <img
-                            src={`https://image.tmdb.org/t/p/w200${season.poster_path}`}
-                            alt={season.name}
-                            className="w-24 h-36 object-cover rounded"
-                          />
-                        )}
-                        <div>
-                          <h4 className="text-white font-semibold">{season.name}</h4>
-                          <p className="text-gray-400 text-sm">{season.episode_count} episodes</p>
-                          <Button
-                            variant="ghost"
-                            className="mt-2 text-white hover:bg-white/10"
-                            onClick={() => {
-                              setSelectedSeason(season.season_number);
-                              setSelectedEpisode(1);
-                              setShowModal(false);
-                              setShowPlayer(true);
-                            }}
-                          >
-                            <Play className="h-4 w-4 mr-2" />
-                            Play
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            {movie.media_type === 'tv' && movieDetails?.seasons && seasonDetails?.episodes && (
+              <EpisodesList
+                seasons={movieDetails.seasons}
+                selectedSeason={selectedSeason}
+                onSeasonChange={handleSeasonChange}
+                episodes={seasonDetails.episodes}
+                onEpisodeSelect={(episodeNumber) => {
+                  setSelectedEpisode(episodeNumber);
+                  setShowModal(false);
+                  setShowPlayer(true);
+                }}
+              />
             )}
           </div>
         </DialogContent>
