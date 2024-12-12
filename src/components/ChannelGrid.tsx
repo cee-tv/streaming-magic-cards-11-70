@@ -41,7 +41,11 @@ export const ChannelGrid = ({ category, channels, selectedChannel, onChannelSele
                   )}
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     <div className="bg-netflix-red rounded-full p-2">
-                      <Play className="w-8 h-8 text-white" />
+                      <img 
+                        src="https://raw.githubusercontent.com/cee-tv/Chinatv/refs/heads/main/logo.png" 
+                        alt="Play" 
+                        className="w-8 h-8"
+                      />
                     </div>
                   </div>
                 </div>
