@@ -34,7 +34,7 @@ export const ChannelGrid = ({ category, channels, selectedChannel, onChannelSele
                     <img
                       src={channel.logo}
                       alt={channel.name}
-                      className="w-12 h-12 object-contain"
+                      className="w-full h-full object-contain p-2"
                     />
                   ) : (
                     <Tv className="w-12 h-12" />
@@ -46,9 +46,9 @@ export const ChannelGrid = ({ category, channels, selectedChannel, onChannelSele
                   </div>
                 </div>
                 {selectedChannel?.name === channel.name && (
-                  <div className="relative w-full mt-1 animate-fade-in">
+                  <div className="relative w-full mt-1 animate-[slideUp_0.3s_ease-out_forwards]">
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                    <p className="text-center text-sm font-medium line-clamp-2 relative z-10 text-white transform -translate-y-1">
+                    <p className="text-center text-sm font-medium line-clamp-2 relative z-10 text-white">
                       {channel.name}
                     </p>
                   </div>
