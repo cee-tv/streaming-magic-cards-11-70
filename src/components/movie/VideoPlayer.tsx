@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { X, ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "../ui/dialog";
 import { useState } from "react";
@@ -13,6 +13,7 @@ interface VideoPlayerProps {
   mediaType: 'movie' | 'tv';
   season?: number;
   episode?: number;
+  onNextEpisode?: () => void;
 }
 
 export const VideoPlayer = ({ 
@@ -24,7 +25,8 @@ export const VideoPlayer = ({
   movieId,
   mediaType,
   season,
-  episode
+  episode,
+  onNextEpisode
 }: VideoPlayerProps) => {
   const [currentProvider, setCurrentProvider] = useState<'embed' | 'multiembed' | 'vidsrc'>('embed');
 
@@ -71,15 +73,25 @@ export const VideoPlayer = ({
           >
             Switch Provider ({currentProvider})
           </Button>
+          {mediaType === 'tv' && onNextEpisode && (
+            <Button
+              variant="ghost"
+              className="text-white hover:bg-white/20"
+              onClick={onNextEpisode}
+            >
+              Next Episode
+              <ChevronRight className="ml-1 h-4 w-4" />
+            </Button>
+          )}
         </div>
         <div className="absolute right-4 top-4 z-50">
           <Button
             variant="ghost"
             size="icon"
-            className="text-white hover:bg-white/20"
+            className="rounded-full text-white hover:bg-white/20 w-8 h-8"
             onClick={onClose}
           >
-            <X className="h-8 w-8" />
+            <X className="h-5 w-5" />
             <span className="sr-only">Close</span>
           </Button>
         </div>

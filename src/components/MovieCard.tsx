@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dial
 import { Button } from "./ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
-import { ArrowLeft, Play, Plus, Check } from "lucide-react";
+import { ArrowLeft, Play, Plus, Check, ChevronRight } from "lucide-react";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { toast } from "sonner";
 import { MovieButtons } from "./movie/MovieButtons";
@@ -55,6 +55,20 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
   const handleSeasonChange = (season: string) => {
     setSelectedSeason(parseInt(season));
     setSelectedEpisode(1);
+  };
+
+  const handleNextEpisode = () => {
+    if (movie.media_type === 'tv' && seasonDetails?.episodes) {
+      // If there's a next episode in the current season
+      if (selectedEpisode < seasonDetails.episodes.length) {
+        setSelectedEpisode(selectedEpisode + 1);
+      }
+      // If we're at the last episode and there's a next season
+      else if (movieDetails?.seasons && selectedSeason < movieDetails.seasons.length) {
+        setSelectedSeason(selectedSeason + 1);
+        setSelectedEpisode(1);
+      }
+    }
   };
 
   return (
@@ -168,6 +182,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
         mediaType={movie.media_type as 'movie' | 'tv'}
         season={selectedSeason}
         episode={selectedEpisode}
+        onNextEpisode={movie.media_type === 'tv' ? handleNextEpisode : undefined}
       />
     </>
   );
