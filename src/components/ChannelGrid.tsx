@@ -39,16 +39,16 @@ export const ChannelGrid = ({ category, channels, selectedChannel, onChannelSele
                   ) : (
                     <Tv className="w-12 h-12" />
                   )}
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     <div className="bg-netflix-red rounded-full p-2">
                       <Play className="w-8 h-8 text-white" />
                     </div>
                   </div>
                 </div>
                 {selectedChannel?.name === channel.name && (
-                  <div className="relative w-full mt-1">
+                  <div className="relative w-full mt-1 animate-fade-in">
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                    <p className="text-center text-sm font-medium line-clamp-2 relative z-10 text-white">
+                    <p className="text-center text-sm font-medium line-clamp-2 relative z-10 text-white transform -translate-y-1">
                       {channel.name}
                     </p>
                   </div>
