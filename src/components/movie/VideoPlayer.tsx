@@ -66,10 +66,10 @@ export const VideoPlayer = ({
   };
 
   const providers = [
-    { id: 'vidsrcvip', name: 'VidSrc VIP' },
-    { id: 'embed', name: 'Embed.su' },
-    { id: 'multiembed', name: 'MultiEmbed' },
-    { id: 'vidsrc', name: 'VidSrc' },
+    { id: 'vidsrcvip', name: 'Source 1 (HD)' },
+    { id: 'embed', name: 'Source 2 (HD)' },
+    { id: 'multiembed', name: 'Source 3 (HD)' },
+    { id: 'vidsrc', name: 'Source 4 (HD)' },
   ] as const;
 
   return (
