@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dial
 import { Button } from "./ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
-import { ArrowLeft, Play, Plus, Check, ChevronRight } from "lucide-react";
+import { ArrowLeft, Play, Plus, Check, ChevronRight, Download } from "lucide-react";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { toast } from "sonner";
 import { MovieButtons } from "./movie/MovieButtons";
@@ -149,6 +149,19 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
                     Add to Watchlist
                   </>
                 )}
+              </Button>
+              <Button
+                variant="outline"
+                className="rounded-full border-white hover:border-white bg-black/30 text-white"
+                onClick={() => {
+                  const downloadUrl = movie.media_type === 'movie'
+                    ? `https://dl.vidsrc.vip/movie/${movie.id}`
+                    : `https://dl.vidsrc.vip/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
+                  window.open(downloadUrl, '_blank');
+                }}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Download
               </Button>
             </div>
             <h2 className="text-2xl font-bold mb-4 text-white">{movie.title || movie.name}</h2>

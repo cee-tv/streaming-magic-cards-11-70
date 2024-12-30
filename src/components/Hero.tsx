@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dialog";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
-import { ArrowLeft, Play, Plus, Check } from "lucide-react";
+import { ArrowLeft, Play, Plus, Check, Download } from "lucide-react";
 import { Button } from "./ui/button";
 import { VideoPlayer } from "./movie/VideoPlayer";
 import { useWatchlist } from "@/contexts/WatchlistContext";
@@ -103,6 +103,19 @@ export const Hero = ({
             >
               ℹ More Info
             </button>
+            <Button
+              variant="outline"
+              className="rounded-full border-white hover:border-white bg-black/30 text-white"
+              onClick={() => {
+                const downloadUrl = movie.media_type === 'movie'
+                  ? `https://dl.vidsrc.vip/movie/${movie.id}`
+                  : `https://dl.vidsrc.vip/tv/${movie.id}/1/1`;
+                window.open(downloadUrl, '_blank');
+              }}
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Download
+            </Button>
           </div>
         </div>
       </div>
@@ -161,6 +174,19 @@ export const Hero = ({
                     Add to Watchlist
                   </>
                 )}
+              </Button>
+              <Button
+                variant="outline"
+                className="rounded-full border-white hover:border-white bg-black/30 text-white"
+                onClick={() => {
+                  const downloadUrl = movie.media_type === 'movie'
+                    ? `https://dl.vidsrc.vip/movie/${movie.id}`
+                    : `https://dl.vidsrc.vip/tv/${movie.id}/1/1`;
+                  window.open(downloadUrl, '_blank');
+                }}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Download
               </Button>
             </div>
             <h2 className="text-2xl font-bold mb-4 text-white">{movie.title || movie.name}</h2>
