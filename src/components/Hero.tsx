@@ -105,6 +105,7 @@ export const Hero = ({
             </button>
             <Button
               variant="outline"
+              size="icon"
               className="rounded-full border-white hover:border-white bg-black/30 text-white"
               onClick={() => {
                 const downloadUrl = movie.media_type === 'movie'
@@ -113,14 +114,12 @@ export const Hero = ({
                 window.open(downloadUrl, '_blank');
               }}
             >
-              <Download className="h-4 w-4 mr-2" />
-              Download
+              <Download className="h-4 w-4" />
             </Button>
           </div>
         </div>
       </div>
 
-      {/* More Info Modal */}
       <Dialog open={showModal} onOpenChange={handleModalOpen}>
         <DialogContent className="max-w-3xl h-[70vh] p-0 bg-black overflow-y-auto">
           <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
@@ -160,23 +159,19 @@ export const Hero = ({
               </Button>
               <Button
                 variant="outline"
+                size="icon"
                 className="rounded-full border-white hover:border-white bg-black/30 text-white"
                 onClick={handleWatchlistToggle}
               >
                 {isInWatchlist(movie.id) ? (
-                  <>
-                    <Check className="h-4 w-4 mr-2" />
-                    Remove from Watchlist
-                  </>
+                  <Check className="h-4 w-4" />
                 ) : (
-                  <>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add to Watchlist
-                  </>
+                  <Plus className="h-4 w-4" />
                 )}
               </Button>
               <Button
                 variant="outline"
+                size="icon"
                 className="rounded-full border-white hover:border-white bg-black/30 text-white"
                 onClick={() => {
                   const downloadUrl = movie.media_type === 'movie'
@@ -185,8 +180,7 @@ export const Hero = ({
                   window.open(downloadUrl, '_blank');
                 }}
               >
-                <Download className="h-4 w-4 mr-2" />
-                Download
+                <Download className="h-4 w-4" />
               </Button>
             </div>
             <h2 className="text-2xl font-bold mb-4 text-white">{movie.title || movie.name}</h2>
