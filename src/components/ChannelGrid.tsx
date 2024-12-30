@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Play, Tv } from "lucide-react";
 import type { Channel } from "../data/channels";
+import { useEffect, useState } from "react";
 
 interface ChannelGridProps {
   category: string;
@@ -12,6 +13,22 @@ interface ChannelGridProps {
 
 export const ChannelGrid = ({ category, channels, selectedChannel, onChannelSelect }: ChannelGridProps) => {
   const categoryChannels = channels.filter((channel) => channel.category === category);
+  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    // Preload images for visible channels
+    const imageUrls = categoryChannels
+      .filter(channel => channel.logo)
+      .map(channel => channel.logo as string);
+
+    imageUrls.forEach(url => {
+      const img = new Image();
+      img.onload = () => {
+        setLoadedImages(prev => new Set(prev).add(url));
+      };
+      img.src = url;
+    });
+  }, [categoryChannels]);
 
   if (categoryChannels.length === 0) return null;
 
@@ -34,7 +51,12 @@ export const ChannelGrid = ({ category, channels, selectedChannel, onChannelSele
                     <img
                       src={channel.logo}
                       alt={channel.name}
-                      className="w-full h-full object-contain p-2"
+                      className={`w-full h-full object-contain p-2 transition-opacity duration-300 ${
+                        loadedImages.has(channel.logo) ? 'opacity-100' : 'opacity-0'
+                      }`}
+                      loading="lazy"
+                      width={100}
+                      height={100}
                     />
                   ) : (
                     <Tv className="w-12 h-12" />
