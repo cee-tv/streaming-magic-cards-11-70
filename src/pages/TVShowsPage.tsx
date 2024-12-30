@@ -3,14 +3,10 @@ import { TVShows } from "@/components/TVShows";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Play, Plus, Check } from "lucide-react";
-import { useWatchlist } from "@/contexts/WatchlistContext";
-import { toast } from "sonner";
+import { Dialog } from "@/components/ui/dialog";
 import { VideoPlayer } from "@/components/movie/VideoPlayer";
-import { EpisodesList } from "@/components/movie/EpisodesList";
-import { TVShowHeader } from "@/components/tv/TVShowHeader";
+import { TVShowHeaderModal } from "@/components/tv/TVShowHeaderModal";
+import { TVShowHeaderControls } from "@/components/tv/TVShowHeaderControls";
 
 const TVShowsPage = () => {
   const [currentShowIndex, setCurrentShowIndex] = useState(0);
@@ -19,7 +15,6 @@ const TVShowsPage = () => {
   const [showPlayer, setShowPlayer] = useState(false);
   const [selectedSeason, setSelectedSeason] = useState(1);
   const [selectedEpisode, setSelectedEpisode] = useState(1);
-  const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
 
   const { data: trending = [] } = useQuery({
     queryKey: ["trending", "tv"],
@@ -37,17 +32,6 @@ const TVShowsPage = () => {
     queryFn: () => tmdb.getTVSeasonDetails(trending[currentShowIndex]?.id, selectedSeason),
     enabled: showModal && trending[currentShowIndex]?.media_type === 'tv',
   });
-
-  const handleWatchlistToggle = () => {
-    const show = trending[currentShowIndex];
-    if (isInWatchlist(show.id)) {
-      removeFromWatchlist(show.id);
-      toast.success("Removed from watchlist");
-    } else {
-      addToWatchlist(show);
-      toast.success("Added to watchlist");
-    }
-  };
 
   const handleSeasonChange = (season: string) => {
     setSelectedSeason(parseInt(season));
@@ -77,108 +61,68 @@ const TVShowsPage = () => {
   return (
     <div className="min-h-screen bg-netflix-black">
       <Navigation onMediaTypeChange={() => {}} />
-      <TVShowHeader 
-        show={currentShow}
-        onModalOpen={() => {
-          setShowModal(true);
-          setIsPaused(true);
-        }}
-        onPlayStart={() => {
-          setShowPlayer(true);
-          setIsPaused(true);
-        }}
-        onPlayEnd={() => {
-          setShowPlayer(false);
-          setIsPaused(false);
-        }}
-      />
+      <div className="relative h-[50vh] md:h-[70vh] mb-8">
+        <div className="absolute inset-0">
+          <img
+            src={`https://image.tmdb.org/t/p/original${currentShow.backdrop_path}`}
+            alt={currentShow.name}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-netflix-black via-netflix-black/50 to-transparent" />
+        </div>
+        <div className="absolute bottom-0 left-0 p-4 md:p-8 max-w-2xl">
+          <h1 className="text-3xl md:text-6xl font-bold text-white mb-2 md:mb-4">
+            {currentShow.name}
+          </h1>
+          <p className="text-white/80 text-sm md:text-lg mb-4 line-clamp-3 md:line-clamp-none">
+            {currentShow.overview}
+          </p>
+          <TVShowHeaderControls
+            show={currentShow}
+            onPlayClick={() => {
+              setShowPlayer(true);
+              setIsPaused(true);
+            }}
+            onMoreInfoClick={() => {
+              setShowModal(true);
+              setIsPaused(true);
+            }}
+          />
+        </div>
+      </div>
       <div className="pt-4">
         <TVShows />
       </div>
 
-      {/* More Info Modal */}
       <Dialog open={showModal} onOpenChange={(open) => {
         setShowModal(open);
         setIsPaused(open);
       }}>
-        <DialogContent className="max-w-3xl h-[90vh] p-0 bg-black overflow-y-auto">
-          <DialogTitle className="sr-only">{currentShow.name}</DialogTitle>
-          <DialogDescription className="sr-only">Details for {currentShow.name}</DialogDescription>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute left-4 top-4 z-50 text-white hover:bg-white/20"
-            onClick={() => {
-              setShowModal(false);
-              setIsPaused(false);
-            }}
-          >
-            <ArrowLeft className="h-4 w-4" />
-            <span className="sr-only">Return</span>
-          </Button>
-          {trailerKey ? (
-            <iframe
-              className="w-full aspect-video"
-              src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          ) : (
-            <div className="w-full aspect-video bg-gray-900 flex items-center justify-center">
-              <p className="text-white">No trailer available</p>
-            </div>
-          )}
-          <div className="p-6">
-            <div className="flex items-center gap-4 mb-6">
-              <Button 
-                className="rounded-full bg-white hover:bg-white/90 text-black"
-                onClick={() => {
-                  setShowModal(false);
-                  setShowPlayer(true);
-                }}
-              >
-                <Play className="h-4 w-4 mr-2" />
-                Play
-              </Button>
-              <Button
-                variant="outline"
-                className="rounded-full border-white hover:border-white bg-black/30 text-white"
-                onClick={handleWatchlistToggle}
-              >
-                {isInWatchlist(currentShow.id) ? (
-                  <>
-                    <Check className="h-4 w-4 mr-2" />
-                    Remove from Watchlist
-                  </>
-                ) : (
-                  <>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add to Watchlist
-                  </>
-                )}
-              </Button>
-            </div>
-            <h2 className="text-2xl font-bold mb-4 text-white">{currentShow.name}</h2>
-            <p className="text-gray-400">{currentShow.overview}</p>
-
-            {showDetails?.seasons && seasonDetails?.episodes && (
-              <EpisodesList
-                seasons={showDetails.seasons}
-                selectedSeason={selectedSeason}
-                onSeasonChange={handleSeasonChange}
-                episodes={seasonDetails.episodes}
-                onEpisodeSelect={(episodeNumber) => {
-                  setSelectedEpisode(episodeNumber);
-                  setShowModal(false);
-                  setShowPlayer(true);
-                }}
-              />
-            )}
-          </div>
-        </DialogContent>
+        <TVShowHeaderModal
+          show={currentShow}
+          showModal={showModal}
+          trailerKey={trailerKey}
+          showDetails={showDetails}
+          seasonDetails={seasonDetails}
+          selectedSeason={selectedSeason}
+          selectedEpisode={selectedEpisode}
+          onClose={() => {
+            setShowModal(false);
+            setIsPaused(false);
+          }}
+          onPlayClick={() => {
+            setShowModal(false);
+            setShowPlayer(true);
+          }}
+          onSeasonChange={handleSeasonChange}
+          onEpisodeSelect={(episodeNumber) => {
+            setSelectedEpisode(episodeNumber);
+            setShowModal(false);
+            setShowPlayer(true);
+          }}
+        />
       </Dialog>
 
-      {/* Video Player */}
       <VideoPlayer
         isOpen={showPlayer}
         onClose={() => {
