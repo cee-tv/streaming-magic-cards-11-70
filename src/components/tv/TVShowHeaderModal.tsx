@@ -50,19 +50,17 @@ export const TVShowHeaderModal = ({
       <DialogTitle className="sr-only">{show.name}</DialogTitle>
       <DialogDescription className="sr-only">Details for {show.name}</DialogDescription>
       <div className="relative">
-        <div className="absolute left-4 top-4 z-50">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-white hover:bg-white/20"
-            onClick={onClose}
-          >
-            <ArrowLeft className="h-4 w-4" />
-            <span className="sr-only">Return</span>
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute left-4 top-4 z-50 text-white hover:bg-white/20"
+          onClick={onClose}
+        >
+          <ArrowLeft className="h-4 w-4" />
+          <span className="sr-only">Return</span>
+        </Button>
         {trailerKey ? (
-          <div className="pt-16">
+          <div className="pt-12">
             <iframe
               className="w-full aspect-video"
               src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1`}
@@ -71,7 +69,7 @@ export const TVShowHeaderModal = ({
             />
           </div>
         ) : (
-          <div className="w-full aspect-video bg-gray-900 flex items-center justify-center pt-16">
+          <div className="w-full aspect-video bg-gray-900 flex items-center justify-center pt-12">
             <p className="text-white">No trailer available</p>
           </div>
         )}
