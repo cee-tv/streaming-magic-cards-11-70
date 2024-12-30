@@ -24,6 +24,8 @@ export const Hero = ({
 }: HeroProps) => {
   const [showModal, setShowModal] = useState(false);
   const [showPlayer, setShowPlayer] = useState(false);
+  const [selectedSeason, setSelectedSeason] = useState(1);
+  const [selectedEpisode, setSelectedEpisode] = useState(1);
 
   const { data: movieDetails } = useQuery({
     queryKey: ["movie", movie.id, movie.media_type],
@@ -31,14 +33,20 @@ export const Hero = ({
     enabled: showModal || showPlayer,
   });
 
+  const { data: seasonDetails } = useQuery({
+    queryKey: ["season", movie.id, selectedSeason],
+    queryFn: () => tmdb.getTVSeasonDetails(movie.id, selectedSeason),
+    enabled: showModal && movie.media_type === 'tv',
+  });
+
   const trailerKey = movieDetails?.videos ? tmdb.getTrailerKey(movieDetails.videos) : null;
 
   const embedUrl = movie.media_type === 'movie' 
     ? `https://embed.su/embed/movie/${movie.id}`
-    : `https://embed.su/embed/tv/${movie.id}/1/1`;
+    : `https://embed.su/embed/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
   const multiEmbedUrl = movie.media_type === 'movie'
     ? `https://multiembed.mov/?video_id=${movie.id}&tmdb=1`
-    : `https://multiembed.mov/?video_id=${movie.id}&tmdb=1&s=1&e=1`;
+    : `https://multiembed.mov/?video_id=${movie.id}&tmdb=1&s=${selectedSeason}&e=${selectedEpisode}`;
 
   const handleModalOpen = (open: boolean) => {
     setShowModal(open);
@@ -57,6 +65,11 @@ export const Hero = ({
   const handlePlayerClose = () => {
     setShowPlayer(false);
     if (onPlayEnd) onPlayEnd();
+  };
+
+  const handleSeasonChange = (season: string) => {
+    setSelectedSeason(parseInt(season));
+    setSelectedEpisode(1);
   };
 
   return (
@@ -90,8 +103,18 @@ export const Hero = ({
           movie={movie}
           showModal={showModal}
           trailerKey={trailerKey}
+          movieDetails={movieDetails}
+          seasonDetails={seasonDetails}
+          selectedSeason={selectedSeason}
+          selectedEpisode={selectedEpisode}
           onClose={() => handleModalOpen(false)}
           onPlayClick={() => {
+            handleModalOpen(false);
+            setShowPlayer(true);
+          }}
+          onSeasonChange={handleSeasonChange}
+          onEpisodeSelect={(episodeNumber) => {
+            setSelectedEpisode(episodeNumber);
             handleModalOpen(false);
             setShowPlayer(true);
           }}
@@ -106,8 +129,8 @@ export const Hero = ({
         multiEmbedUrl={multiEmbedUrl}
         movieId={movie.id}
         mediaType={movie.media_type as 'movie' | 'tv'}
-        season={1}
-        episode={1}
+        season={selectedSeason}
+        episode={selectedEpisode}
       />
     </>
   );
