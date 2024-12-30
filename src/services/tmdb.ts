@@ -3,7 +3,7 @@ const API_KEY = "72ba10c429914157380d27104ed18fa";
 
 const headers = {
   Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MmJhMTBjNDI5OTE0MTU3MzgwOGQyNzEwNGVkMThmYSIsInN1YiI6IjY0ZjVhNTUwMTIxOTdlMDBmZWE5MzdmMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.84b7vWpVEilAbly4RpS01E9tyirHdhSXjcpfmTczI3Q",
-  "Content-Type": "application/json",
+  accept: "application/json"
 };
 
 export interface Episode {
@@ -50,7 +50,11 @@ export interface MovieDetails extends Movie {
 
 export const tmdb = {
   getTrending: async (mediaType: 'movie' | 'tv' = 'movie'): Promise<Movie[]> => {
+    console.log('Fetching trending:', mediaType);
     const response = await fetch(`${BASE_URL}/trending/${mediaType}/week`, { headers });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     const data = await response.json();
     return data.results.map((item: Movie) => ({
       ...item,
@@ -59,7 +63,11 @@ export const tmdb = {
   },
 
   getPopular: async (mediaType: 'movie' | 'tv' = 'movie'): Promise<Movie[]> => {
+    console.log('Fetching popular:', mediaType);
     const response = await fetch(`${BASE_URL}/${mediaType}/popular`, { headers });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     const data = await response.json();
     return data.results.map((item: Movie) => ({
       ...item,
@@ -68,7 +76,11 @@ export const tmdb = {
   },
 
   getTopRated: async (mediaType: 'movie' | 'tv' = 'movie'): Promise<Movie[]> => {
+    console.log('Fetching top rated:', mediaType);
     const response = await fetch(`${BASE_URL}/${mediaType}/top_rated`, { headers });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     const data = await response.json();
     return data.results.map((item: Movie) => ({
       ...item,
@@ -77,10 +89,14 @@ export const tmdb = {
   },
 
   getByGenre: async (mediaType: 'movie' | 'tv' = 'movie', genreId: number): Promise<Movie[]> => {
+    console.log('Fetching by genre:', mediaType, genreId);
     const response = await fetch(
       `${BASE_URL}/discover/${mediaType}?with_genres=${genreId}`,
       { headers }
     );
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     const data = await response.json();
     return data.results.map((item: Movie) => ({
       ...item,
@@ -89,11 +105,15 @@ export const tmdb = {
   },
 
   search: async (query: string): Promise<Movie[]> => {
+    console.log('Searching:', query);
     if (!query) return [];
     const response = await fetch(
       `${BASE_URL}/search/multi?query=${encodeURIComponent(query)}`,
       { headers }
     );
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     const data = await response.json();
     return data.results.filter((item: Movie) => 
       (item.media_type === 'movie' || item.media_type === 'tv') && item.poster_path
@@ -101,35 +121,22 @@ export const tmdb = {
   },
 
   getMovieDetails: async (id: number, mediaType: 'movie' | 'tv' = 'movie'): Promise<MovieDetails> => {
+    console.log('Fetching details:', mediaType, id);
     try {
       const response = await fetch(
         `${BASE_URL}/${mediaType}/${id}?append_to_response=videos`,
         { headers }
       );
       
-      if (response.ok) {
-        const data = await response.json();
-        return {
-          ...data,
-          media_type: mediaType
-        };
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
       
-      const otherType = mediaType === 'movie' ? 'tv' : 'movie';
-      const retryResponse = await fetch(
-        `${BASE_URL}/${otherType}/${id}?append_to_response=videos`,
-        { headers }
-      );
-      
-      if (retryResponse.ok) {
-        const data = await retryResponse.json();
-        return {
-          ...data,
-          media_type: otherType
-        };
-      }
-      
-      throw new Error(`Failed to fetch details for ID ${id}`);
+      const data = await response.json();
+      return {
+        ...data,
+        media_type: mediaType
+      };
     } catch (error) {
       console.error(`Error fetching details for ID ${id}:`, error);
       throw error;
@@ -137,12 +144,13 @@ export const tmdb = {
   },
 
   getTVSeasonDetails: async (tvId: number, seasonNumber: number): Promise<Season> => {
+    console.log('Fetching season details:', tvId, seasonNumber);
     const response = await fetch(
       `${BASE_URL}/tv/${tvId}/season/${seasonNumber}`,
       { headers }
     );
     if (!response.ok) {
-      throw new Error(`Failed to fetch season details for TV show ${tvId}, season ${seasonNumber}`);
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
     return response.json();
   },
