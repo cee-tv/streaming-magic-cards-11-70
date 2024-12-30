@@ -1,12 +1,13 @@
 import { Button } from "../ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { MoreHorizontal, Play } from "lucide-react";
+import { ChevronDown, ChevronUp, Play, MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { useState } from "react";
 
 interface Episode {
   episode_number: number;
@@ -34,6 +35,16 @@ export const EpisodesList = ({
   episodes,
   onEpisodeSelect,
 }: EpisodesListProps) => {
+  const [expandedEpisodes, setExpandedEpisodes] = useState<number[]>([]);
+
+  const toggleEpisode = (episodeNumber: number) => {
+    setExpandedEpisodes(prev => 
+      prev.includes(episodeNumber)
+        ? prev.filter(ep => ep !== episodeNumber)
+        : [...prev, episodeNumber]
+    );
+  };
+
   return (
     <div className="space-y-4">
       <Select
@@ -81,6 +92,18 @@ export const EpisodesList = ({
                   >
                     <Play className="h-4 w-4" />
                   </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full hover:bg-white/20"
+                    onClick={() => toggleEpisode(episode.episode_number)}
+                  >
+                    {expandedEpisodes.includes(episode.episode_number) ? (
+                      <ChevronUp className="h-4 w-4" />
+                    ) : (
+                      <ChevronDown className="h-4 w-4" />
+                    )}
+                  </Button>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
@@ -102,7 +125,9 @@ export const EpisodesList = ({
                   </DropdownMenu>
                 </div>
               </div>
-              <p className="text-sm text-gray-400 mt-1 line-clamp-2">{episode.overview}</p>
+              {expandedEpisodes.includes(episode.episode_number) && (
+                <p className="text-sm text-gray-400 mt-2">{episode.overview}</p>
+              )}
             </div>
           </div>
         ))}
