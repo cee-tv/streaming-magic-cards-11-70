@@ -60,7 +60,7 @@ export const TVShowHeaderModal = ({
           <span className="sr-only">Return</span>
         </Button>
         {trailerKey ? (
-          <div className="pt-12">
+          <div className="pt-16">
             <iframe
               className="w-full aspect-video"
               src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1`}
@@ -69,7 +69,7 @@ export const TVShowHeaderModal = ({
             />
           </div>
         ) : (
-          <div className="w-full aspect-video bg-gray-900 flex items-center justify-center pt-12">
+          <div className="w-full aspect-video bg-gray-900 flex items-center justify-center pt-16">
             <p className="text-white">No trailer available</p>
           </div>
         )}
