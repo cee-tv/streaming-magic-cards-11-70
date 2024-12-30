@@ -15,18 +15,32 @@ const MoviesPage = () => {
   });
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    
-    if (!isPaused && trending.length > 0) {
-      interval = setInterval(() => {
-        setCurrentMovieIndex((prev) => 
-          prev === trending.length - 1 ? 0 : prev + 1
-        );
-      }, 5000);
-    }
+    if (trending.length === 0 || isPaused) return;
+
+    const interval = setInterval(() => {
+      setCurrentMovieIndex((prev) => 
+        prev === trending.length - 1 ? 0 : prev + 1
+      );
+    }, 10000); // Change poster every 10 seconds
 
     return () => clearInterval(interval);
   }, [trending.length, isPaused]);
+
+  const handleModalOpen = () => {
+    setIsPaused(true);
+  };
+
+  const handleModalClose = () => {
+    setIsPaused(false);
+  };
+
+  const handlePlayStart = () => {
+    setIsPaused(true);
+  };
+
+  const handlePlayEnd = () => {
+    setIsPaused(false);
+  };
 
   const randomMovie = trending.length > 0 
     ? trending[currentMovieIndex]
@@ -41,10 +55,10 @@ const MoviesPage = () => {
       <Navigation onMediaTypeChange={() => {}} />
       <Hero 
         movie={randomMovie} 
-        onModalOpen={() => setIsPaused(true)}
-        onModalClose={() => setIsPaused(false)}
-        onPlayStart={() => setIsPaused(true)}
-        onPlayEnd={() => setIsPaused(false)}
+        onModalOpen={handleModalOpen}
+        onModalClose={handleModalClose}
+        onPlayStart={handlePlayStart}
+        onPlayEnd={handlePlayEnd}
       />
       <div className="pt-4">
         <Movies />

@@ -2,7 +2,7 @@ import { Navigation } from "@/components/Navigation";
 import { TVShows } from "@/components/TVShows";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog } from "@/components/ui/dialog";
 import { VideoPlayer } from "@/components/movie/VideoPlayer";
 import { TVShowHeaderModal } from "@/components/tv/TVShowHeaderModal";
@@ -20,6 +20,18 @@ const TVShowsPage = () => {
     queryKey: ["trending", "tv"],
     queryFn: () => tmdb.getTrending("tv"),
   });
+
+  useEffect(() => {
+    if (trending.length === 0 || isPaused) return;
+
+    const interval = setInterval(() => {
+      setCurrentShowIndex((prev) => 
+        prev === trending.length - 1 ? 0 : prev + 1
+      );
+    }, 10000); // Change poster every 10 seconds
+
+    return () => clearInterval(interval);
+  }, [trending.length, isPaused]);
 
   const { data: showDetails } = useQuery({
     queryKey: ["show", trending[currentShowIndex]?.id],
