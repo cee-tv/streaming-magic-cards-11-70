@@ -59,30 +59,37 @@ export const VideoPlayer = ({
     }
   };
 
-  const switchProvider = () => {
-    const providers: Array<'embed' | 'multiembed' | 'vidsrc' | 'vidsrcvip'> = ['vidsrcvip', 'embed', 'multiembed', 'vidsrc'];
-    const currentIndex = providers.indexOf(currentProvider);
-    const nextIndex = (currentIndex + 1) % providers.length;
-    setCurrentProvider(providers[nextIndex]);
-  };
+  const providers = [
+    { id: 'vidsrcvip', name: 'VidSrc VIP' },
+    { id: 'embed', name: 'Embed.su' },
+    { id: 'multiembed', name: 'MultiEmbed' },
+    { id: 'vidsrc', name: 'VidSrc' },
+  ] as const;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-5xl h-[80vh] p-0 bg-black">
         <DialogTitle className="sr-only">Play {title}</DialogTitle>
         <DialogDescription className="sr-only">Video player for {title}</DialogDescription>
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 flex gap-2">
-          <Button
-            variant="ghost"
-            className="text-white hover:bg-white/20"
-            onClick={switchProvider}
-          >
-            Switch Provider ({currentProvider})
-          </Button>
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {providers.map((provider) => (
+              <Button
+                key={provider.id}
+                variant="ghost"
+                className={`text-white hover:bg-white/20 ${
+                  currentProvider === provider.id ? 'bg-white/20' : ''
+                }`}
+                onClick={() => setCurrentProvider(provider.id)}
+              >
+                {provider.name}
+              </Button>
+            ))}
+          </div>
           {mediaType === 'tv' && onNextEpisode && (
             <Button
               variant="ghost"
-              className="text-white hover:bg-white/20"
+              className="text-white hover:bg-white/20 mt-2 w-full"
               onClick={onNextEpisode}
             >
               Next Episode
