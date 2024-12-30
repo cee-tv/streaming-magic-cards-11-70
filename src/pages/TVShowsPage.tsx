@@ -2,7 +2,7 @@ import { Navigation } from "@/components/Navigation";
 import { TVShows } from "@/components/TVShows";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TVShowHeader } from "@/components/tv/TVShowHeader";
 
 const TVShowsPage = () => {
