@@ -34,7 +34,7 @@ export const TVShows = () => {
   });
 
   return (
-    <div className="container mx-auto px-4 space-y-8">
+    <div className="space-y-8">
       <MovieRow title="Trending TV Shows" movies={trending} />
       <MovieRow title="Popular TV Shows" movies={popular} />
       <MovieRow title="Top Rated TV Shows" movies={topRated} />
