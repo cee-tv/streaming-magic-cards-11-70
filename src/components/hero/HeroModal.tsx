@@ -1,9 +1,7 @@
 import { Movie } from "@/services/tmdb";
 import { Button } from "../ui/button";
 import { DialogContent, DialogTitle, DialogDescription } from "../ui/dialog";
-import { ArrowLeft, Play, Plus, Check } from "lucide-react";
-import { useWatchlist } from "@/contexts/WatchlistContext";
-import { toast } from "sonner";
+import { ArrowLeft, Play } from "lucide-react";
 
 interface HeroModalProps {
   movie: Movie;
@@ -14,18 +12,6 @@ interface HeroModalProps {
 }
 
 export const HeroModal = ({ movie, showModal, trailerKey, onClose, onPlayClick }: HeroModalProps) => {
-  const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
-
-  const handleWatchlistToggle = () => {
-    if (isInWatchlist(movie.id)) {
-      removeFromWatchlist(movie.id);
-      toast.success("Removed from watchlist");
-    } else {
-      addToWatchlist(movie);
-      toast.success("Added to watchlist");
-    }
-  };
-
   return (
     <DialogContent className="max-w-3xl h-[70vh] p-0 bg-black overflow-y-auto">
       <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
@@ -59,18 +45,6 @@ export const HeroModal = ({ movie, showModal, trailerKey, onClose, onPlayClick }
           >
             <Play className="h-4 w-4 mr-2" />
             Play
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            className="rounded-full border-white hover:border-white bg-black/30 text-white"
-            onClick={handleWatchlistToggle}
-          >
-            {isInWatchlist(movie.id) ? (
-              <Check className="h-4 w-4" />
-            ) : (
-              <Plus className="h-4 w-4" />
-            )}
           </Button>
         </div>
         <h2 className="text-2xl font-bold mb-4 text-white">{movie.title || movie.name}</h2>
