@@ -1,7 +1,11 @@
 import { Movie } from "@/services/tmdb";
 import { Button } from "../ui/button";
 import { DialogContent, DialogTitle, DialogDescription } from "../ui/dialog";
-import { ArrowLeft, Play } from "lucide-react";
+import { ArrowLeft, Play, ChevronRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { tmdb } from "@/services/tmdb";
+import { EpisodesList } from "../movie/EpisodesList";
+import { useState } from "react";
 
 interface HeroModalProps {
   movie: Movie;
@@ -12,8 +16,26 @@ interface HeroModalProps {
 }
 
 export const HeroModal = ({ movie, showModal, trailerKey, onClose, onPlayClick }: HeroModalProps) => {
+  const [selectedSeason, setSelectedSeason] = useState(1);
+
+  const { data: seasonDetails } = useQuery({
+    queryKey: ["season", movie.id, selectedSeason],
+    queryFn: () => tmdb.getTVSeasonDetails(movie.id, selectedSeason),
+    enabled: showModal && movie.media_type === 'tv',
+  });
+
+  const { data: movieDetails } = useQuery({
+    queryKey: ["movie", movie.id, movie.media_type],
+    queryFn: () => tmdb.getMovieDetails(movie.id, movie.media_type as 'movie' | 'tv'),
+    enabled: showModal,
+  });
+
+  const handleSeasonChange = (season: string) => {
+    setSelectedSeason(parseInt(season));
+  };
+
   return (
-    <DialogContent className="max-w-3xl h-[70vh] p-0 bg-black overflow-y-auto">
+    <DialogContent className="max-w-3xl h-[90vh] p-0 bg-black overflow-y-auto">
       <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
       <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
       <Button
@@ -48,7 +70,20 @@ export const HeroModal = ({ movie, showModal, trailerKey, onClose, onPlayClick }
           </Button>
         </div>
         <h2 className="text-2xl font-bold mb-4 text-white">{movie.title || movie.name}</h2>
-        <p className="text-gray-400">{movie.overview}</p>
+        <p className="text-gray-400 mb-6">{movie.overview}</p>
+
+        {movie.media_type === 'tv' && movieDetails?.seasons && seasonDetails?.episodes && (
+          <EpisodesList
+            seasons={movieDetails.seasons}
+            selectedSeason={selectedSeason}
+            onSeasonChange={handleSeasonChange}
+            episodes={seasonDetails.episodes}
+            onEpisodeSelect={(episodeNumber) => {
+              onClose();
+              onPlayClick();
+            }}
+          />
+        )}
       </div>
     </DialogContent>
   );
