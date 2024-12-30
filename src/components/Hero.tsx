@@ -87,7 +87,7 @@ export const Hero = ({
 
       <Dialog open={showModal} onOpenChange={handleModalOpen}>
         <HeroModal
-          movie={movieDetails || movie}
+          movie={movie}
           showModal={showModal}
           trailerKey={trailerKey}
           onClose={() => handleModalOpen(false)}
