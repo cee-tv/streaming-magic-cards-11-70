@@ -50,10 +50,10 @@ export const Hero = ({
 
   const handleModalOpen = (open: boolean) => {
     setShowModal(open);
-    if (open && onModalOpen) {
-      onModalOpen();
-    } else if (!open && onModalClose) {
-      onModalClose();
+    if (open) {
+      if (onModalOpen) onModalOpen();
+    } else {
+      if (onModalClose) onModalClose();
     }
   };
 
