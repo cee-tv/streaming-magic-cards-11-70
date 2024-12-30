@@ -1,7 +1,13 @@
-import { X, ChevronRight } from "lucide-react";
+import { X } from "lucide-react";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "../ui/dialog";
 import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 interface VideoPlayerProps {
   isOpen: boolean;
@@ -28,7 +34,7 @@ export const VideoPlayer = ({
   episode,
   onNextEpisode
 }: VideoPlayerProps) => {
-  const [currentProvider, setCurrentProvider] = useState<'embed' | 'multiembed' | 'vidsrc' | 'vidsrcvip'>('vidsrcvip');
+  const [currentProvider, setCurrentProvider] = useState<'vidsrcvip' | 'embed' | 'multiembed' | 'vidsrc'>('vidsrcvip');
 
   const getVidsrcUrl = () => {
     if (mediaType === 'movie') {
@@ -71,43 +77,37 @@ export const VideoPlayer = ({
       <DialogContent className="max-w-5xl h-[80vh] p-0 bg-black">
         <DialogTitle className="sr-only">Play {title}</DialogTitle>
         <DialogDescription className="sr-only">Video player for {title}</DialogDescription>
+        
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            {providers.map((provider) => (
-              <Button
-                key={provider.id}
-                variant="ghost"
-                className={`text-white hover:bg-white/20 ${
-                  currentProvider === provider.id ? 'bg-white/20' : ''
-                }`}
-                onClick={() => setCurrentProvider(provider.id)}
-              >
-                {provider.name}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="text-white hover:bg-white/20">
+                {providers.find(p => p.id === currentProvider)?.name || 'Select Provider'}
               </Button>
-            ))}
-          </div>
-          {mediaType === 'tv' && onNextEpisode && (
-            <Button
-              variant="ghost"
-              className="text-white hover:bg-white/20 mt-2 w-full"
-              onClick={onNextEpisode}
-            >
-              Next Episode
-              <ChevronRight className="ml-1 h-4 w-4" />
-            </Button>
-          )}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {providers.map((provider) => (
+                <DropdownMenuItem
+                  key={provider.id}
+                  onClick={() => setCurrentProvider(provider.id)}
+                >
+                  {provider.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-        <div className="absolute right-4 top-4 z-50">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full text-white hover:bg-white/20 w-8 h-8"
-            onClick={onClose}
-          >
-            <X className="h-5 w-5" />
-            <span className="sr-only">Close</span>
-          </Button>
-        </div>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute right-4 top-4 z-50 rounded-full bg-black/50 text-white hover:bg-black/70 w-8 h-8"
+          onClick={onClose}
+        >
+          <X className="h-5 w-5" />
+          <span className="sr-only">Close</span>
+        </Button>
+
         <iframe
           className="w-full h-full"
           src={getCurrentUrl()}
