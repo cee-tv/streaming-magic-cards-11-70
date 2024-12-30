@@ -3,7 +3,7 @@ import { TVShows } from "@/components/TVShows";
 import { Hero } from "@/components/Hero";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const TVShowsPage = () => {
   const [currentShowIndex, setCurrentShowIndex] = useState(0);
@@ -13,6 +13,20 @@ const TVShowsPage = () => {
     queryKey: ["trending", "tv"],
     queryFn: () => tmdb.getTrending("tv"),
   });
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    
+    if (!isPaused && trending.length > 0) {
+      interval = setInterval(() => {
+        setCurrentShowIndex((prev) => 
+          prev === trending.length - 1 ? 0 : prev + 1
+        );
+      }, 5000);
+    }
+
+    return () => clearInterval(interval);
+  }, [trending.length, isPaused]);
 
   const randomShow = trending.length > 0 
     ? trending[currentShowIndex]
