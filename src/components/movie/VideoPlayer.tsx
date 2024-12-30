@@ -60,15 +60,10 @@ export const VideoPlayer = ({
   };
 
   const switchProvider = () => {
-    if (currentProvider === 'embed') {
-      setCurrentProvider('multiembed');
-    } else if (currentProvider === 'multiembed') {
-      setCurrentProvider('vidsrc');
-    } else if (currentProvider === 'vidsrc') {
-      setCurrentProvider('vidsrcvip');
-    } else {
-      setCurrentProvider('embed');
-    }
+    const providers: Array<'embed' | 'multiembed' | 'vidsrc' | 'vidsrcvip'> = ['vidsrcvip', 'embed', 'multiembed', 'vidsrc'];
+    const currentIndex = providers.indexOf(currentProvider);
+    const nextIndex = (currentIndex + 1) % providers.length;
+    setCurrentProvider(providers[nextIndex]);
   };
 
   return (
