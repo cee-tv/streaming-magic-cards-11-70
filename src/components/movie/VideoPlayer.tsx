@@ -97,17 +97,15 @@ export const VideoPlayer = ({
             </Button>
           )}
         </div>
-        <div className="absolute right-4 top-4 z-50">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full text-white hover:bg-white/20 w-8 h-8"
-            onClick={onClose}
-          >
-            <X className="h-5 w-5" />
-            <span className="sr-only">Close</span>
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute right-4 top-4 z-50 rounded-full text-white hover:bg-white/20 w-8 h-8"
+          onClick={onClose}
+        >
+          <X className="h-5 w-5" />
+          <span className="sr-only">Close</span>
+        </Button>
         <iframe
           className="w-full h-full"
           src={getCurrentUrl()}
