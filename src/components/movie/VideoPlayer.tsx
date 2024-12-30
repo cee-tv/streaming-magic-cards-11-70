@@ -28,13 +28,20 @@ export const VideoPlayer = ({
   episode,
   onNextEpisode
 }: VideoPlayerProps) => {
-  const [currentProvider, setCurrentProvider] = useState<'embed' | 'multiembed' | 'vidsrc'>('embed');
+  const [currentProvider, setCurrentProvider] = useState<'embed' | 'multiembed' | 'vidsrc' | 'vidsrcvip'>('embed');
 
   const getVidsrcUrl = () => {
     if (mediaType === 'movie') {
       return `https://vidsrc.to/embed/movie/${movieId}`;
     }
     return `https://vidsrc.to/embed/tv/${movieId}/${season}/${episode}`;
+  };
+
+  const getVidsrcVipUrl = () => {
+    if (mediaType === 'movie') {
+      return `https://vidsrc.vip/embed/movie/${movieId}`;
+    }
+    return `https://vidsrc.vip/embed/tv/${movieId}/${season}/${episode}`;
   };
 
   const getCurrentUrl = () => {
@@ -45,6 +52,8 @@ export const VideoPlayer = ({
         return multiEmbedUrl;
       case 'vidsrc':
         return getVidsrcUrl();
+      case 'vidsrcvip':
+        return getVidsrcVipUrl();
       default:
         return embedUrl;
     }
@@ -55,6 +64,8 @@ export const VideoPlayer = ({
       setCurrentProvider('multiembed');
     } else if (currentProvider === 'multiembed') {
       setCurrentProvider('vidsrc');
+    } else if (currentProvider === 'vidsrc') {
+      setCurrentProvider('vidsrcvip');
     } else {
       setCurrentProvider('embed');
     }
