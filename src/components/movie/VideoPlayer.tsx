@@ -101,7 +101,7 @@ export const VideoPlayer = ({
         <Button
           variant="ghost"
           size="icon"
-          className="absolute right-4 top-4 z-50 rounded-full bg-black/50 text-white hover:bg-black/70 w-8 h-8"
+          className="absolute right-4 top-4 z-50 rounded-full bg-black/50 text-white hover:bg-black/70 w-8 h-8 border border-white"
           onClick={onClose}
         >
           <X className="h-5 w-5" />
