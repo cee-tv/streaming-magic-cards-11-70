@@ -1,9 +1,8 @@
 import { Navigation } from "@/components/Navigation";
 import { TVShows } from "@/components/TVShows";
-import { Hero } from "@/components/Hero";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Play, Plus, Check } from "lucide-react";
@@ -11,6 +10,7 @@ import { useWatchlist } from "@/contexts/WatchlistContext";
 import { toast } from "sonner";
 import { VideoPlayer } from "@/components/movie/VideoPlayer";
 import { EpisodesList } from "@/components/movie/EpisodesList";
+import { TVShowHeader } from "@/components/tv/TVShowHeader";
 
 const TVShowsPage = () => {
   const [currentShowIndex, setCurrentShowIndex] = useState(0);
@@ -37,20 +37,6 @@ const TVShowsPage = () => {
     queryFn: () => tmdb.getTVSeasonDetails(trending[currentShowIndex]?.id, selectedSeason),
     enabled: showModal && trending[currentShowIndex]?.media_type === 'tv',
   });
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    
-    if (!isPaused && trending.length > 0) {
-      interval = setInterval(() => {
-        setCurrentShowIndex((prev) => 
-          prev === trending.length - 1 ? 0 : prev + 1
-        );
-      }, 5000);
-    }
-
-    return () => clearInterval(interval);
-  }, [trending.length, isPaused]);
 
   const handleWatchlistToggle = () => {
     const show = trending[currentShowIndex];
@@ -91,15 +77,11 @@ const TVShowsPage = () => {
   return (
     <div className="min-h-screen bg-netflix-black">
       <Navigation onMediaTypeChange={() => {}} />
-      <Hero 
-        movie={currentShow} 
+      <TVShowHeader 
+        show={currentShow}
         onModalOpen={() => {
           setShowModal(true);
           setIsPaused(true);
-        }}
-        onModalClose={() => {
-          setShowModal(false);
-          setIsPaused(false);
         }}
         onPlayStart={() => {
           setShowPlayer(true);
@@ -115,7 +97,10 @@ const TVShowsPage = () => {
       </div>
 
       {/* More Info Modal */}
-      <Dialog open={showModal} onOpenChange={setShowModal}>
+      <Dialog open={showModal} onOpenChange={(open) => {
+        setShowModal(open);
+        setIsPaused(open);
+      }}>
         <DialogContent className="max-w-3xl h-[90vh] p-0 bg-black overflow-y-auto">
           <DialogTitle className="sr-only">{currentShow.name}</DialogTitle>
           <DialogDescription className="sr-only">Details for {currentShow.name}</DialogDescription>
@@ -174,7 +159,7 @@ const TVShowsPage = () => {
               </Button>
             </div>
             <h2 className="text-2xl font-bold mb-4 text-white">{currentShow.name}</h2>
-            <p className="text-gray-400 mb-6">{currentShow.overview}</p>
+            <p className="text-gray-400">{currentShow.overview}</p>
 
             {showDetails?.seasons && seasonDetails?.episodes && (
               <EpisodesList
