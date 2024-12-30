@@ -1,24 +1,5 @@
-import { Button } from "../ui/button";
+import { Episode, Season } from "@/services/tmdb";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { ChevronDown, ChevronUp, Play, MoreHorizontal } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { useState } from "react";
-
-interface Episode {
-  episode_number: number;
-  name: string;
-  overview: string;
-  still_path: string | null;
-}
-
-interface Season {
-  season_number: number;
-}
 
 interface EpisodesListProps {
   seasons: Season[];
@@ -35,99 +16,48 @@ export const EpisodesList = ({
   episodes,
   onEpisodeSelect,
 }: EpisodesListProps) => {
-  const [expandedEpisodes, setExpandedEpisodes] = useState<number[]>([]);
-
-  const toggleEpisode = (episodeNumber: number) => {
-    setExpandedEpisodes(prev => 
-      prev.includes(episodeNumber)
-        ? prev.filter(ep => ep !== episodeNumber)
-        : [...prev, episodeNumber]
-    );
-  };
-
   return (
-    <div className="space-y-4">
-      <Select
-        value={selectedSeason.toString()}
-        onValueChange={onSeasonChange}
-      >
-        <SelectTrigger className="w-[180px] bg-white/10 text-white border-white/20">
-          <SelectValue placeholder="Select season" />
-        </SelectTrigger>
-        <SelectContent>
-          {seasons.map((season) => (
-            <SelectItem
-              key={season.season_number}
-              value={season.season_number.toString()}
-            >
-              Season {season.season_number}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+    <div className="p-6 bg-black text-white">
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-3xl font-bold">Episodes</h2>
+        <Select value={selectedSeason.toString()} onValueChange={onSeasonChange}>
+          <SelectTrigger className="w-[180px] bg-zinc-800 border-none text-white">
+            <SelectValue placeholder="Select season" />
+          </SelectTrigger>
+          <SelectContent className="bg-zinc-800 border-none text-white">
+            {seasons.map((season) => (
+              <SelectItem 
+                key={season.season_number} 
+                value={season.season_number.toString()}
+                className="hover:bg-zinc-700"
+              >
+                Season {season.season_number}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         {episodes.map((episode) => (
           <div
-            key={episode.episode_number}
-            className="flex items-start gap-4 text-white"
+            key={episode.id}
+            className="flex gap-4 cursor-pointer hover:bg-zinc-800/50 p-4 rounded-lg transition-colors"
+            onClick={() => onEpisodeSelect(episode.episode_number)}
           >
-            <img
-              src={episode.still_path ? `https://image.tmdb.org/t/p/w300${episode.still_path}` : '/placeholder.svg'}
-              alt={episode.name}
-              className="w-40 h-24 object-cover rounded"
-            />
+            {episode.still_path && (
+              <img
+                src={`https://image.tmdb.org/t/p/w300${episode.still_path}`}
+                alt={episode.name}
+                className="w-40 h-24 object-cover rounded-md"
+              />
+            )}
             <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-bold">Episode {episode.episode_number}</h4>
-                  <h5>{episode.name}</h5>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full hover:bg-white/20"
-                    onClick={() => onEpisodeSelect(episode.episode_number)}
-                  >
-                    <Play className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full hover:bg-white/20"
-                    onClick={() => toggleEpisode(episode.episode_number)}
-                  >
-                    {expandedEpisodes.includes(episode.episode_number) ? (
-                      <ChevronUp className="h-4 w-4" />
-                    ) : (
-                      <ChevronDown className="h-4 w-4" />
-                    )}
-                  </Button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="rounded-full hover:bg-white/20"
-                      >
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem onClick={() => onEpisodeSelect(episode.episode_number)}>
-                        Play Episode
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => window.open(`https://dl.vidsrc.vip/tv/${episode.episode_number}/${selectedSeason}/${episode.episode_number}`, '_blank')}>
-                        Download Episode
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
+              <div className="flex items-center justify-between mb-1">
+                <h3 className="font-bold">{episode.name}</h3>
+                <span className="text-sm text-gray-400">{episode.runtime}m</span>
               </div>
-              {expandedEpisodes.includes(episode.episode_number) && (
-                <p className="text-sm text-gray-400 mt-2">{episode.overview}</p>
-              )}
+              <p className="text-sm text-gray-400 line-clamp-2">{episode.overview}</p>
             </div>
           </div>
         ))}

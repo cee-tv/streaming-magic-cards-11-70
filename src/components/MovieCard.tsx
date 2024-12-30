@@ -100,31 +100,27 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
         <DialogContent className="max-w-3xl h-[90vh] p-0 bg-black overflow-y-auto">
           <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
           <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
-          <div className="relative">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute left-4 top-4 z-50 text-white hover:bg-white/20"
-              onClick={() => setShowModal(false)}
-            >
-              <ArrowLeft className="h-4 w-4" />
-              <span className="sr-only">Return</span>
-            </Button>
-            {trailerKey ? (
-              <div className="pt-12">
-                <iframe
-                  className="w-full aspect-video"
-                  src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1`}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
-            ) : (
-              <div className="w-full aspect-video bg-gray-900 flex items-center justify-center pt-12">
-                <p className="text-white">No trailer available</p>
-              </div>
-            )}
-          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="absolute left-4 top-4 z-50 text-white hover:bg-white/20"
+            onClick={() => setShowModal(false)}
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span className="sr-only">Return</span>
+          </Button>
+          {trailerKey ? (
+            <iframe
+              className="w-full aspect-video"
+              src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          ) : (
+            <div className="w-full aspect-video bg-gray-900 flex items-center justify-center">
+              <p className="text-white">No trailer available</p>
+            </div>
+          )}
           <div className="p-6">
             <div className="flex items-center gap-4 mb-6">
               <Button 
