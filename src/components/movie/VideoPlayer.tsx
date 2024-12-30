@@ -28,7 +28,7 @@ export const VideoPlayer = ({
   episode,
   onNextEpisode
 }: VideoPlayerProps) => {
-  const [currentProvider, setCurrentProvider] = useState<'embed' | 'multiembed' | 'vidsrc' | 'vidsrcvip'>('embed');
+  const [currentProvider, setCurrentProvider] = useState<'embed' | 'multiembed' | 'vidsrc' | 'vidsrcvip'>('vidsrcvip');
 
   const getVidsrcUrl = () => {
     if (mediaType === 'movie') {
@@ -55,7 +55,7 @@ export const VideoPlayer = ({
       case 'vidsrcvip':
         return getVidsrcVipUrl();
       default:
-        return embedUrl;
+        return getVidsrcVipUrl();
     }
   };
 
