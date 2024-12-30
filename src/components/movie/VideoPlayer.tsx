@@ -78,42 +78,44 @@ export const VideoPlayer = ({
         <DialogTitle className="sr-only">Play {title}</DialogTitle>
         <DialogDescription className="sr-only">Video player for {title}</DialogDescription>
         
-        <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-50">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="text-white hover:bg-white/20">
-                {providers.find(p => p.id === currentProvider)?.name || 'Select Provider'}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              {providers.map((provider) => (
-                <DropdownMenuItem
-                  key={provider.id}
-                  onClick={() => setCurrentProvider(provider.id)}
-                >
-                  {provider.name}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <div className="relative w-full h-full">
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 flex items-center gap-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="text-white bg-black/50 hover:bg-black/70 backdrop-blur-sm">
+                  {providers.find(p => p.id === currentProvider)?.name || 'Select Provider'}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {providers.map((provider) => (
+                  <DropdownMenuItem
+                    key={provider.id}
+                    onClick={() => setCurrentProvider(provider.id)}
+                  >
+                    {provider.name}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full bg-black/50 text-white hover:bg-black/70 backdrop-blur-sm w-8 h-8 border border-white/20"
+              onClick={onClose}
+            >
+              <X className="h-5 w-5" />
+              <span className="sr-only">Close</span>
+            </Button>
+          </div>
+
+          <iframe
+            className="w-full h-full"
+            src={getCurrentUrl()}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
         </div>
-
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute right-8 top-8 z-50 rounded-full bg-black/50 text-white hover:bg-black/70 w-8 h-8 border border-white"
-          onClick={onClose}
-        >
-          <X className="h-5 w-5" />
-          <span className="sr-only">Close</span>
-        </Button>
-
-        <iframe
-          className="w-full h-[calc(100%-4rem)] mt-16"
-          src={getCurrentUrl()}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
       </DialogContent>
     </Dialog>
   );
