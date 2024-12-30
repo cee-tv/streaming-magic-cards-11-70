@@ -27,11 +27,11 @@ if (process.env.NODE_ENV === 'production') {
   });
 
   // Disable developer tools
-  window.addEventListener('devtoolschange', function(e) {
-    if (e.detail.isOpen) {
+  window.addEventListener('devtoolschange', function(e: CustomEvent) {
+    if ((e as CustomEvent<{ isOpen: boolean }>).detail.isOpen) {
       window.location.reload();
     }
-  });
+  } as EventListener);
 }
 
 const rootElement = document.getElementById("root");
