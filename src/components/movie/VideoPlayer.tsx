@@ -78,7 +78,7 @@ export const VideoPlayer = ({
         <DialogTitle className="sr-only">Play {title}</DialogTitle>
         <DialogDescription className="sr-only">Video player for {title}</DialogDescription>
         
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50">
+        <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-50">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="text-white hover:bg-white/20">
@@ -101,7 +101,7 @@ export const VideoPlayer = ({
         <Button
           variant="ghost"
           size="icon"
-          className="absolute right-4 top-4 z-50 rounded-full bg-black/50 text-white hover:bg-black/70 w-8 h-8 border border-white"
+          className="absolute right-8 top-8 z-50 rounded-full bg-black/50 text-white hover:bg-black/70 w-8 h-8 border border-white"
           onClick={onClose}
         >
           <X className="h-5 w-5" />
@@ -109,7 +109,7 @@ export const VideoPlayer = ({
         </Button>
 
         <iframe
-          className="w-full h-full"
+          className="w-full h-full mt-16"
           src={getCurrentUrl()}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
