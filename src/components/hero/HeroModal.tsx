@@ -5,7 +5,6 @@ import { ArrowLeft, Play, Download, Plus, Check } from "lucide-react";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { toast } from "sonner";
 import { EpisodesList } from "../movie/EpisodesList";
-import { TrailerPlayer } from "../movie/TrailerPlayer";
 
 interface HeroModalProps {
   movie: Movie;
@@ -23,6 +22,7 @@ interface HeroModalProps {
 
 export const HeroModal = ({ 
   movie, 
+  showModal, 
   trailerKey, 
   movieDetails,
   seasonDetails,
@@ -59,7 +59,20 @@ export const HeroModal = ({
           <ArrowLeft className="h-4 w-4" />
           <span className="sr-only">Return</span>
         </Button>
-        <TrailerPlayer trailerKey={trailerKey} />
+        {trailerKey ? (
+          <div className="pt-16">
+            <iframe
+              className="w-full aspect-video"
+              src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        ) : (
+          <div className="w-full aspect-video bg-gray-900 flex items-center justify-center pt-16">
+            <p className="text-white">No trailer available</p>
+          </div>
+        )}
       </div>
       <div className="p-6">
         <div className="flex items-center gap-4 mb-6">
