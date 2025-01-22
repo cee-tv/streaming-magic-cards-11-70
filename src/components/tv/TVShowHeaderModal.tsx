@@ -63,7 +63,7 @@ export const TVShowHeaderModal = ({
           <div className="pt-16">
             <iframe
               className="w-full aspect-video"
-              src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1`}
+              src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
