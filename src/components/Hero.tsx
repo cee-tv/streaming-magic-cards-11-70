@@ -81,9 +81,8 @@ export const Hero = ({
             alt={movie.title}
             className="w-full h-full object-cover"
           />
-          {/* Updated gradient overlays for better text visibility */}
-          <div className="absolute inset-0 bg-gradient-to-t from-netflix-black via-transparent to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-netflix-black/90 via-netflix-black/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-netflix-black via-netflix-black/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-netflix-black via-netflix-black/25 to-transparent" />
         </div>
         <div className="absolute bottom-0 left-0 p-4 md:p-8 max-w-2xl">
           <h1 className="text-3xl md:text-6xl font-bold text-white mb-2 md:mb-4">
