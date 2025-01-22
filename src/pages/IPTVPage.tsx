@@ -17,6 +17,13 @@ const IPTVPage = () => {
     }
   }, []);
 
+  // Auto-select first channel on mount
+  useEffect(() => {
+    if (channels.length > 0 && !selectedChannel) {
+      setSelectedChannel(channels[0]);
+    }
+  }, []);
+
   const handleChannelSelect = (channel: Channel) => {
     setSelectedChannel(channel);
   };
