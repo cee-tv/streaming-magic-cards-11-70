@@ -42,11 +42,11 @@ export const Hero = ({
   const trailerKey = movieDetails?.videos ? tmdb.getTrailerKey(movieDetails.videos) : null;
 
   const embedUrl = movie.media_type === 'movie' 
-    ? `https://embed.su/embed/movie/${movie.id}`
-    : `https://embed.su/embed/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
+    ? `https://embed.su/embed/movie/${movie.id}?autoplay=1`
+    : `https://embed.su/embed/tv/${movie.id}/${selectedSeason}/${selectedEpisode}?autoplay=1`;
   const multiEmbedUrl = movie.media_type === 'movie'
-    ? `https://multiembed.mov/?video_id=${movie.id}&tmdb=1`
-    : `https://multiembed.mov/?video_id=${movie.id}&tmdb=1&s=${selectedSeason}&e=${selectedEpisode}`;
+    ? `https://multiembed.mov/?video_id=${movie.id}&tmdb=1&autoplay=1`
+    : `https://multiembed.mov/?video_id=${movie.id}&tmdb=1&s=${selectedSeason}&e=${selectedEpisode}&autoplay=1`;
 
   const handleModalOpen = (open: boolean) => {
     setShowModal(open);
