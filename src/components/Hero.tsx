@@ -1,6 +1,6 @@
 import { Movie } from "@/services/tmdb";
 import { useState } from "react";
-import { Dialog, DialogContent } from "./ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dialog";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
 import { VideoPlayer } from "./movie/VideoPlayer";
@@ -100,6 +100,8 @@ export const Hero = ({
 
       <Dialog open={showModal} onOpenChange={handleModalOpen}>
         <DialogContent className="max-w-[70vh] h-[70vh] aspect-square p-0 bg-black overflow-y-auto">
+          <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
+          <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
           <HeroModal
             movie={movie}
             showModal={showModal}
