@@ -108,11 +108,11 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
             <Button
               variant="ghost"
               size="icon"
-              className="absolute left-4 top-4 z-50 text-white hover:bg-white/20"
+              className="absolute right-4 top-4 z-50 text-white hover:bg-white/20 h-12 w-12"
               onClick={() => setShowModal(false)}
             >
-              <ArrowLeft className="h-4 w-4" />
-              <span className="sr-only">Return</span>
+              <X className="h-6 w-6" />
+              <span className="sr-only">Close</span>
             </Button>
             <div className="relative">
               {trailerKey ? (
