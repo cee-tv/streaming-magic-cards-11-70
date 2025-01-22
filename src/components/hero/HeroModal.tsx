@@ -69,9 +69,7 @@ export const HeroModal = ({
                 allowFullScreen
               />
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/50 to-transparent p-4">
-                <h2 className="text-2xl font-bold mb-2 text-white">{movie.title || movie.name}</h2>
-                <p className="text-gray-400 mb-4 line-clamp-2">{movie.overview}</p>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 mb-4">
                   <Button 
                     className="rounded-full bg-white hover:bg-white/90 text-black"
                     onClick={onPlayClick}
@@ -105,6 +103,8 @@ export const HeroModal = ({
                     <Download className="h-4 w-4" />
                   </Button>
                 </div>
+                <h2 className="text-2xl font-bold mb-2 text-white">{movie.title || movie.name}</h2>
+                <p className="text-gray-400">{movie.overview}</p>
               </div>
             </div>
           ) : (
