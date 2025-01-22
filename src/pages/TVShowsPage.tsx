@@ -73,22 +73,21 @@ const TVShowsPage = () => {
   return (
     <div className="min-h-screen bg-netflix-black">
       <Navigation onMediaTypeChange={() => {}} />
-      <div className="relative h-[50vh] md:h-[70vh]">
+      <div className="relative h-[50vh] md:h-[70vh] mb-8">
         <div className="absolute inset-0">
           <img
-            src={`https://image.tmdb.org/t/p/original${currentShow?.backdrop_path}`}
-            alt={currentShow?.name}
+            src={`https://image.tmdb.org/t/p/original${currentShow.backdrop_path}`}
+            alt={currentShow.name}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-netflix-black via-netflix-black/50 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-netflix-black via-netflix-black/25 to-transparent" />
         </div>
         <div className="absolute bottom-0 left-0 p-4 md:p-8 max-w-2xl">
           <h1 className="text-3xl md:text-6xl font-bold text-white mb-2 md:mb-4">
-            {currentShow?.name}
+            {currentShow.name}
           </h1>
           <p className="text-white/80 text-sm md:text-lg mb-4 line-clamp-3 md:line-clamp-none">
-            {currentShow?.overview}
+            {currentShow.overview}
           </p>
           <TVShowHeaderControls
             show={currentShow}
@@ -103,13 +102,7 @@ const TVShowsPage = () => {
           />
         </div>
       </div>
-      
-      {/* Add gradient background section */}
-      <div className="relative">
-        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-netflix-black via-[#1a0f29] to-[#0d0d2b] -mt-8" />
-      </div>
-
-      <div className="relative pt-4">
+      <div className="pt-4">
         <TVShows />
       </div>
 
@@ -148,10 +141,10 @@ const TVShowsPage = () => {
           setShowPlayer(false);
           setIsPaused(false);
         }}
-        title={currentShow?.name}
+        title={currentShow.name}
         embedUrl={embedUrl}
         multiEmbedUrl={multiEmbedUrl}
-        movieId={currentShow?.id}
+        movieId={currentShow.id}
         mediaType="tv"
         season={selectedSeason}
         episode={selectedEpisode}
