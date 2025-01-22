@@ -68,7 +68,7 @@ export const TVShowHeaderModal = ({
           )}
         </div>
       </div>
-      <div className="p-6">
+      <div className="p-4">
         <h2 className="text-2xl font-bold mb-4 text-white">{show.name}</h2>
         <p className="text-gray-400 mb-6">{show.overview}</p>
 

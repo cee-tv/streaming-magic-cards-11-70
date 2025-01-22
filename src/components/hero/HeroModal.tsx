@@ -70,7 +70,7 @@ export const HeroModal = ({
           )}
         </div>
       </div>
-      <div className="p-6">
+      <div className="p-4">
         <h2 className="text-2xl font-bold mb-4 text-white">
           {movie.title || movie.name}
         </h2>

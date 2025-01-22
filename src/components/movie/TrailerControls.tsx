@@ -30,7 +30,7 @@ export const TrailerControls = ({
   };
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center gap-4 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300">
+    <div className="absolute bottom-0 left-0 flex items-center gap-4 p-4 bg-gradient-to-t from-black/80 to-transparent w-full">
       <Button
         className="rounded-full bg-white hover:bg-white/90 text-black"
         onClick={onPlayClick}
