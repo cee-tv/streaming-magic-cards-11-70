@@ -38,24 +38,24 @@ export const VideoPlayer = ({
 
   const getVidsrcUrl = () => {
     if (mediaType === 'movie') {
-      return `https://vidsrc.to/embed/movie/${movieId}`;
+      return `https://vidsrc.to/embed/movie/${movieId}?autoplay=1`;
     }
-    return `https://vidsrc.to/embed/tv/${movieId}/${season}/${episode}`;
+    return `https://vidsrc.to/embed/tv/${movieId}/${season}/${episode}?autoplay=1`;
   };
 
   const getVidsrcVipUrl = () => {
     if (mediaType === 'movie') {
-      return `https://vidsrc.vip/embed/movie/${movieId}`;
+      return `https://vidsrc.vip/embed/movie/${movieId}?autoplay=1`;
     }
-    return `https://vidsrc.vip/embed/tv/${movieId}/${season}/${episode}`;
+    return `https://vidsrc.vip/embed/tv/${movieId}/${season}/${episode}?autoplay=1`;
   };
 
   const getCurrentUrl = () => {
     switch (currentProvider) {
       case 'embed':
-        return embedUrl;
+        return `${embedUrl}?autoplay=1`;
       case 'multiembed':
-        return multiEmbedUrl;
+        return `${multiEmbedUrl}&autoplay=1`;
       case 'vidsrc':
         return getVidsrcUrl();
       case 'vidsrcvip':
