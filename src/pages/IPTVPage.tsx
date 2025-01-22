@@ -7,15 +7,6 @@ import type { Channel } from "../data/channels";
 
 const IPTVPage = () => {
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
-  const [jwPlayer, setJwPlayer] = useState<any>(null);
-
-  useEffect(() => {
-    if (window.jwplayer && !jwPlayer) {
-      window.jwplayer.key = 'XSuP4qMl+9tK17QNb+4+th2Pm9AWgMO/cYH8CI0HGGr7bdjo';
-      const player = window.jwplayer("jwplayer-container");
-      setJwPlayer(player);
-    }
-  }, []);
 
   // Auto-select first channel on mount
   useEffect(() => {
@@ -33,7 +24,7 @@ const IPTVPage = () => {
       <Navigation onMediaTypeChange={() => {}} />
       
       <div className="container mx-auto px-4 pt-20 pb-8">
-        <IPTVPlayer selectedChannel={selectedChannel} jwPlayer={jwPlayer} />
+        <IPTVPlayer selectedChannel={selectedChannel} jwPlayer={null} />
 
         {categories.map((category) => (
           <ChannelGrid

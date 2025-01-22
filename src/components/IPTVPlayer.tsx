@@ -1,62 +1,78 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import shaka from 'shaka-player';
 import type { Channel } from "../data/channels";
 
 interface IPTVPlayerProps {
   selectedChannel: Channel | null;
-  jwPlayer: any;
+  jwPlayer: any; // Keep for backwards compatibility during transition
 }
 
-export const IPTVPlayer = ({ selectedChannel, jwPlayer }: IPTVPlayerProps) => {
-  useEffect(() => {
-    if (jwPlayer && selectedChannel) {
-      const playerConfig = {
-        width: "100%",
-        height: "100%",
-        autostart: true,
-        controls: true,
-        stretching: "uniform",
-        file: selectedChannel.streamUrl,
-        type: selectedChannel.type,
-        drm: selectedChannel.type === 'mpd' && selectedChannel.drmConfig ? {
-          clearkey: {
-            keyId: selectedChannel.drmConfig.keyId,
-            key: selectedChannel.drmConfig.key
-          }
-        } : undefined,
-        skin: {
-          name: "netflix"
-        },
-        mute: false,
-        volume: 90,
-        displaytitle: true,
-        displaydescription: true,
-        playbackRateControls: true,
-        repeat: false,
-        controlbar: {
-          volumetooltip: true,
-          elements: [
-            "play",
-            "progress",
-            "current",
-            "duration",
-            "mute",
-            "volume",
-            "fullscreen"
-          ]
-        },
-        visualization: {
-          effect: "bars"
-        }
-      };
+export const IPTVPlayer = ({ selectedChannel }: IPTVPlayerProps) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const playerRef = useRef<shaka.Player | null>(null);
 
-      console.log("Setting up player with config:", playerConfig);
-      jwPlayer.setup(playerConfig);
+  useEffect(() => {
+    // Install polyfills
+    shaka.polyfill.installAll();
+
+    // Initialize player
+    if (videoRef.current && !playerRef.current) {
+      const player = new shaka.Player(videoRef.current);
+      
+      // Error handling
+      player.addEventListener('error', (event) => {
+        console.error('Error code', event.detail.code, 'object', event.detail);
+      });
+
+      playerRef.current = player;
     }
-  }, [selectedChannel, jwPlayer]);
+
+    return () => {
+      if (playerRef.current) {
+        playerRef.current.destroy();
+        playerRef.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const loadContent = async () => {
+      if (!selectedChannel || !playerRef.current || !videoRef.current) return;
+
+      try {
+        // Configure DRM if needed
+        if (selectedChannel.type === 'mpd' && selectedChannel.drmConfig) {
+          playerRef.current.configure({
+            drm: {
+              clearKeys: {
+                [selectedChannel.drmConfig.keyId]: selectedChannel.drmConfig.key
+              }
+            }
+          });
+        }
+
+        // Load the content
+        await playerRef.current.load(selectedChannel.streamUrl);
+        
+        // Start playback
+        videoRef.current.play();
+      } catch (error) {
+        console.error('Error loading content:', error);
+      }
+    };
+
+    loadContent();
+  }, [selectedChannel]);
 
   return (
     <div className="w-full aspect-video bg-black mb-8 rounded-lg overflow-hidden shadow-lg">
-      <div id="jwplayer-container"></div>
+      <video 
+        ref={videoRef}
+        className="w-full h-full"
+        controls
+        autoPlay
+        playsInline
+      />
     </div>
   );
 };
