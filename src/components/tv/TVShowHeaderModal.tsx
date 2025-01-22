@@ -45,7 +45,7 @@ export const TVShowHeaderModal = ({
           <ArrowLeft className="h-4 w-4" />
           <span className="sr-only">Return</span>
         </Button>
-        <div className="relative pt-16">
+        <div className="relative">
           {trailerKey ? (
             <div className="relative">
               <iframe
@@ -68,9 +68,9 @@ export const TVShowHeaderModal = ({
           )}
         </div>
       </div>
-      <div className="p-4">
-        <h2 className="text-2xl font-bold mb-4 text-white">{show.name}</h2>
-        <p className="text-gray-400 mb-6">{show.overview}</p>
+      <div className="p-6 space-y-4">
+        <h2 className="text-4xl font-bold text-white">{show.name}</h2>
+        <p className="text-lg text-gray-400">{show.overview}</p>
 
         {showDetails?.seasons && seasonDetails?.episodes && (
           <EpisodesList
