@@ -99,26 +99,28 @@ export const Hero = ({
       </div>
 
       <Dialog open={showModal} onOpenChange={handleModalOpen}>
-        <HeroModal
-          movie={movie}
-          showModal={showModal}
-          trailerKey={trailerKey}
-          movieDetails={movieDetails}
-          seasonDetails={seasonDetails}
-          selectedSeason={selectedSeason}
-          selectedEpisode={selectedEpisode}
-          onClose={() => handleModalOpen(false)}
-          onPlayClick={() => {
-            handleModalOpen(false);
-            setShowPlayer(true);
-          }}
-          onSeasonChange={handleSeasonChange}
-          onEpisodeSelect={(episodeNumber) => {
-            setSelectedEpisode(episodeNumber);
-            handleModalOpen(false);
-            setShowPlayer(true);
-          }}
-        />
+        <DialogContent className="max-w-[70vh] h-[70vh] aspect-square p-0 bg-black overflow-y-auto">
+          <HeroModal
+            movie={movie}
+            showModal={showModal}
+            trailerKey={trailerKey}
+            movieDetails={movieDetails}
+            seasonDetails={seasonDetails}
+            selectedSeason={selectedSeason}
+            selectedEpisode={selectedEpisode}
+            onClose={() => handleModalOpen(false)}
+            onPlayClick={() => {
+              handleModalOpen(false);
+              setShowPlayer(true);
+            }}
+            onSeasonChange={handleSeasonChange}
+            onEpisodeSelect={(episodeNumber) => {
+              setSelectedEpisode(episodeNumber);
+              handleModalOpen(false);
+              setShowPlayer(true);
+            }}
+          />
+        </DialogContent>
       </Dialog>
 
       <VideoPlayer

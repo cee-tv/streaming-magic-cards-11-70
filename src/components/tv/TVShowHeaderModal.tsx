@@ -46,7 +46,7 @@ export const TVShowHeaderModal = ({
   };
 
   return (
-    <DialogContent className="max-w-[90vh] h-[90vh] aspect-square p-0 bg-black overflow-y-auto">
+    <DialogContent className="max-w-[70vh] h-[70vh] aspect-square p-0 bg-black overflow-y-auto">
       <DialogTitle className="sr-only">{show.name}</DialogTitle>
       <DialogDescription className="sr-only">Details for {show.name}</DialogDescription>
       <div className="relative">
