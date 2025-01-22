@@ -120,10 +120,9 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
                   <div className="relative">
                     <iframe
                       className="w-full aspect-video"
-                      src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=1&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3&fs=0&disablekb=1&playsinline=1`}
+                      src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3`}
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
-                      title="trailer"
                     />
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
                       <div className="flex items-center gap-4">
