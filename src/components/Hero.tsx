@@ -1,6 +1,6 @@
 import { Movie } from "@/services/tmdb";
 import { useState } from "react";
-import { Dialog } from "./ui/dialog";
+import { Dialog, DialogContent } from "./ui/dialog";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
 import { VideoPlayer } from "./movie/VideoPlayer";
