@@ -54,14 +54,12 @@ export const TVShowHeaderModal = ({
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300">
-                <TrailerControls
-                  movie={show}
-                  onPlayClick={onPlayClick}
-                  selectedSeason={selectedSeason}
-                  selectedEpisode={selectedEpisode}
-                />
-              </div>
+              <TrailerControls
+                movie={show}
+                onPlayClick={onPlayClick}
+                selectedSeason={selectedSeason}
+                selectedEpisode={selectedEpisode}
+              />
             </div>
           ) : (
             <div className="w-full aspect-video bg-gray-900 flex items-center justify-center">
@@ -70,9 +68,9 @@ export const TVShowHeaderModal = ({
           )}
         </div>
       </div>
-      <div className="p-4">
-        <h2 className="text-2xl font-bold mb-2 text-white">{show.name}</h2>
-        <p className="text-gray-400 mb-4">{show.overview}</p>
+      <div className="p-6">
+        <h2 className="text-2xl font-bold mb-4 text-white">{show.name}</h2>
+        <p className="text-gray-400 mb-6">{show.overview}</p>
 
         {showDetails?.seasons && seasonDetails?.episodes && (
           <EpisodesList
