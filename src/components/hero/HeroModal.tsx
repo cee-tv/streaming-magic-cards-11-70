@@ -34,7 +34,9 @@ export const HeroModal = ({
   return (
     <DialogContent className="max-w-3xl h-[90vh] p-0 bg-black overflow-y-auto">
       <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
-      <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
+      <DialogDescription className="sr-only">
+        Details for {movie.title || movie.name}
+      </DialogDescription>
       <div className="relative">
         <Button
           variant="ghost"
@@ -68,22 +70,22 @@ export const HeroModal = ({
           )}
         </div>
       </div>
-      <div className="px-6 pb-6">
-        <h2 className="text-4xl font-bold text-white mt-2">{movie.title || movie.name}</h2>
-        <p className="text-gray-400 mt-2 text-lg">{movie.overview}</p>
+      <div className="p-4">
+        <h2 className="text-2xl font-bold mb-4 text-white">
+          {movie.title || movie.name}
+        </h2>
+        <p className="text-gray-400 mb-6">{movie.overview}</p>
 
         {movie.media_type === "tv" &&
           movieDetails?.seasons &&
           seasonDetails?.episodes && (
-            <div className="mt-6">
-              <EpisodesList
-                seasons={movieDetails.seasons}
-                selectedSeason={selectedSeason}
-                onSeasonChange={onSeasonChange}
-                episodes={seasonDetails.episodes}
-                onEpisodeSelect={onEpisodeSelect}
-              />
-            </div>
+            <EpisodesList
+              seasons={movieDetails.seasons}
+              selectedSeason={selectedSeason}
+              onSeasonChange={onSeasonChange}
+              episodes={seasonDetails.episodes}
+              onEpisodeSelect={onEpisodeSelect}
+            />
           )}
       </div>
     </DialogContent>

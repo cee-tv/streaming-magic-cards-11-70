@@ -68,20 +68,18 @@ export const TVShowHeaderModal = ({
           )}
         </div>
       </div>
-      <div className="px-6 pb-6">
-        <h2 className="text-4xl font-bold text-white mt-2">{show.name}</h2>
-        <p className="text-gray-400 mt-2 text-lg">{show.overview}</p>
+      <div className="p-4">
+        <h2 className="text-2xl font-bold mb-4 text-white">{show.name}</h2>
+        <p className="text-gray-400 mb-6">{show.overview}</p>
 
         {showDetails?.seasons && seasonDetails?.episodes && (
-          <div className="mt-6">
-            <EpisodesList
-              seasons={showDetails.seasons}
-              selectedSeason={selectedSeason}
-              onSeasonChange={onSeasonChange}
-              episodes={seasonDetails.episodes}
-              onEpisodeSelect={onEpisodeSelect}
-            />
-          </div>
+          <EpisodesList
+            seasons={showDetails.seasons}
+            selectedSeason={selectedSeason}
+            onSeasonChange={onSeasonChange}
+            episodes={seasonDetails.episodes}
+            onEpisodeSelect={onEpisodeSelect}
+          />
         )}
       </div>
     </DialogContent>
