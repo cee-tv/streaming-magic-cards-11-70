@@ -45,6 +45,12 @@ export interface MovieDetails extends Movie {
       type: string;
     }>;
   };
+  runtime?: number;
+  genres?: Array<{
+    id: number;
+    name: string;
+  }>;
+  tagline?: string;
   seasons?: Season[];
 }
 
