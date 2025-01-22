@@ -20,18 +20,18 @@ interface HeroModalProps {
   onEpisodeSelect: (episodeNumber: number) => void;
 }
 
-export const HeroModal = ({ 
-  movie, 
-  showModal, 
-  trailerKey, 
+export const HeroModal = ({
+  movie,
+  showModal,
+  trailerKey,
   movieDetails,
   seasonDetails,
   selectedSeason,
   selectedEpisode,
-  onClose, 
+  onClose,
   onPlayClick,
   onSeasonChange,
-  onEpisodeSelect
+  onEpisodeSelect,
 }: HeroModalProps) => {
   const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
 
@@ -74,8 +74,8 @@ export const HeroModal = ({
           </div>
         )}
       </div>
-      <div className="p-6">
-        <div className="flex items-center gap-4 mb-6">
+      <div className="p-4">
+        <div className="flex items-center gap-4 mb-4">
           <Button 
             className="rounded-full bg-white hover:bg-white/90 text-black"
             onClick={onPlayClick}
@@ -109,8 +109,8 @@ export const HeroModal = ({
             <Download className="h-4 w-4" />
           </Button>
         </div>
-        <h2 className="text-2xl font-bold mb-4 text-white">{movie.title || movie.name}</h2>
-        <p className="text-gray-400 mb-6">{movie.overview}</p>
+        <h2 className="text-2xl font-bold mb-2 text-white">{movie.title || movie.name}</h2>
+        <p className="text-gray-400 mb-4">{movie.overview}</p>
 
         {movie.media_type === 'tv' && movieDetails?.seasons && seasonDetails?.episodes && (
           <EpisodesList

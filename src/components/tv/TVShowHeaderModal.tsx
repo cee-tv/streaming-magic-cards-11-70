@@ -74,8 +74,8 @@ export const TVShowHeaderModal = ({
           </div>
         )}
       </div>
-      <div className="p-6">
-        <div className="flex items-center gap-4 mb-6">
+      <div className="p-4">
+        <div className="flex items-center gap-4 mb-4">
           <Button 
             className="rounded-full bg-white hover:bg-white/90 text-black"
             onClick={onPlayClick}
@@ -107,8 +107,8 @@ export const TVShowHeaderModal = ({
             <Download className="h-4 w-4" />
           </Button>
         </div>
-        <h2 className="text-2xl font-bold mb-4 text-white">{show.name}</h2>
-        <p className="text-gray-400 mb-6">{show.overview}</p>
+        <h2 className="text-2xl font-bold mb-2 text-white">{show.name}</h2>
+        <p className="text-gray-400 mb-4">{show.overview}</p>
 
         {showDetails?.seasons && seasonDetails?.episodes && (
           <EpisodesList
