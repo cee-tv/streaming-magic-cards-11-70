@@ -70,18 +70,20 @@ export const EpisodesList = ({
       {episodes.length > 3 && (
         <Button
           variant="ghost"
-          className="w-full text-white hover:bg-white/10"
+          className="w-full hover:bg-white/10"
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          {isExpanded ? (
-            <>
-              Show Less <ChevronUp className="ml-2 h-4 w-4" />
-            </>
-          ) : (
-            <>
-              Show More <ChevronDown className="ml-2 h-4 w-4" />
-            </>
-          )}
+          <span className="text-white">
+            {isExpanded ? (
+              <>
+                Show Less <ChevronUp className="ml-2 h-4 w-4" />
+              </>
+            ) : (
+              <>
+                Show More <ChevronDown className="ml-2 h-4 w-4" />
+              </>
+            )}
+          </span>
         </Button>
       )}
     </div>
