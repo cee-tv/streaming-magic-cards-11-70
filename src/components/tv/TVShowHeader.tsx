@@ -23,9 +23,9 @@ export const TVShowHeader = ({
           className="w-full h-full object-cover"
         />
         {/* Triple gradient overlay for better text visibility */}
-        <div className="absolute inset-0 bg-gradient-to-r from-netflix-black via-netflix-black/50 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-netflix-black via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-b from-netflix-black/30 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-transparent" />
       </div>
       <div className="absolute bottom-0 left-0 p-4 md:p-8 max-w-2xl">
         <h1 className="text-3xl md:text-6xl font-bold text-white mb-2 md:mb-4">
