@@ -70,22 +70,22 @@ export const HeroModal = ({
           )}
         </div>
       </div>
-      <div className="pt-0 px-4 pb-4">
-        <h2 className="text-2xl font-bold mb-2 text-white">
-          {movie.title || movie.name}
-        </h2>
-        <p className="text-gray-400 mb-4">{movie.overview}</p>
+      <div className="px-6">
+        <h2 className="text-4xl font-bold text-white mt-2">{movie.title || movie.name}</h2>
+        <p className="text-gray-400 mt-2">{movie.overview}</p>
 
         {movie.media_type === "tv" &&
           movieDetails?.seasons &&
           seasonDetails?.episodes && (
-            <EpisodesList
-              seasons={movieDetails.seasons}
-              selectedSeason={selectedSeason}
-              onSeasonChange={onSeasonChange}
-              episodes={seasonDetails.episodes}
-              onEpisodeSelect={onEpisodeSelect}
-            />
+            <div className="mt-4">
+              <EpisodesList
+                seasons={movieDetails.seasons}
+                selectedSeason={selectedSeason}
+                onSeasonChange={onSeasonChange}
+                episodes={seasonDetails.episodes}
+                onEpisodeSelect={onEpisodeSelect}
+              />
+            </div>
           )}
       </div>
     </DialogContent>
