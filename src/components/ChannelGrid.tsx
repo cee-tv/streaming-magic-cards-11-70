@@ -16,19 +16,26 @@ export const ChannelGrid = ({ category, channels, selectedChannel, onChannelSele
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    // Preload images for visible channels
+    // Immediately start loading all images when component mounts
     const imageUrls = categoryChannels
       .filter(channel => channel.logo)
       .map(channel => channel.logo as string);
 
-    imageUrls.forEach(url => {
-      const img = new Image();
-      img.onload = () => {
-        setLoadedImages(prev => new Set(prev).add(url));
-      };
-      img.src = url;
+    // Create an array to track loading promises
+    const loadPromises = imageUrls.map(url => {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          setLoadedImages(prev => new Set([...prev, url]));
+          resolve(url);
+        };
+        img.src = url;
+      });
     });
-  }, [categoryChannels]);
+
+    // Load all images in parallel
+    Promise.all(loadPromises);
+  }, []);
 
   if (categoryChannels.length === 0) return null;
 
@@ -54,7 +61,7 @@ export const ChannelGrid = ({ category, channels, selectedChannel, onChannelSele
                       className={`w-full h-full object-contain p-2 transition-opacity duration-300 ${
                         loadedImages.has(channel.logo) ? 'opacity-100' : 'opacity-0'
                       }`}
-                      loading="lazy"
+                      loading="eager"
                       width={100}
                       height={100}
                     />
