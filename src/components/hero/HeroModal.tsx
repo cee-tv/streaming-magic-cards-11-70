@@ -47,7 +47,7 @@ export const HeroModal = ({
           <ArrowLeft className="h-4 w-4" />
           <span className="sr-only">Return</span>
         </Button>
-        <div className="relative pt-16">
+        <div className="relative">
           {trailerKey ? (
             <div className="relative">
               <iframe
@@ -70,15 +70,12 @@ export const HeroModal = ({
           )}
         </div>
       </div>
-      <div className="p-4">
-        <h2 className="text-2xl font-bold mb-4 text-white">
-          {movie.title || movie.name}
-        </h2>
-        <p className="text-gray-400 mb-6">{movie.overview}</p>
+      <div className="px-6 pt-2">
+        <h2 className="text-2xl font-bold text-white">{movie.title || movie.name}</h2>
+        <p className="text-gray-400 mt-2">{movie.overview}</p>
 
-        {movie.media_type === "tv" &&
-          movieDetails?.seasons &&
-          seasonDetails?.episodes && (
+        {movie.media_type === "tv" && movieDetails?.seasons && seasonDetails?.episodes && (
+          <div className="mt-6">
             <EpisodesList
               seasons={movieDetails.seasons}
               selectedSeason={selectedSeason}
@@ -86,7 +83,8 @@ export const HeroModal = ({
               episodes={seasonDetails.episodes}
               onEpisodeSelect={onEpisodeSelect}
             />
-          )}
+          </div>
+        )}
       </div>
     </DialogContent>
   );
