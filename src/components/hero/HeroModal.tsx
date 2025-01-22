@@ -60,22 +60,13 @@ export const HeroModal = ({
           <span className="sr-only">Return</span>
         </Button>
         {trailerKey ? (
-          <div className="pt-16 relative group">
+          <div className="pt-16">
             <iframe
               className="w-full aspect-video"
-              src={`https://www.youtube.com/embed/${trailerKey}?controls=0&autoplay=1`}
+              src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-              <Button 
-                size="lg"
-                className="rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm"
-                onClick={onPlayClick}
-              >
-                <Play className="h-8 w-8 text-white" />
-              </Button>
-            </div>
           </div>
         ) : (
           <div className="w-full aspect-video bg-gray-900 flex items-center justify-center pt-16">
