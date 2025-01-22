@@ -43,6 +43,17 @@ export const MovieRow = ({ title, movies }: MovieRowProps) => {
       switch (e.key) {
         case 'ArrowRight':
           e.preventDefault();
+          if (currentIndex === cards.length - 1) {
+            // If at the end of current row, try to move to the next row
+            const nextRow = rowRef.current.parentElement?.nextElementSibling?.querySelector('[role="row"]');
+            if (nextRow) {
+              const nextCards = nextRow.querySelectorAll('.movie-card');
+              if (nextCards[0]) {
+                (nextCards[0] as HTMLElement).focus();
+                return;
+              }
+            }
+          }
           newIndex = Math.min(currentIndex + 1, cards.length - 1);
           if (newIndex > currentIndex) {
             const card = cards[newIndex] as HTMLElement;
@@ -51,6 +62,17 @@ export const MovieRow = ({ title, movies }: MovieRowProps) => {
           break;
         case 'ArrowLeft':
           e.preventDefault();
+          if (currentIndex === 0) {
+            // If at the start of current row, try to move to the previous row
+            const prevRow = rowRef.current.parentElement?.previousElementSibling?.querySelector('[role="row"]');
+            if (prevRow) {
+              const prevCards = prevRow.querySelectorAll('.movie-card');
+              if (prevCards.length > 0) {
+                (prevCards[prevCards.length - 1] as HTMLElement).focus();
+                return;
+              }
+            }
+          }
           newIndex = Math.max(currentIndex - 1, 0);
           if (newIndex < currentIndex) {
             const card = cards[newIndex] as HTMLElement;
@@ -59,23 +81,25 @@ export const MovieRow = ({ title, movies }: MovieRowProps) => {
           break;
         case 'ArrowUp':
           e.preventDefault();
-          // Find the previous row's cards
           const prevRow = rowRef.current.parentElement?.previousElementSibling?.querySelector('[role="row"]');
           if (prevRow) {
             const prevCards = prevRow.querySelectorAll('.movie-card');
             if (prevCards[currentIndex]) {
               (prevCards[currentIndex] as HTMLElement).focus();
+            } else if (prevCards.length > 0) {
+              (prevCards[prevCards.length - 1] as HTMLElement).focus();
             }
           }
           break;
         case 'ArrowDown':
           e.preventDefault();
-          // Find the next row's cards
           const nextRow = rowRef.current.parentElement?.nextElementSibling?.querySelector('[role="row"]');
           if (nextRow) {
             const nextCards = nextRow.querySelectorAll('.movie-card');
             if (nextCards[currentIndex]) {
               (nextCards[currentIndex] as HTMLElement).focus();
+            } else if (nextCards.length > 0) {
+              (nextCards[0] as HTMLElement).focus();
             }
           }
           break;
@@ -92,7 +116,6 @@ export const MovieRow = ({ title, movies }: MovieRowProps) => {
     <div className="mb-8 relative group">
       <h2 className="text-2xl font-bold text-white mb-4 px-4">{title}</h2>
       
-      {/* Navigation Arrows - Desktop Only */}
       {!isMobile && (
         <>
           {showLeftArrow && (
@@ -116,7 +139,6 @@ export const MovieRow = ({ title, movies }: MovieRowProps) => {
         </>
       )}
 
-      {/* Scrollable Container */}
       <div
         ref={rowRef}
         role="row"
