@@ -52,7 +52,7 @@ export const HeroModal = ({
             <div className="relative">
               <iframe
                 className="w-full aspect-video"
-                src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0`}
+                src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3&fs=0&disablekb=1`}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />
@@ -70,11 +70,11 @@ export const HeroModal = ({
           )}
         </div>
       </div>
-      <div className="p-4">
-        <h2 className="text-2xl font-bold mb-4 text-white">
+      <div className="p-2">
+        <h2 className="text-2xl font-bold mb-2 text-white">
           {movie.title || movie.name}
         </h2>
-        <p className="text-gray-400 mb-6">{movie.overview}</p>
+        <p className="text-gray-400 mb-4">{movie.overview}</p>
 
         {movie.media_type === "tv" &&
           movieDetails?.seasons &&
