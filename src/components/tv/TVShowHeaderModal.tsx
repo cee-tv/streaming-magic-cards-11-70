@@ -45,7 +45,7 @@ export const TVShowHeaderModal = ({
           <ArrowLeft className="h-4 w-4" />
           <span className="sr-only">Return</span>
         </Button>
-        <div className="relative">
+        <div className="relative pt-16">
           {trailerKey ? (
             <div className="relative">
               <iframe
@@ -68,20 +68,18 @@ export const TVShowHeaderModal = ({
           )}
         </div>
       </div>
-      <div className="px-6 pt-2">
-        <h2 className="text-2xl font-bold text-white">{show.name}</h2>
-        <p className="text-gray-400 mt-2">{show.overview}</p>
+      <div className="p-4">
+        <h2 className="text-2xl font-bold mb-4 text-white">{show.name}</h2>
+        <p className="text-gray-400 mb-6">{show.overview}</p>
 
         {showDetails?.seasons && seasonDetails?.episodes && (
-          <div className="mt-6">
-            <EpisodesList
-              seasons={showDetails.seasons}
-              selectedSeason={selectedSeason}
-              onSeasonChange={onSeasonChange}
-              episodes={seasonDetails.episodes}
-              onEpisodeSelect={onEpisodeSelect}
-            />
-          </div>
+          <EpisodesList
+            seasons={showDetails.seasons}
+            selectedSeason={selectedSeason}
+            onSeasonChange={onSeasonChange}
+            episodes={seasonDetails.episodes}
+            onEpisodeSelect={onEpisodeSelect}
+          />
         )}
       </div>
     </DialogContent>
