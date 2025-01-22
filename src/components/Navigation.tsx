@@ -27,6 +27,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
   };
 
   const isActive = (path: string) => location.pathname === path;
+  const isSearchPage = location.pathname === '/search';
 
   return (
     <nav className="fixed top-0 w-full z-50 transition-all duration-300" 
@@ -79,14 +80,16 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
               >
                 <Bookmark className="h-6 w-6" />
               </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className={`text-white hover:bg-white/10 ${showSearch ? 'bg-white/20' : ''}`}
-                onClick={() => setShowSearch(!showSearch)}
-              >
-                <Search className="h-6 w-6" />
-              </Button>
+              {!isSearchPage && (
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className={`text-white hover:bg-white/10 ${showSearch ? 'bg-white/20' : ''}`}
+                  onClick={() => setShowSearch(!showSearch)}
+                >
+                  <Search className="h-6 w-6" />
+                </Button>
+              )}
             </div>
           ) : (
             <div className="flex items-center gap-2">
@@ -120,18 +123,20 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
                 <Bookmark className="h-4 w-4 mr-2" />
                 Watchlist
               </Button>
-              <Button 
-                variant="ghost" 
-                className={`text-white hover:bg-white/10 ${showSearch ? 'bg-white/20' : ''}`}
-                onClick={() => setShowSearch(!showSearch)}
-              >
-                <Search className="h-4 w-4 mr-2" />
-                Search
-              </Button>
+              {!isSearchPage && (
+                <Button 
+                  variant="ghost" 
+                  className={`text-white hover:bg-white/10 ${showSearch ? 'bg-white/20' : ''}`}
+                  onClick={() => setShowSearch(!showSearch)}
+                >
+                  <Search className="h-4 w-4 mr-2" />
+                  Search
+                </Button>
+              )}
             </div>
           )}
           
-          {showSearch && (
+          {showSearch && !isSearchPage && (
             <form onSubmit={handleSearch} className="absolute mt-12 right-4">
               <input
                 type="text"
