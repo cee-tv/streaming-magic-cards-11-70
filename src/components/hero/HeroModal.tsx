@@ -65,46 +65,42 @@ export const HeroModal = ({
               <div className="relative">
                 <iframe
                   className="w-full aspect-video"
-                  src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
+                  src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0`}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/50 to-transparent">
-                  <div className="p-4">
-                    <div className="flex items-center gap-4">
-                      <Button 
-                        className="rounded-full bg-white hover:bg-white/90 text-black"
-                        onClick={onPlayClick}
-                      >
-                        <Play className="h-4 w-4 mr-2" />
-                        Play
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="rounded-full border-white hover:border-white bg-black/30 text-white"
-                        onClick={handleWatchlistToggle}
-                      >
-                        {isInWatchlist(movie.id) ? (
-                          <Check className="h-4 w-4" />
-                        ) : (
-                          <Plus className="h-4 w-4" />
-                        )}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="rounded-full border-white hover:border-white bg-black/30 text-white"
-                        onClick={() => {
-                          const downloadUrl = movie.media_type === 'movie'
-                            ? `https://dl.vidsrc.vip/movie/${movie.id}`
-                            : `https://dl.vidsrc.vip/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
-                          window.open(downloadUrl, '_blank');
-                        }}
-                      >
-                        <Download className="h-4 w-4" />
-                      </Button>
-                    </div>
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                  <div className="flex items-center gap-4">
+                    <Button 
+                      className="rounded-full bg-white hover:bg-white/90 text-black"
+                      onClick={onPlayClick}
+                    >
+                      <Play className="h-4 w-4 mr-2" />
+                      Play
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="rounded-full border-white hover:border-white bg-black/30 text-white"
+                      onClick={handleWatchlistToggle}
+                    >
+                      {isInWatchlist(movie.id) ? (
+                        <Check className="h-4 w-4" />
+                      ) : (
+                        <Plus className="h-4 w-4" />
+                      )}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="rounded-full border-white hover:border-white bg-black/30 text-white"
+                      onClick={() => {
+                        const downloadUrl = `https://dl.vidsrc.vip/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
+                        window.open(downloadUrl, '_blank');
+                      }}
+                    >
+                      <Download className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
               </div>

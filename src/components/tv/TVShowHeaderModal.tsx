@@ -64,7 +64,7 @@ export const TVShowHeaderModal = ({
             <div className="relative">
               <iframe
                 className="w-full aspect-video"
-                src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
+                src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0`}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />
@@ -110,10 +110,11 @@ export const TVShowHeaderModal = ({
           )}
         </div>
       </div>
-      <div className="p-4">
+      <div className="bg-black p-4">
         <h2 className="text-2xl font-bold mb-2 text-white">{show.name}</h2>
-        <p className="text-gray-400 mb-4">{show.overview}</p>
-
+        <p className="text-gray-400">{show.overview}</p>
+      </div>
+      <div className="p-4">
         {showDetails?.seasons && seasonDetails?.episodes && (
           <EpisodesList
             seasons={showDetails.seasons}
