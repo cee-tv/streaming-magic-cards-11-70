@@ -1,6 +1,6 @@
 import { Movie } from "@/services/tmdb";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dialog";
+import { Dialog } from "./ui/dialog";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
 import { VideoPlayer } from "./movie/VideoPlayer";
@@ -99,30 +99,26 @@ export const Hero = ({
       </div>
 
       <Dialog open={showModal} onOpenChange={handleModalOpen}>
-        <DialogContent className="max-w-[70vh] h-[70vh] aspect-square p-0 bg-black overflow-y-auto">
-          <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
-          <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
-          <HeroModal
-            movie={movie}
-            showModal={showModal}
-            trailerKey={trailerKey}
-            movieDetails={movieDetails}
-            seasonDetails={seasonDetails}
-            selectedSeason={selectedSeason}
-            selectedEpisode={selectedEpisode}
-            onClose={() => handleModalOpen(false)}
-            onPlayClick={() => {
-              handleModalOpen(false);
-              setShowPlayer(true);
-            }}
-            onSeasonChange={handleSeasonChange}
-            onEpisodeSelect={(episodeNumber) => {
-              setSelectedEpisode(episodeNumber);
-              handleModalOpen(false);
-              setShowPlayer(true);
-            }}
-          />
-        </DialogContent>
+        <HeroModal
+          movie={movie}
+          showModal={showModal}
+          trailerKey={trailerKey}
+          movieDetails={movieDetails}
+          seasonDetails={seasonDetails}
+          selectedSeason={selectedSeason}
+          selectedEpisode={selectedEpisode}
+          onClose={() => handleModalOpen(false)}
+          onPlayClick={() => {
+            handleModalOpen(false);
+            setShowPlayer(true);
+          }}
+          onSeasonChange={handleSeasonChange}
+          onEpisodeSelect={(episodeNumber) => {
+            setSelectedEpisode(episodeNumber);
+            handleModalOpen(false);
+            setShowPlayer(true);
+          }}
+        />
       </Dialog>
 
       <VideoPlayer
