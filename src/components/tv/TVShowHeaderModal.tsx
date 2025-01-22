@@ -1,7 +1,7 @@
 import { Movie } from "@/services/tmdb";
 import { Button } from "../ui/button";
 import { DialogContent, DialogTitle, DialogDescription } from "../ui/dialog";
-import { ArrowLeft, Play, Download, Plus, Check } from "lucide-react";
+import { X, Play, Download, Plus, Check } from "lucide-react";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { toast } from "sonner";
 import { EpisodesList } from "../movie/EpisodesList";

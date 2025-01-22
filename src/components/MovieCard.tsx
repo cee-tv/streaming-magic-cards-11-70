@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dial
 import { Button } from "./ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
-import { ArrowLeft, Play, Plus, Check, Download } from "lucide-react";
+import { ArrowLeft, Play, Plus, Check, Download, X } from "lucide-react";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { toast } from "sonner";
 import { MovieButtons } from "./movie/MovieButtons";
