@@ -45,6 +45,14 @@ export const HeroModal = ({
     }
   };
 
+  const releaseYear = movie.release_date 
+    ? new Date(movie.release_date).getFullYear()
+    : movie.first_air_date 
+    ? new Date(movie.first_air_date).getFullYear()
+    : null;
+
+  const votePercentage = Math.round(movie.vote_average * 10);
+
   return (
     <DialogContent className="max-w-3xl h-[90vh] p-0 bg-black overflow-y-auto">
       <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
@@ -65,7 +73,7 @@ export const HeroModal = ({
               <div className="relative">
                 <iframe
                   className="w-full aspect-video"
-                  src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0`}
+                  src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=1&modestbranding=1&showinfo=0&rel=0`}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />
@@ -105,8 +113,23 @@ export const HeroModal = ({
                 </div>
               </div>
               <div className="bg-black p-4">
-                <h2 className="text-2xl font-bold mb-2 text-white">{movie.title || movie.name}</h2>
+                <div className="flex items-center gap-2 mb-2">
+                  <h2 className="text-2xl font-bold text-white">{movie.title || movie.name}</h2>
+                  {releaseYear && <span className="text-gray-400">({releaseYear})</span>}
+                </div>
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="text-green-500 font-bold">{votePercentage}% Match</span>
+                  {movieDetails?.runtime && (
+                    <span className="text-gray-400">{movieDetails.runtime} min</span>
+                  )}
+                  {movieDetails?.genres?.map((genre: { id: number; name: string }) => (
+                    <span key={genre.id} className="text-gray-400">{genre.name}</span>
+                  ))}
+                </div>
                 <p className="text-gray-400">{movie.overview}</p>
+                {movieDetails?.tagline && (
+                  <p className="text-gray-500 mt-2 italic">{movieDetails.tagline}</p>
+                )}
               </div>
             </>
           ) : (
