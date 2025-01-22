@@ -53,7 +53,7 @@ export const HeroModal = ({
         <Button
           variant="ghost"
           size="icon"
-          className="absolute right-4 top-4 z-50 text-white hover:bg-white/20"
+          className="absolute left-4 top-4 z-50 text-white hover:bg-white/20"
           onClick={onClose}
         >
           <ArrowLeft className="h-4 w-4" />
@@ -65,50 +65,48 @@ export const HeroModal = ({
               <div className="relative">
                 <iframe
                   className="w-full aspect-video"
-                  src={`https://www.youtube.com/embed/${trailerKey}?modestbranding=1&showinfo=0&rel=0`}
+                  src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0`}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                  <div className="flex items-center gap-4">
+                    <Button 
+                      className="rounded-full bg-white hover:bg-white/90 text-black"
+                      onClick={onPlayClick}
+                    >
+                      <Play className="h-4 w-4 mr-2" />
+                      Play
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="rounded-full border-white hover:border-white bg-black/30 text-white"
+                      onClick={handleWatchlistToggle}
+                    >
+                      {isInWatchlist(movie.id) ? (
+                        <Check className="h-4 w-4" />
+                      ) : (
+                        <Plus className="h-4 w-4" />
+                      )}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="rounded-full border-white hover:border-white bg-black/30 text-white"
+                      onClick={() => {
+                        const downloadUrl = `https://dl.vidsrc.vip/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
+                        window.open(downloadUrl, '_blank');
+                      }}
+                    >
+                      <Download className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
               </div>
-              <div className="bg-black p-6">
-                <div className="flex items-center gap-4 mb-4">
-                  <Button 
-                    className="rounded-md bg-white hover:bg-white/90 text-black px-8"
-                    onClick={onPlayClick}
-                  >
-                    <Play className="h-4 w-4 mr-2" />
-                    Play
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="rounded-full border-white/20 hover:border-white bg-white/10 text-white"
-                    onClick={handleWatchlistToggle}
-                  >
-                    {isInWatchlist(movie.id) ? (
-                      <Check className="h-4 w-4" />
-                    ) : (
-                      <Plus className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
+              <div className="bg-black p-4">
                 <h2 className="text-2xl font-bold mb-2 text-white">{movie.title || movie.name}</h2>
-                <div className="flex items-center gap-3 text-sm mb-4">
-                  <span className="text-green-500 font-medium">
-                    {movieDetails?.vote_average ? `${Math.round(movieDetails.vote_average * 10)}% Match` : ''}
-                  </span>
-                  <span className="text-white/70">
-                    {movieDetails?.release_date?.split('-')[0] || movieDetails?.first_air_date?.split('-')[0]}
-                  </span>
-                  <span className="px-1 py-0.5 text-xs border border-white/20 text-white/70 rounded">
-                    {movieDetails?.original_language?.toUpperCase() || 'EN'}
-                  </span>
-                </div>
-                <p className="text-white/90 text-sm leading-relaxed mb-6">{movie.overview}</p>
-                <div className="text-sm text-white/70">
-                  <span className="text-white/50">Genres: </span>
-                  {movieDetails?.genres?.map((genre: any) => genre.name).join(', ')}
-                </div>
+                <p className="text-gray-400">{movie.overview}</p>
               </div>
             </>
           ) : (
