@@ -136,7 +136,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
             </div>
           )}
           
-          {showSearch && (
+          {showSearch && !isSearchPage && (
             <form onSubmit={handleSearch} className="absolute mt-12 right-4">
               <input
                 type="text"
