@@ -1,10 +1,9 @@
 import { Movie } from "@/services/tmdb";
 import { Button } from "../ui/button";
 import { DialogContent, DialogTitle, DialogDescription } from "../ui/dialog";
-import { ArrowLeft, Play, Download, Plus, Check } from "lucide-react";
-import { useWatchlist } from "@/contexts/WatchlistContext";
-import { toast } from "sonner";
+import { ArrowLeft } from "lucide-react";
 import { EpisodesList } from "../movie/EpisodesList";
+import { TrailerControls } from "../movie/TrailerControls";
 
 interface HeroModalProps {
   movie: Movie;
@@ -20,35 +19,24 @@ interface HeroModalProps {
   onEpisodeSelect: (episodeNumber: number) => void;
 }
 
-export const HeroModal = ({ 
-  movie, 
-  showModal, 
-  trailerKey, 
+export const HeroModal = ({
+  movie,
+  trailerKey,
   movieDetails,
   seasonDetails,
   selectedSeason,
   selectedEpisode,
-  onClose, 
+  onClose,
   onPlayClick,
   onSeasonChange,
-  onEpisodeSelect
+  onEpisodeSelect,
 }: HeroModalProps) => {
-  const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
-
-  const handleWatchlistToggle = () => {
-    if (isInWatchlist(movie.id)) {
-      removeFromWatchlist(movie.id);
-      toast.success("Removed from watchlist");
-    } else {
-      addToWatchlist(movie);
-      toast.success("Added to watchlist");
-    }
-  };
-
   return (
     <DialogContent className="max-w-3xl h-[90vh] p-0 bg-black overflow-y-auto">
       <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
-      <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
+      <DialogDescription className="sr-only">
+        Details for {movie.title || movie.name}
+      </DialogDescription>
       <div className="relative">
         <Button
           variant="ghost"
@@ -59,68 +47,46 @@ export const HeroModal = ({
           <ArrowLeft className="h-4 w-4" />
           <span className="sr-only">Return</span>
         </Button>
-        {trailerKey ? (
-          <div className="pt-16">
-            <iframe
-              className="w-full aspect-video"
-              src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-        ) : (
-          <div className="w-full aspect-video bg-gray-900 flex items-center justify-center pt-16">
-            <p className="text-white">No trailer available</p>
-          </div>
-        )}
+        <div className="relative pt-16">
+          {trailerKey ? (
+            <div className="relative">
+              <iframe
+                className="w-full aspect-video"
+                src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+              <TrailerControls
+                movie={movie}
+                onPlayClick={onPlayClick}
+                selectedSeason={selectedSeason}
+                selectedEpisode={selectedEpisode}
+              />
+            </div>
+          ) : (
+            <div className="w-full aspect-video bg-gray-900 flex items-center justify-center">
+              <p className="text-white">No trailer available</p>
+            </div>
+          )}
+        </div>
       </div>
       <div className="p-6">
-        <div className="flex items-center gap-4 mb-6">
-          <Button 
-            className="rounded-full bg-white hover:bg-white/90 text-black"
-            onClick={onPlayClick}
-          >
-            <Play className="h-4 w-4 mr-2" />
-            Play
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            className="rounded-full border-white hover:border-white bg-black/30 text-white"
-            onClick={handleWatchlistToggle}
-          >
-            {isInWatchlist(movie.id) ? (
-              <Check className="h-4 w-4" />
-            ) : (
-              <Plus className="h-4 w-4" />
-            )}
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            className="rounded-full border-white hover:border-white bg-black/30 text-white"
-            onClick={() => {
-              const downloadUrl = movie.media_type === 'movie'
-                ? `https://dl.vidsrc.vip/movie/${movie.id}`
-                : `https://dl.vidsrc.vip/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
-              window.open(downloadUrl, '_blank');
-            }}
-          >
-            <Download className="h-4 w-4" />
-          </Button>
-        </div>
-        <h2 className="text-2xl font-bold mb-4 text-white">{movie.title || movie.name}</h2>
+        <h2 className="text-2xl font-bold mb-4 text-white">
+          {movie.title || movie.name}
+        </h2>
         <p className="text-gray-400 mb-6">{movie.overview}</p>
 
-        {movie.media_type === 'tv' && movieDetails?.seasons && seasonDetails?.episodes && (
-          <EpisodesList
-            seasons={movieDetails.seasons}
-            selectedSeason={selectedSeason}
-            onSeasonChange={onSeasonChange}
-            episodes={seasonDetails.episodes}
-            onEpisodeSelect={onEpisodeSelect}
-          />
-        )}
+        {movie.media_type === "tv" &&
+          movieDetails?.seasons &&
+          seasonDetails?.episodes && (
+            <EpisodesList
+              seasons={movieDetails.seasons}
+              selectedSeason={selectedSeason}
+              onSeasonChange={onSeasonChange}
+              episodes={seasonDetails.episodes}
+              onEpisodeSelect={onEpisodeSelect}
+            />
+          )}
       </div>
     </DialogContent>
   );
