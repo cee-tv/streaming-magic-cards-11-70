@@ -136,7 +136,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
             </div>
           )}
           
-          {showSearch && !isSearchPage && (
+          {showSearch && (
             <form onSubmit={handleSearch} className="absolute mt-12 right-4">
               <input
                 type="text"
@@ -145,6 +145,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
                 onChange={handleSearchInputChange}
                 className="w-40 h-8 bg-black/50 text-sm text-white border border-white/20 rounded-md px-2 py-1 focus:outline-none focus:border-white/40"
                 autoFocus
+                style={{ display: isSearchPage ? 'none' : 'block' }}
               />
             </form>
           )}
