@@ -115,7 +115,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/50 to-transparent p-4">
+                  <div className="p-4 bg-black">
                     <div className="flex items-center gap-4 mb-4">
                       <Button 
                         className="rounded-full bg-white hover:bg-white/90 text-black"
@@ -165,9 +165,6 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
             </div>
           </div>
           <div className="p-4">
-            <h2 className="text-2xl font-bold mb-2 text-white">{movie.title || movie.name}</h2>
-            <p className="text-gray-400 mb-4">{movie.overview}</p>
-
             {movie.media_type === 'tv' && movieDetails?.seasons && seasonDetails?.episodes && (
               <EpisodesList
                 seasons={movieDetails.seasons}
