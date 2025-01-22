@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import shaka from 'shaka-player';
+import * as shaka from 'shaka-player';
 import type { Channel } from "../data/channels";
 
 interface IPTVPlayerProps {
