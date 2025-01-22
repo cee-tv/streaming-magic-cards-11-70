@@ -111,11 +111,11 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
                 <div className="relative">
                   <iframe
                     className="w-full aspect-video"
-                    src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1`}
+                    src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0`}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/50 to-transparent p-4">
                     <div className="flex items-center gap-4">
                       <Button 
                         className="rounded-full bg-white hover:bg-white/90 text-black"
