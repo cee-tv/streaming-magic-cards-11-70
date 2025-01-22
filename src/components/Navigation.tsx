@@ -80,16 +80,14 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
               >
                 <Bookmark className="h-6 w-6" />
               </Button>
-              {!isSearchPage && (
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className={`text-white hover:bg-white/10 ${showSearch ? 'bg-white/20' : ''}`}
-                  onClick={() => setShowSearch(!showSearch)}
-                >
-                  <Search className="h-6 w-6" />
-                </Button>
-              )}
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className={`text-white hover:bg-white/10 ${showSearch ? 'bg-white/20' : ''}`}
+                onClick={() => setShowSearch(!showSearch)}
+              >
+                <Search className="h-6 w-6" />
+              </Button>
             </div>
           ) : (
             <div className="flex items-center gap-2">
@@ -136,7 +134,7 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
             </div>
           )}
           
-          {showSearch && (
+          {showSearch && !isSearchPage && (
             <form onSubmit={handleSearch} className="absolute mt-12 right-4">
               <input
                 type="text"
@@ -145,7 +143,6 @@ export const Navigation = ({ onMediaTypeChange }: { onMediaTypeChange: (type: 'm
                 onChange={handleSearchInputChange}
                 className="w-40 h-8 bg-black/50 text-sm text-white border border-white/20 rounded-md px-2 py-1 focus:outline-none focus:border-white/40"
                 autoFocus
-                style={{ display: isSearchPage ? 'none' : 'block' }}
               />
             </form>
           )}
