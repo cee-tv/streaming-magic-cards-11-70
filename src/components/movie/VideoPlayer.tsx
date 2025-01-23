@@ -26,6 +26,7 @@ export const VideoPlayer = ({
   isOpen, 
   onClose, 
   title, 
+  embedUrl, 
   multiEmbedUrl,
   movieId,
   mediaType,
@@ -33,7 +34,7 @@ export const VideoPlayer = ({
   episode,
   onNextEpisode
 }: VideoPlayerProps) => {
-  const [currentProvider, setCurrentProvider] = useState<'vidsrcvip' | 'multiembed' | 'vidsrc'>('vidsrcvip');
+  const [currentProvider, setCurrentProvider] = useState<'vidsrcvip' | 'embed' | 'multiembed' | 'vidsrc'>('vidsrcvip');
 
   const getVidsrcUrl = () => {
     if (mediaType === 'movie') {
@@ -51,11 +52,14 @@ export const VideoPlayer = ({
 
   const getCurrentUrl = () => {
     switch (currentProvider) {
+      case 'embed':
+        return embedUrl;
       case 'multiembed':
         return multiEmbedUrl;
       case 'vidsrc':
         return getVidsrcUrl();
       case 'vidsrcvip':
+        return getVidsrcVipUrl();
       default:
         return getVidsrcVipUrl();
     }
@@ -63,8 +67,9 @@ export const VideoPlayer = ({
 
   const providers = [
     { id: 'vidsrcvip', name: 'Source 1' },
-    { id: 'multiembed', name: 'Source 2' },
-    { id: 'vidsrc', name: 'Source 3' },
+    { id: 'embed', name: 'Source 2' },
+    { id: 'multiembed', name: 'Source 3' },
+    { id: 'vidsrc', name: 'Source 4' },
   ] as const;
 
   return (
