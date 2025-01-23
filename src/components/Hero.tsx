@@ -6,8 +6,6 @@ import { tmdb } from "@/services/tmdb";
 import { VideoPlayer } from "./movie/VideoPlayer";
 import { HeroControls } from "./hero/HeroControls";
 import { HeroModal } from "./hero/HeroModal";
-import { MediaPoster } from "./shared/MediaPoster";
-import { MediaContent } from "./shared/MediaContent";
 
 interface HeroProps {
   movie: Movie;
@@ -77,14 +75,28 @@ export const Hero = ({
   return (
     <>
       <div className="relative h-[50vh] md:h-[70vh] mb-8">
-        <MediaPoster media={movie} />
-        <MediaContent media={movie}>
+        <div className="absolute inset-0">
+          <img
+            src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
+            alt={movie.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-netflix-black via-netflix-black/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-netflix-black via-netflix-black/25 to-transparent" />
+        </div>
+        <div className="absolute bottom-0 left-0 p-4 md:p-8 max-w-2xl">
+          <h1 className="text-3xl md:text-6xl font-bold text-white mb-2 md:mb-4">
+            {movie.title || movie.name}
+          </h1>
+          <p className="text-white/80 text-sm md:text-lg mb-4 line-clamp-3 md:line-clamp-none">
+            {movie.overview}
+          </p>
           <HeroControls
             movie={movie}
             onPlayClick={handlePlayerOpen}
             onMoreInfoClick={() => handleModalOpen(true)}
           />
-        </MediaContent>
+        </div>
       </div>
 
       <Dialog open={showModal} onOpenChange={handleModalOpen}>
