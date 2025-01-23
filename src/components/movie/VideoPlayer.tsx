@@ -74,7 +74,7 @@ export const VideoPlayer = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[95vw] w-full h-[90vh] p-0 bg-black">
+      <DialogContent className="max-w-full w-full h-screen p-0 bg-black overflow-y-auto m-0">
         <DialogTitle className="sr-only">Play {title}</DialogTitle>
         <DialogDescription className="sr-only">Video player for {title}</DialogDescription>
         
@@ -109,7 +109,7 @@ export const VideoPlayer = ({
         </Button>
 
         <iframe
-          className="w-full h-[calc(100%-4rem)] mt-16"
+          className="w-full h-full"
           src={getCurrentUrl()}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
