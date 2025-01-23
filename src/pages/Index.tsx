@@ -10,22 +10,31 @@ const Index = () => {
   const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  const { data: trending = [] } = useQuery({
-    queryKey: ["trending", "all"],
+  // Fetch both movies and TV shows
+  const { data: trendingMovies = [] } = useQuery({
+    queryKey: ["trending", "movie"],
     queryFn: () => tmdb.getTrending("movie"),
   });
 
+  const { data: trendingTVShows = [] } = useQuery({
+    queryKey: ["trending", "tv"],
+    queryFn: () => tmdb.getTrending("tv"),
+  });
+
+  // Combine and shuffle the results
+  const combinedContent = [...trendingMovies, ...trendingTVShows].sort(() => Math.random() - 0.5);
+
   useEffect(() => {
-    if (trending.length === 0 || isPaused) return;
+    if (combinedContent.length === 0 || isPaused) return;
 
     const interval = setInterval(() => {
       setCurrentMovieIndex((prevIndex) => 
-        prevIndex === trending.length - 1 ? 0 : prevIndex + 1
+        prevIndex === combinedContent.length - 1 ? 0 : prevIndex + 1
       );
     }, 10000); // Change poster every 10 seconds
 
     return () => clearInterval(interval);
-  }, [trending.length, isPaused]);
+  }, [combinedContent.length, isPaused]);
 
   const handleModalOpen = () => {
     setIsPaused(true);
@@ -43,11 +52,11 @@ const Index = () => {
     setIsPaused(false);
   };
 
-  const randomMovie = trending.length > 0 
-    ? trending[currentMovieIndex]
+  const randomContent = combinedContent.length > 0 
+    ? combinedContent[currentMovieIndex]
     : null;
 
-  if (!randomMovie) {
+  if (!randomContent) {
     return <div className="text-white">Loading...</div>;
   }
 
@@ -55,7 +64,7 @@ const Index = () => {
     <div className="min-h-screen bg-netflix-black">
       <Navigation onMediaTypeChange={() => {}} />
       <Hero 
-        movie={randomMovie} 
+        movie={randomContent} 
         onModalOpen={handleModalOpen}
         onModalClose={handleModalClose}
         onPlayStart={handlePlayStart}
