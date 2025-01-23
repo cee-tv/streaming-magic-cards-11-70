@@ -1,5 +1,3 @@
-import { X } from "lucide-react";
-import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "../ui/dialog";
 import { useState } from "react";
 import {
@@ -8,6 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { Button } from "../ui/button";
 
 interface VideoPlayerProps {
   isOpen: boolean;
@@ -97,16 +96,6 @@ export const VideoPlayer = ({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute right-8 top-8 z-50 rounded-full bg-black/50 text-white hover:bg-black/70 w-8 h-8"
-          onClick={onClose}
-        >
-          <X className="h-5 w-5" />
-          <span className="sr-only">Close</span>
-        </Button>
 
         <iframe
           className="w-full h-[calc(100vh-4rem)] mt-16"
