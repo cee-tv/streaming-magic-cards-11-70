@@ -72,12 +72,12 @@ export const VideoPlayer = ({
   ] as const;
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={() => {}}>
       <DialogContent className="max-w-full w-full h-[90vh] p-0 bg-black overflow-y-auto m-0">
         <DialogTitle className="sr-only">Play {title}</DialogTitle>
         <DialogDescription className="sr-only">Video player for {title}</DialogDescription>
         
-        <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-50">
+        <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-50 flex items-center gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="text-white hover:bg-white/20">
@@ -95,6 +95,13 @@ export const VideoPlayer = ({
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
+          <Button 
+            variant="ghost" 
+            className="text-white hover:bg-white/20"
+            onClick={onClose}
+          >
+            Close
+          </Button>
         </div>
 
         <iframe
