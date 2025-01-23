@@ -72,13 +72,15 @@ export const Hero = ({
     setSelectedEpisode(1);
   };
 
+  console.log('Hero component - Current movie:', movie.title || movie.name, 'ID:', movie.id);
+
   return (
     <>
       <div className="relative h-[50vh] md:h-[70vh] mb-8">
         <div className="absolute inset-0">
           <img
             src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
-            alt={movie.title}
+            alt={movie.title || movie.name}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-netflix-black via-netflix-black/50 to-transparent" />
