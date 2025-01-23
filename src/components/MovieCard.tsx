@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { MovieButtons } from "./movie/MovieButtons";
 import { VideoPlayer } from "./movie/VideoPlayer";
 import { EpisodesList } from "./movie/EpisodesList";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 
 interface MovieCardProps {
   movie: Movie;
@@ -105,7 +106,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
           <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
           <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
           <div className="relative">
-            <div className="relative pt-16"> {/* Added pt-16 for top spacing */}
+            <div className="relative pt-16">
               {trailerKey ? (
                 <>
                   <div className="relative">
@@ -196,6 +197,73 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
                 }}
               />
             )}
+            <Tabs defaultValue="more" className="w-full">
+              <TabsList className="bg-white/10 text-white w-full h-14 text-lg">
+                <TabsTrigger value="more" className="data-[state=active]:bg-white/20 flex-1 h-full">More Like This</TabsTrigger>
+                <TabsTrigger value="details" className="data-[state=active]:bg-white/20 flex-1 h-full">Details</TabsTrigger>
+              </TabsList>
+              <TabsContent value="more">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-4">
+                  {movieDetails?.similarMovies?.map((similarMovie) => (
+                    <MovieCard key={similarMovie.id} movie={similarMovie} />
+                  ))}
+                </div>
+              </TabsContent>
+              <TabsContent value="details" className="text-white space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div>
+                    <h3 className="text-xl font-semibold mb-4">Movie Information</h3>
+                    <div className="space-y-2">
+                      {releaseYear && (
+                        <p><span className="text-gray-400">Release Year:</span> {releaseYear}</p>
+                      )}
+                      <p><span className="text-gray-400">Rating:</span> {votePercentage}%</p>
+                      {movieDetails?.status && (
+                        <p><span className="text-gray-400">Status:</span> {movieDetails.status}</p>
+                      )}
+                      {movieDetails?.runtime && (
+                        <p><span className="text-gray-400">Runtime:</span> {movieDetails.runtime} minutes</p>
+                      )}
+                      {movieDetails?.budget > 0 && (
+                        <p><span className="text-gray-400">Budget:</span> ${movieDetails.budget.toLocaleString()}</p>
+                      )}
+                      {movieDetails?.revenue > 0 && (
+                        <p><span className="text-gray-400">Revenue:</span> ${movieDetails.revenue.toLocaleString()}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-4">Additional Details</h3>
+                    <div className="space-y-2">
+                      {movieDetails?.genres && (
+                        <p>
+                          <span className="text-gray-400">Genres:</span>{' '}
+                          {movieDetails.genres.map((genre: any) => genre.name).join(', ')}
+                        </p>
+                      )}
+                      {movieDetails?.production_companies && movieDetails.production_companies.length > 0 && (
+                        <p>
+                          <span className="text-gray-400">Production:</span>{' '}
+                          {movieDetails.production_companies.map((company: any) => company.name).join(', ')}
+                        </p>
+                      )}
+                      {movieDetails?.production_countries && movieDetails.production_countries.length > 0 && (
+                        <p>
+                          <span className="text-gray-400">Countries:</span>{' '}
+                          {movieDetails.production_countries.map((country: any) => country.name).join(', ')}
+                        </p>
+                      )}
+                      {movieDetails?.original_language && (
+                        <p>
+                          <span className="text-gray-400">Original Language:</span>{' '}
+                          {movieDetails.original_language.toUpperCase()}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
         </DialogContent>
       </Dialog>
