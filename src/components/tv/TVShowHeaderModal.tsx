@@ -52,7 +52,7 @@ export const TVShowHeaderModal = ({
   const votePercentage = Math.round(show.vote_average * 10);
 
   return (
-    <DialogContent className="max-w-3xl h-[45vh] p-0 bg-black overflow-y-auto">
+    <DialogContent className="max-w-3xl h-[80vh] p-0 bg-black overflow-y-auto">
       <DialogTitle className="sr-only">{show.name}</DialogTitle>
       <DialogDescription className="sr-only">Details for {show.name}</DialogDescription>
       <div className="relative pt-14">
@@ -132,7 +132,8 @@ export const TVShowHeaderModal = ({
           </div>
         )}
       </div>
-      <div className="p-4">
+      <div className="p-4 bg-black/95">
+        <h3 className="text-xl font-bold text-white mb-4">Episodes</h3>
         {showDetails?.seasons && seasonDetails?.episodes && (
           <EpisodesList
             seasons={showDetails.seasons}
