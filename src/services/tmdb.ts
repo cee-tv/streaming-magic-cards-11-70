@@ -52,18 +52,6 @@ export interface MovieDetails extends Movie {
   }>;
   tagline?: string;
   seasons?: Season[];
-  status?: string;
-  number_of_seasons?: number;
-  number_of_episodes?: number;
-  networks?: Array<{
-    id: number;
-    name: string;
-  }>;
-  production_companies?: Array<{
-    id: number;
-    name: string;
-  }>;
-  original_language?: string;
 }
 
 export const tmdb = {
