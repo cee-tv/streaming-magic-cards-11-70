@@ -26,6 +26,7 @@ export const VideoPlayer = ({
   isOpen, 
   onClose, 
   title, 
+  embedUrl, 
   multiEmbedUrl,
   movieId,
   mediaType,
@@ -33,7 +34,7 @@ export const VideoPlayer = ({
   episode,
   onNextEpisode
 }: VideoPlayerProps) => {
-  const [currentProvider, setCurrentProvider] = useState<'vidsrcvip' | 'multiembed' | 'vidsrc'>('vidsrcvip');
+  const [currentProvider, setCurrentProvider] = useState<'vidsrcvip' | 'embed' | 'multiembed' | 'vidsrc'>('vidsrcvip');
 
   const getVidsrcUrl = () => {
     if (mediaType === 'movie') {
@@ -51,53 +52,36 @@ export const VideoPlayer = ({
 
   const getCurrentUrl = () => {
     switch (currentProvider) {
+      case 'embed':
+        return embedUrl;
       case 'multiembed':
         return multiEmbedUrl;
       case 'vidsrc':
         return getVidsrcUrl();
       case 'vidsrcvip':
+        return getVidsrcVipUrl();
       default:
         return getVidsrcVipUrl();
     }
   };
 
-  const handleProviderChange = (provider: 'vidsrcvip' | 'multiembed' | 'vidsrc') => {
-    setCurrentProvider(provider);
-  };
-
   const providers = [
-    { id: 'vidsrcvip' as const, name: 'Source 1' },
-    { id: 'multiembed' as const, name: 'Source 2' },
-    { id: 'vidsrc' as const, name: 'Source 3' },
-  ];
-
-  const handleButtonClick = (e: React.MouseEvent, action: () => void) => {
-    e.preventDefault();
-    e.stopPropagation();
-    action();
-  };
+    { id: 'vidsrcvip', name: 'Source 1' },
+    { id: 'embed', name: 'Source 2' },
+    { id: 'multiembed', name: 'Source 3' },
+    { id: 'vidsrc', name: 'Source 4' },
+  ] as const;
 
   return (
-    <Dialog 
-      open={isOpen} 
-      onOpenChange={onClose}
-      onPointerDownOutside={(e) => e.preventDefault()}
-    >
-      <DialogContent 
-        className="max-w-full w-full h-screen p-0 bg-black overflow-y-auto m-0" 
-        onPointerDownOutside={(e) => e.preventDefault()}
-      >
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-full w-full h-screen p-0 bg-black overflow-y-auto m-0">
         <DialogTitle className="sr-only">Play {title}</DialogTitle>
         <DialogDescription className="sr-only">Video player for {title}</DialogDescription>
         
         <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-50">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button 
-                variant="ghost" 
-                className="text-white hover:bg-white/20"
-                onClick={(e) => e.stopPropagation()}
-              >
+              <Button variant="ghost" className="text-white hover:bg-white/20">
                 {providers.find(p => p.id === currentProvider)?.name || 'Select Provider'}
               </Button>
             </DropdownMenuTrigger>
@@ -105,7 +89,7 @@ export const VideoPlayer = ({
               {providers.map((provider) => (
                 <DropdownMenuItem
                   key={provider.id}
-                  onClick={(e) => handleButtonClick(e, () => handleProviderChange(provider.id))}
+                  onClick={() => setCurrentProvider(provider.id)}
                 >
                   {provider.name}
                 </DropdownMenuItem>
@@ -118,7 +102,7 @@ export const VideoPlayer = ({
           variant="ghost"
           size="icon"
           className="absolute right-8 top-8 z-50 rounded-full bg-black/50 text-white hover:bg-black/70 w-8 h-8"
-          onClick={(e) => handleButtonClick(e, onClose)}
+          onClick={onClose}
         >
           <X className="h-5 w-5" />
           <span className="sr-only">Close</span>
@@ -129,18 +113,7 @@ export const VideoPlayer = ({
           src={getCurrentUrl()}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
-          sandbox="allow-same-origin allow-scripts allow-forms"
-          referrerPolicy="no-referrer"
         />
-
-        {onNextEpisode && (
-          <Button
-            className="absolute bottom-8 right-8 z-50"
-            onClick={(e) => handleButtonClick(e, onNextEpisode)}
-          >
-            Next Episode
-          </Button>
-        )}
       </DialogContent>
     </Dialog>
   );
