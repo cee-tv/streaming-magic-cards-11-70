@@ -5,7 +5,6 @@ import { X, Play, Download, Plus, Check } from "lucide-react";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { toast } from "sonner";
 import { EpisodesList } from "../movie/EpisodesList";
-import { getVideoConfig } from "@/utils/videoConfig";
 
 interface HeroModalProps {
   movie: Movie;
@@ -35,7 +34,6 @@ export const HeroModal = ({
   onEpisodeSelect,
 }: HeroModalProps) => {
   const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
-  const videoConfig = getVideoConfig();
 
   const handleWatchlistToggle = () => {
     if (isInWatchlist(movie.id)) {
@@ -69,13 +67,13 @@ export const HeroModal = ({
           <X className="h-6 w-6" />
           <span className="sr-only">Close</span>
         </Button>
-        <div className="relative pt-16">
+        <div className="relative pt-16"> {/* Added pt-16 for top spacing */}
           {trailerKey ? (
             <>
               <div className="relative">
                 <iframe
                   className="w-full aspect-video"
-                  src={`https://www.youtube.com/embed/${trailerKey}?${new URLSearchParams(videoConfig.playerVars as any).toString()}`}
+                  src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0`}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />
@@ -105,9 +103,7 @@ export const HeroModal = ({
                       size="icon"
                       className="rounded-full border-white hover:border-white bg-black/30 text-white"
                       onClick={() => {
-                        const downloadUrl = movie.media_type === 'movie'
-                          ? `https://dl.vidsrc.vip/movie/${movie.id}`
-                          : `https://dl.vidsrc.vip/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
+                        const downloadUrl = `https://dl.vidsrc.vip/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
                         window.open(downloadUrl, '_blank');
                       }}
                     >
