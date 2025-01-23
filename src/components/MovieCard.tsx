@@ -109,7 +109,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
         </div>
       </div>
 
-      <Dialog open={showModal} onOpenChange={setShowModal}>
+      <Dialog open={showModal} onOpenChange={() => {}}>
         <DialogContent className="max-w-full w-full h-[80vh] p-0 bg-black overflow-y-auto m-0">
           <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
           <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
