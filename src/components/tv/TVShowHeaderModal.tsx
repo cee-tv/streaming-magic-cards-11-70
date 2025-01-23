@@ -5,7 +5,6 @@ import { X, Play, Download, Plus, Check } from "lucide-react";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { toast } from "sonner";
 import { EpisodesList } from "../movie/EpisodesList";
-import { getDefaultOptions } from "@/utils/youtubeConfig";
 
 interface TVShowHeaderModalProps {
   show: Movie;
@@ -60,12 +59,12 @@ export const TVShowHeaderModal = ({
           <X className="h-6 w-6" />
           <span className="sr-only">Close</span>
         </Button>
-        <div className="relative pt-16">
+        <div className="relative pt-16"> {/* Added pt-16 for top spacing */}
           {trailerKey ? (
             <div className="relative">
               <iframe
                 className="w-full aspect-video"
-                src={`https://www.youtube.com/embed/${trailerKey}?${new URLSearchParams(getDefaultOptions().playerVars as Record<string, string>).toString()}`}
+                src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0`}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />
