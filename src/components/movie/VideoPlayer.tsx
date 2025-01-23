@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
+import { X } from "lucide-react";
 
 interface VideoPlayerProps {
   isOpen: boolean;
@@ -73,7 +74,7 @@ export const VideoPlayer = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-full w-full h-screen p-0 bg-black overflow-y-auto m-0">
+      <DialogContent className="max-w-full w-full h-[90vh] p-0 bg-black overflow-y-auto m-0">
         <DialogTitle className="sr-only">Play {title}</DialogTitle>
         <DialogDescription className="sr-only">Video player for {title}</DialogDescription>
         
@@ -97,8 +98,18 @@ export const VideoPlayer = ({
           </DropdownMenu>
         </div>
 
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute right-8 top-8 z-50 rounded-full bg-black/50 text-white hover:bg-black/70 w-8 h-8"
+          onClick={onClose}
+        >
+          <X className="h-5 w-5" />
+          <span className="sr-only">Close</span>
+        </Button>
+
         <iframe
-          className="w-full h-[calc(100vh-4rem)] mt-16"
+          className="w-full h-[calc(90vh-4rem)] mt-16"
           src={getCurrentUrl()}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
