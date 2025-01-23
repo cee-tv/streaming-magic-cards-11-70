@@ -16,12 +16,10 @@ export const ChannelGrid = ({ category, channels, selectedChannel, onChannelSele
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    // Immediately start loading all images when component mounts
     const imageUrls = categoryChannels
       .filter(channel => channel.logo)
       .map(channel => channel.logo as string);
 
-    // Create an array to track loading promises
     const loadPromises = imageUrls.map(url => {
       return new Promise((resolve) => {
         const img = new Image();
@@ -33,7 +31,6 @@ export const ChannelGrid = ({ category, channels, selectedChannel, onChannelSele
       });
     });
 
-    // Load all images in parallel
     Promise.all(loadPromises);
   }, []);
 
@@ -41,13 +38,13 @@ export const ChannelGrid = ({ category, channels, selectedChannel, onChannelSele
 
   return (
     <div className="mb-4">
-      <h2 className="text-white text-xl font-bold mb-2 px-2">{category}</h2>
+      <h2 className="text-black text-xl font-bold mb-2 px-2">{category}</h2>
       <ScrollArea className="w-full whitespace-nowrap">
         <div className="flex space-x-2 p-2">
           {categoryChannels.map((channel, index) => (
             <Card
               key={channel.id || `${category}-${index}`}
-              className={`group flex-shrink-0 w-[120px] h-[120px] cursor-pointer transition-transform hover:scale-105 relative ${
+              className={`group flex-shrink-0 w-[120px] h-[120px] cursor-pointer transition-transform hover:scale-105 relative bg-white ${
                 selectedChannel?.name === channel.name ? 'ring-2 ring-primary' : ''
               }`}
               onClick={() => onChannelSelect(channel)}
