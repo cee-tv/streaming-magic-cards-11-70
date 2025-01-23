@@ -17,20 +17,28 @@ export const IPTVPlayer = ({ selectedChannel }: IPTVPlayerProps) => {
 
     // Initialize player
     if (videoRef.current && !playerRef.current) {
-      const player = new shaka.Player(videoRef.current);
-      
-      // Error handling
-      player.addEventListener('error', (event) => {
-        console.error('Error code', event.detail.code, 'object', event.detail);
-      });
+      try {
+        const player = new shaka.Player(videoRef.current);
+        
+        // Error handling
+        player.addEventListener('error', (event) => {
+          console.error('Error code', event.detail.code, 'object', event.detail);
+        });
 
-      playerRef.current = player;
+        playerRef.current = player;
+      } catch (error) {
+        console.error('Error initializing player:', error);
+      }
     }
 
     return () => {
       if (playerRef.current) {
-        playerRef.current.destroy();
-        playerRef.current = null;
+        try {
+          playerRef.current.destroy();
+          playerRef.current = null;
+        } catch (error) {
+          console.error('Error destroying player:', error);
+        }
       }
     };
   }, []);
@@ -40,6 +48,9 @@ export const IPTVPlayer = ({ selectedChannel }: IPTVPlayerProps) => {
       if (!selectedChannel || !playerRef.current || !videoRef.current) return;
 
       try {
+        // Stop any current playback
+        videoRef.current.pause();
+        
         // Configure DRM if needed
         if (selectedChannel.type === 'mpd' && selectedChannel.drmConfig) {
           playerRef.current.configure({
@@ -51,17 +62,32 @@ export const IPTVPlayer = ({ selectedChannel }: IPTVPlayerProps) => {
           });
         }
 
+        console.log('Loading stream URL:', selectedChannel.streamUrl);
+        
         // Load the content
         await playerRef.current.load(selectedChannel.streamUrl);
         
         // Start playback
-        videoRef.current.play();
+        if (videoRef.current) {
+          try {
+            await videoRef.current.play();
+          } catch (playError) {
+            console.error('Error starting playback:', playError);
+          }
+        }
       } catch (error) {
         console.error('Error loading content:', error);
       }
     };
 
     loadContent();
+
+    // Cleanup function
+    return () => {
+      if (videoRef.current) {
+        videoRef.current.pause();
+      }
+    };
   }, [selectedChannel]);
 
   return (
