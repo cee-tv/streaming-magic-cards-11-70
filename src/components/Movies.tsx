@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
 import { MovieRow } from "./MovieRow";
+import { TopTenRow } from "./TopTenRow";
 
 export const Movies = () => {
   const { data: trending = [] } = useQuery({
@@ -43,9 +44,13 @@ export const Movies = () => {
     queryFn: () => tmdb.getByGenre("movie", 878),
   });
 
+  // Get first 10 items from popular movies for Top 10
+  const topTenMovies = popular.slice(0, 10);
+
   return (
     <div className="space-y-8 pb-20">
       <MovieRow title="Trending Now" movies={trending} />
+      <TopTenRow title="Top 10 Movies on Netflix Today" movies={topTenMovies} />
       <MovieRow title="Popular on Netflix" movies={popular} />
       <MovieRow title="Top Rated" movies={topRated} />
       <MovieRow title="Action Thrillers" movies={actionMovies} />
