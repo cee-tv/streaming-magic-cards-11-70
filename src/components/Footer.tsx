@@ -24,24 +24,24 @@ export const Footer = () => {
         {/* Footer Links */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <Link to="/audio-description" className="block hover:text-white">Audio Description</Link>
-            <Link to="/gift-cards" className="block hover:text-white">Gift Cards</Link>
-            <Link to="/investor-relations" className="block hover:text-white">Investor Relations</Link>
+            <a href="#" className="block hover:text-white">Audio Description</a>
+            <a href="#" className="block hover:text-white">Gift Cards</a>
+            <a href="#" className="block hover:text-white">Investor Relations</a>
           </div>
           <div className="space-y-4">
-            <Link to="/terms" className="block hover:text-white">Terms of Use</Link>
-            <Link to="/legal" className="block hover:text-white">Legal Notices</Link>
-            <Link to="/corporate" className="block hover:text-white">Corporate Information</Link>
+            <a href="#" className="block hover:text-white">Terms of Use</a>
+            <a href="#" className="block hover:text-white">Legal Notices</a>
+            <a href="#" className="block hover:text-white">Corporate Information</a>
           </div>
           <div className="space-y-4">
-            <Link to="/help" className="block hover:text-white">Help Center</Link>
-            <Link to="/media" className="block hover:text-white">Media Center</Link>
-            <Link to="/jobs" className="block hover:text-white">Jobs</Link>
+            <a href="#" className="block hover:text-white">Help Center</a>
+            <a href="#" className="block hover:text-white">Media Center</a>
+            <a href="#" className="block hover:text-white">Jobs</a>
           </div>
           <div className="space-y-4">
-            <Link to="/privacy" className="block hover:text-white">Privacy</Link>
-            <Link to="/cookie-preferences" className="block hover:text-white">Cookie Preferences</Link>
-            <Link to="/contact" className="block hover:text-white">Contact Us</Link>
+            <a href="#" className="block hover:text-white">Privacy</a>
+            <a href="#" className="block hover:text-white">Cookie Preferences</a>
+            <a href="#" className="block hover:text-white">Contact Us</a>
           </div>
         </div>
 
