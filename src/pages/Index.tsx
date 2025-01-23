@@ -7,25 +7,34 @@ import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
 
 const Index = () => {
-  const [currentMovieIndex, setCurrentMovieIndex] = useState(0);
+  const [currentContentIndex, setCurrentContentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  const { data: trending = [] } = useQuery({
-    queryKey: ["trending", "all"],
+  // Fetch both movies and TV shows
+  const { data: trendingMovies = [] } = useQuery({
+    queryKey: ["trending", "movie"],
     queryFn: () => tmdb.getTrending("movie"),
   });
 
+  const { data: trendingTVShows = [] } = useQuery({
+    queryKey: ["trending", "tv"],
+    queryFn: () => tmdb.getTrending("tv"),
+  });
+
+  // Combine and shuffle movies and TV shows
+  const allTrendingContent = [...trendingMovies, ...trendingTVShows].sort(() => Math.random() - 0.5);
+
   useEffect(() => {
-    if (trending.length === 0 || isPaused) return;
+    if (allTrendingContent.length === 0 || isPaused) return;
 
     const interval = setInterval(() => {
-      setCurrentMovieIndex((prevIndex) => 
-        prevIndex === trending.length - 1 ? 0 : prevIndex + 1
+      setCurrentContentIndex((prevIndex) => 
+        prevIndex === allTrendingContent.length - 1 ? 0 : prevIndex + 1
       );
-    }, 10000); // Change poster every 10 seconds
+    }, 10000); // Change content every 10 seconds
 
     return () => clearInterval(interval);
-  }, [trending.length, isPaused]);
+  }, [allTrendingContent.length, isPaused]);
 
   const handleModalOpen = () => {
     setIsPaused(true);
@@ -43,11 +52,13 @@ const Index = () => {
     setIsPaused(false);
   };
 
-  const randomMovie = trending.length > 0 
-    ? trending[currentMovieIndex]
+  const randomContent = allTrendingContent.length > 0 
+    ? allTrendingContent[currentContentIndex]
     : null;
 
-  if (!randomMovie) {
+  console.log("Current hero content:", randomContent);
+
+  if (!randomContent) {
     return <div className="text-white">Loading...</div>;
   }
 
@@ -55,7 +66,7 @@ const Index = () => {
     <div className="min-h-screen bg-netflix-black">
       <Navigation onMediaTypeChange={() => {}} />
       <Hero 
-        movie={randomMovie} 
+        movie={randomContent}
         onModalOpen={handleModalOpen}
         onModalClose={handleModalClose}
         onPlayStart={handlePlayStart}
