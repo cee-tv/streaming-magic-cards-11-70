@@ -34,7 +34,7 @@ export const DetailsTabContent = ({ details, releaseYear, votePercentage }: Deta
         <div>
           <h3 className="text-xl font-semibold mb-4">Additional Details</h3>
           <div className="space-y-2">
-            {details?.genres && (
+            {details?.genres && details.genres.length > 0 && (
               <p>
                 <span className="text-gray-400">Genres:</span>{' '}
                 {details.genres.map((genre) => genre.name).join(', ')}
