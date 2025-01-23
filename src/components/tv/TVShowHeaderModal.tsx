@@ -6,7 +6,7 @@ import { useWatchlist } from "@/contexts/WatchlistContext";
 import { toast } from "sonner";
 import { EpisodesList } from "../movie/EpisodesList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { MovieRow } from "../MovieRow";
+import { MovieCard } from "../MovieCard";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
 
@@ -41,7 +41,7 @@ export const TVShowHeaderModal = ({
 
   const { data: similarShows = [] } = useQuery({
     queryKey: ["similar", show.id],
-    queryFn: () => tmdb.getByGenre("tv", showDetails?.genres?.[0]?.id || 18),
+    queryFn: () => tmdb.getSimilar(show.id, "tv"),
     enabled: showModal,
   });
 
@@ -133,8 +133,12 @@ export const TVShowHeaderModal = ({
             )}
           </TabsContent>
           <TabsContent value="more">
-            <div className="mt-4">
-              <MovieRow title="" movies={similarShows} />
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-4">
+              {similarShows.map((movie) => (
+                <div key={movie.id} className="w-full">
+                  <MovieCard movie={movie} />
+                </div>
+              ))}
             </div>
           </TabsContent>
         </Tabs>
