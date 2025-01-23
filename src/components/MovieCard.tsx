@@ -84,7 +84,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
           alt={movie.title || movie.name}
           className="rounded-md transition-transform duration-300 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md">
           <div className="absolute inset-0 flex flex-col justify-between p-3 md:p-4">
             <h3 className="text-white font-bold text-xs md:text-sm line-clamp-2">
               {movie.title || movie.name}
