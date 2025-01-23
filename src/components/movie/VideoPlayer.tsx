@@ -101,7 +101,7 @@ export const VideoPlayer = ({
         <Button
           variant="ghost"
           size="icon"
-          className="absolute right-8 top-8 z-50 rounded-full bg-black/50 text-white hover:bg-black/70 w-8 h-8 border border-white"
+          className="absolute right-8 top-8 z-50 rounded-full bg-black/50 text-white hover:bg-black/70 w-8 h-8"
           onClick={onClose}
         >
           <X className="h-5 w-5" />
@@ -109,7 +109,7 @@ export const VideoPlayer = ({
         </Button>
 
         <iframe
-          className="w-full h-full"
+          className="w-full h-[calc(100vh-4rem)] mt-16"
           src={getCurrentUrl()}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
