@@ -20,7 +20,7 @@ const IPTVPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-netflix-black">
       <Navigation onMediaTypeChange={() => {}} />
       
       <div className="container mx-auto px-4 pt-20 pb-8">
