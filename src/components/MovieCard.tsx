@@ -114,7 +114,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
               <X className="h-6 w-6" />
               <span className="sr-only">Close</span>
             </Button>
-            <div className="relative">
+            <div className="relative pt-16"> {/* Added pt-16 for top spacing */}
               {trailerKey ? (
                 <>
                   <div className="relative">

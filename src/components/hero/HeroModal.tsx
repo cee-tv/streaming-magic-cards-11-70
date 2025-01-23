@@ -67,13 +67,13 @@ export const HeroModal = ({
           <X className="h-6 w-6" />
           <span className="sr-only">Close</span>
         </Button>
-        <div className="relative">
+        <div className="relative pt-16"> {/* Added pt-16 for top spacing */}
           {trailerKey ? (
             <>
               <div className="relative">
                 <iframe
                   className="w-full aspect-video"
-                  src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3`}
+                  src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0`}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />
