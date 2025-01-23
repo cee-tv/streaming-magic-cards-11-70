@@ -168,5 +168,21 @@ export const tmdb = {
       (video.type === "Trailer" || video.type === "Teaser")
     );
     return trailer ? trailer.key : null;
+  },
+
+  getSimilar: async (id: number, mediaType: 'movie' | 'tv'): Promise<Movie[]> => {
+    console.log('Fetching similar:', mediaType, id);
+    const response = await fetch(
+      `${BASE_URL}/${mediaType}/${id}/similar`,
+      { headers }
+    );
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.results.map((item: Movie) => ({
+      ...item,
+      media_type: mediaType
+    }));
   }
 };

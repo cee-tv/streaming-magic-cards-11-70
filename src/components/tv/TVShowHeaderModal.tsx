@@ -1,10 +1,14 @@
 import { Movie } from "@/services/tmdb";
 import { Button } from "../ui/button";
 import { DialogContent, DialogTitle, DialogDescription } from "../ui/dialog";
-import { X, Play, Download, Plus, Check } from "lucide-react";
+import { Play, Download, Plus, Check } from "lucide-react";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { toast } from "sonner";
 import { EpisodesList } from "../movie/EpisodesList";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { MovieRow } from "../MovieRow";
+import { useQuery } from "@tanstack/react-query";
+import { tmdb } from "@/services/tmdb";
 
 interface TVShowHeaderModalProps {
   show: Movie;
@@ -34,6 +38,12 @@ export const TVShowHeaderModal = ({
   onEpisodeSelect,
 }: TVShowHeaderModalProps) => {
   const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
+
+  const { data: similarShows = [] } = useQuery({
+    queryKey: ["similar", show.id],
+    queryFn: () => tmdb.getByGenre("tv", showDetails?.genres?.[0]?.id || 18),
+    enabled: showModal,
+  });
 
   const handleWatchlistToggle = () => {
     if (isInWatchlist(show.id)) {
@@ -106,15 +116,28 @@ export const TVShowHeaderModal = ({
         <p className="text-gray-400">{show.overview}</p>
       </div>
       <div className="p-4">
-        {showDetails?.seasons && seasonDetails?.episodes && (
-          <EpisodesList
-            seasons={showDetails.seasons}
-            selectedSeason={selectedSeason}
-            onSeasonChange={onSeasonChange}
-            episodes={seasonDetails.episodes}
-            onEpisodeSelect={onEpisodeSelect}
-          />
-        )}
+        <Tabs defaultValue="episodes" className="w-full">
+          <TabsList className="bg-white/10 text-white">
+            <TabsTrigger value="episodes" className="data-[state=active]:bg-white/20">Episodes</TabsTrigger>
+            <TabsTrigger value="more" className="data-[state=active]:bg-white/20">More Like This</TabsTrigger>
+          </TabsList>
+          <TabsContent value="episodes">
+            {showDetails?.seasons && seasonDetails?.episodes && (
+              <EpisodesList
+                seasons={showDetails.seasons}
+                selectedSeason={selectedSeason}
+                onSeasonChange={onSeasonChange}
+                episodes={seasonDetails.episodes}
+                onEpisodeSelect={onEpisodeSelect}
+              />
+            )}
+          </TabsContent>
+          <TabsContent value="more">
+            <div className="mt-4">
+              <MovieRow title="" movies={similarShows} />
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </DialogContent>
   );
