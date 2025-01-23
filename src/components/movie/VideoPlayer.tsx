@@ -1,4 +1,5 @@
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "../ui/dialog";
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -71,8 +72,8 @@ export const VideoPlayer = ({
   ] as const;
 
   return (
-    <Dialog open={isOpen} onOpenChange={() => {}}>
-      <DialogContent className="max-w-full w-full h-[90vh] p-0 bg-black overflow-hidden m-0">
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-full w-full h-[90vh] p-0 bg-black overflow-y-auto m-0">
         <DialogTitle className="sr-only">Play {title}</DialogTitle>
         <DialogDescription className="sr-only">Video player for {title}</DialogDescription>
         
