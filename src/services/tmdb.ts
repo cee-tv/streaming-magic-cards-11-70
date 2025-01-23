@@ -1,8 +1,8 @@
 const BASE_URL = "https://api.themoviedb.org/3";
-const API_KEY = "72ba10c429914157380d27104ed18faa";
+const API_KEY = "72ba10c429914157380d27104ed18fa";
 
 const headers = {
-  Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MmJhMTBjNDI5OTE0MTU3MzgwZDI3MTA0ZWQxOGZhYSIsInN1YiI6IjY0ZjVhNTUwMTIxOTdlMDBmZWE5MzdmMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.84b7vWpVEilAbly4RpS01E9tyirHdhSXjcpfmTczI3Q",
+  Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MmJhMTBjNDI5OTE0MTU3MzgwOGQyNzEwNGVkMThmYSIsInN1YiI6IjY0ZjVhNTUwMTIxOTdlMDBmZWE5MzdmMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.84b7vWpVEilAbly4RpS01E9tyirHdhSXjcpfmTczI3Q",
   accept: "application/json"
 };
 
@@ -52,18 +52,6 @@ export interface MovieDetails extends Movie {
   }>;
   tagline?: string;
   seasons?: Season[];
-  status?: string;
-  number_of_seasons?: number;
-  number_of_episodes?: number;
-  networks?: Array<{
-    id: number;
-    name: string;
-  }>;
-  production_companies?: Array<{
-    id: number;
-    name: string;
-  }>;
-  original_language?: string;
 }
 
 export const tmdb = {
