@@ -62,7 +62,7 @@ export const TVShowHeaderModal = ({
   const votePercentage = Math.round(show.vote_average * 10);
 
   return (
-    <DialogContent className="max-w-full w-full h-[80vh] p-0 bg-black overflow-y-auto m-0">
+    <DialogContent className="max-w-full w-full h-screen p-0 bg-black overflow-y-auto m-0">
       <DialogTitle className="sr-only">{show.name}</DialogTitle>
       <DialogDescription className="sr-only">Details for {show.name}</DialogDescription>
       <div className="relative">
