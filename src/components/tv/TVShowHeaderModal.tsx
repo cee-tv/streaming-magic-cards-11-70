@@ -59,7 +59,6 @@ export const TVShowHeaderModal = ({
     <DialogContent className="max-w-full w-full h-screen p-0 bg-black overflow-y-auto m-0">
       <DialogTitle className="sr-only">{show.name}</DialogTitle>
       <DialogDescription className="sr-only">Details for {show.name}</DialogDescription>
-      
       <div className="relative">
         <div className="relative pt-16">
           {trailerKey ? (
@@ -116,18 +115,13 @@ export const TVShowHeaderModal = ({
         <h2 className="text-2xl font-bold mb-2 text-white">{show.name}</h2>
         <p className="text-gray-400">{show.overview}</p>
       </div>
-      
       <div className="p-4">
         <Tabs defaultValue="episodes" className="w-full">
-          <TabsList className="bg-white/10 text-white w-full h-12">
-            <TabsTrigger value="episodes" className="data-[state=active]:bg-white/20 flex-1 h-full text-lg">
-              Episodes
-            </TabsTrigger>
-            <TabsTrigger value="more" className="data-[state=active]:bg-white/20 flex-1 h-full text-lg">
-              More Like This
-            </TabsTrigger>
+          <TabsList className="bg-white/10 text-white">
+            <TabsTrigger value="episodes" className="data-[state=active]:bg-white/20">Episodes</TabsTrigger>
+            <TabsTrigger value="more" className="data-[state=active]:bg-white/20">More Like This</TabsTrigger>
           </TabsList>
-          <TabsContent value="episodes" className="mt-6">
+          <TabsContent value="episodes">
             {showDetails?.seasons && seasonDetails?.episodes && (
               <EpisodesList
                 seasons={showDetails.seasons}
@@ -138,8 +132,8 @@ export const TVShowHeaderModal = ({
               />
             )}
           </TabsContent>
-          <TabsContent value="more" className="mt-6">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <TabsContent value="more">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-4">
               {similarShows.map((movie) => (
                 <div key={movie.id} className="w-full">
                   <MovieCard movie={movie} />
