@@ -53,7 +53,7 @@ export const VideoPlayer = ({
   const getCurrentUrl = () => {
     switch (currentProvider) {
       case 'embed':
-        return embedUrl;
+        return multiEmbedUrl; // Using multiEmbedUrl as a more reliable source
       case 'multiembed':
         return multiEmbedUrl;
       case 'vidsrc':
@@ -65,16 +65,19 @@ export const VideoPlayer = ({
     }
   };
 
+  const handleProviderChange = (provider: 'vidsrcvip' | 'embed' | 'multiembed' | 'vidsrc') => {
+    setCurrentProvider(provider);
+  };
+
   const providers = [
-    { id: 'vidsrcvip', name: 'Source 1' },
-    { id: 'embed', name: 'Source 2' },
-    { id: 'multiembed', name: 'Source 3' },
-    { id: 'vidsrc', name: 'Source 4' },
-  ] as const;
+    { id: 'vidsrcvip' as const, name: 'Source 1' },
+    { id: 'multiembed' as const, name: 'Source 2' },
+    { id: 'vidsrc' as const, name: 'Source 3' },
+  ];
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-full w-full h-screen p-0 bg-black overflow-y-auto m-0">
+      <DialogContent className="max-w-full w-full h-screen p-0 bg-black overflow-y-auto m-0" onPointerDownOutside={(e) => e.preventDefault()}>
         <DialogTitle className="sr-only">Play {title}</DialogTitle>
         <DialogDescription className="sr-only">Video player for {title}</DialogDescription>
         
@@ -89,7 +92,7 @@ export const VideoPlayer = ({
               {providers.map((provider) => (
                 <DropdownMenuItem
                   key={provider.id}
-                  onClick={() => setCurrentProvider(provider.id)}
+                  onClick={() => handleProviderChange(provider.id)}
                 >
                   {provider.name}
                 </DropdownMenuItem>
@@ -102,7 +105,11 @@ export const VideoPlayer = ({
           variant="ghost"
           size="icon"
           className="absolute right-8 top-8 z-50 rounded-full bg-black/50 text-white hover:bg-black/70 w-8 h-8"
-          onClick={onClose}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onClose();
+          }}
         >
           <X className="h-5 w-5" />
           <span className="sr-only">Close</span>
@@ -113,7 +120,21 @@ export const VideoPlayer = ({
           src={getCurrentUrl()}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
+          sandbox="allow-same-origin allow-scripts allow-forms"
         />
+
+        {onNextEpisode && (
+          <Button
+            className="absolute bottom-8 right-8 z-50"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onNextEpisode();
+            }}
+          >
+            Next Episode
+          </Button>
+        )}
       </DialogContent>
     </Dialog>
   );
