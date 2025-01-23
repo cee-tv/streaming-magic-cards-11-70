@@ -1,7 +1,7 @@
 import { Movie } from "@/services/tmdb";
 import { MovieCard } from "./MovieCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface TopTenRowProps {
@@ -65,19 +65,25 @@ export const TopTenRow = ({ title, movies }: TopTenRowProps) => {
         ref={rowRef}
         role="row"
         onScroll={handleScroll}
-        className="flex overflow-x-auto scrollbar-hide gap-4 px-4"
+        className="flex overflow-x-auto scrollbar-hide gap-2 px-4"
         style={{ scrollSnapType: "x mandatory" }}
       >
         {movies.map((movie, index) => (
           <div
             key={movie.id}
-            className="relative flex-none w-[200px] md:w-[240px] lg:w-[280px] scroll-snap-align-start movie-card"
+            className="relative flex-none w-[200px] md:w-[240px] lg:w-[280px] scroll-snap-align-start movie-card pl-[30px]"
             style={{ scrollSnapAlign: "start" }}
             tabIndex={0}
             onFocus={() => setFocusedIndex(index)}
           >
-            <div className="absolute -left-4 top-0 bottom-0 flex items-center z-10">
-              <span className="text-[180px] font-bold text-neutral-700 leading-none">
+            <div 
+              className="absolute left-0 top-0 bottom-0 flex items-center z-10"
+              style={{
+                WebkitTextStroke: '2px #595959',
+                WebkitTextFillColor: 'transparent'
+              }}
+            >
+              <span className="text-[120px] font-bold leading-none">
                 {index + 1}
               </span>
             </div>
