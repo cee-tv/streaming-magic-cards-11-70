@@ -64,7 +64,7 @@ export const HeroModal = ({
   const votePercentage = Math.round(movie.vote_average * 10);
 
   return (
-    <DialogContent className="max-w-full w-full h-screen p-0 bg-black overflow-y-auto m-0">
+    <DialogContent className="max-w-full w-full h-[80vh] p-0 bg-black overflow-y-auto m-0">
       <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
       <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
       <div className="relative">
@@ -74,7 +74,7 @@ export const HeroModal = ({
               <div className="relative">
                 <iframe
                   className="w-full aspect-video"
-                  src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0`}
+                  src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0&modestbranding=1&showinfo=0`}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />

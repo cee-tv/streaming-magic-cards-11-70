@@ -1,7 +1,14 @@
 import { MovieDetails } from "@/services/tmdb";
 
 interface DetailsTabContentProps {
-  details: MovieDetails;
+  details: MovieDetails & {
+    status?: string;
+    number_of_seasons?: number;
+    number_of_episodes?: number;
+    networks?: { name: string }[];
+    production_companies?: { name: string }[];
+    original_language?: string;
+  };
   releaseYear: number | null;
   votePercentage: number;
 }
