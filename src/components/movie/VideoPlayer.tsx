@@ -73,7 +73,7 @@ export const VideoPlayer = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-full w-full h-[90vh] p-0 bg-black overflow-y-auto m-0">
+      <DialogContent className="max-w-full w-full h-[80vh] p-0 bg-black overflow-y-auto m-0">
         <DialogTitle className="sr-only">Play {title}</DialogTitle>
         <DialogDescription className="sr-only">Video player for {title}</DialogDescription>
         
