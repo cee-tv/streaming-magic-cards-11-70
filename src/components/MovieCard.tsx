@@ -36,6 +36,9 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
 
   const trailerKey = movieDetails?.videos ? tmdb.getTrailerKey(movieDetails.videos) : null;
   const embedUrl = movie.media_type === 'movie' 
+    ? `https://embed.su/embed/movie/${movie.id}`
+    : `https://embed.su/embed/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
+  const multiEmbedUrl = movie.media_type === 'movie'
     ? `https://multiembed.mov/?video_id=${movie.id}&tmdb=1`
     : `https://multiembed.mov/?video_id=${movie.id}&tmdb=1&s=${selectedSeason}&e=${selectedEpisode}`;
 
@@ -72,8 +75,6 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
     : null;
 
   const votePercentage = Math.round(movie.vote_average * 10);
-
-  // ... keep existing code (JSX for movie card UI, modal, and video player components)
 
   return (
     <>
@@ -213,7 +214,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
         onClose={() => setShowPlayer(false)}
         title={movie.title || movie.name}
         embedUrl={embedUrl}
-        multiEmbedUrl={embedUrl}
+        multiEmbedUrl={multiEmbedUrl}
         movieId={movie.id}
         mediaType={movie.media_type as 'movie' | 'tv'}
         season={selectedSeason}
