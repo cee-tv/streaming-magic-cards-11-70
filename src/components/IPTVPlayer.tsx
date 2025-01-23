@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import * as shaka from 'shaka-player';
-import { useToast } from "@/hooks/use-toast";
 import type { Channel } from "../data/channels";
 
 interface IPTVPlayerProps {
@@ -11,21 +10,10 @@ interface IPTVPlayerProps {
 export const IPTVPlayer = ({ selectedChannel }: IPTVPlayerProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<shaka.Player | null>(null);
-  const { toast } = useToast();
 
   useEffect(() => {
     // Install polyfills
     shaka.polyfill.installAll();
-
-    // Check browser support
-    if (!shaka.Player.isBrowserSupported()) {
-      toast({
-        title: "Browser not supported",
-        description: "Please use a modern browser that supports MSE/EME",
-        variant: "destructive",
-      });
-      return;
-    }
 
     // Initialize player
     if (videoRef.current && !playerRef.current) {
@@ -33,12 +21,7 @@ export const IPTVPlayer = ({ selectedChannel }: IPTVPlayerProps) => {
       
       // Error handling
       player.addEventListener('error', (event) => {
-        console.error('Detailed error:', event.detail);
-        toast({
-          title: "Playback Error",
-          description: `Error code ${event.detail.code}: ${event.detail.message}`,
-          variant: "destructive",
-        });
+        console.error('Error code', event.detail.code, 'object', event.detail);
       });
 
       playerRef.current = player;
@@ -57,9 +40,6 @@ export const IPTVPlayer = ({ selectedChannel }: IPTVPlayerProps) => {
       if (!selectedChannel || !playerRef.current || !videoRef.current) return;
 
       try {
-        // Unload any previous content
-        await playerRef.current.unload();
-        
         // Configure DRM if needed
         if (selectedChannel.type === 'mpd' && selectedChannel.drmConfig) {
           playerRef.current.configure({
@@ -71,27 +51,13 @@ export const IPTVPlayer = ({ selectedChannel }: IPTVPlayerProps) => {
           });
         }
 
-        console.log('Loading stream URL:', selectedChannel.streamUrl);
-        
         // Load the content
         await playerRef.current.load(selectedChannel.streamUrl);
         
         // Start playback
-        videoRef.current.play().catch(error => {
-          console.error('Playback error:', error);
-          toast({
-            title: "Playback Error",
-            description: "Could not start playback. Please try again.",
-            variant: "destructive",
-          });
-        });
+        videoRef.current.play();
       } catch (error) {
         console.error('Error loading content:', error);
-        toast({
-          title: "Loading Error",
-          description: "Failed to load the channel. Please try another one.",
-          variant: "destructive",
-        });
       }
     };
 
@@ -99,7 +65,7 @@ export const IPTVPlayer = ({ selectedChannel }: IPTVPlayerProps) => {
   }, [selectedChannel]);
 
   return (
-    <div className="w-full aspect-video bg-netflix-black mb-8 rounded-lg overflow-hidden shadow-lg">
+    <div className="w-full aspect-video bg-black mb-8 rounded-lg overflow-hidden shadow-lg">
       <video 
         ref={videoRef}
         className="w-full h-full"

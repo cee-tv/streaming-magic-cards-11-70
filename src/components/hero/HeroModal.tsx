@@ -1,7 +1,7 @@
 import { Movie } from "@/services/tmdb";
 import { Button } from "../ui/button";
 import { DialogContent, DialogTitle, DialogDescription } from "../ui/dialog";
-import { Play, Download, Plus, Check } from "lucide-react";
+import { X, Play, Download, Plus, Check } from "lucide-react";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { toast } from "sonner";
 import { EpisodesList } from "../movie/EpisodesList";
@@ -58,6 +58,15 @@ export const HeroModal = ({
       <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
       <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
       <div className="relative">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute right-4 top-4 z-50 text-white hover:bg-white/20 h-12 w-12"
+          onClick={onClose}
+        >
+          <X className="h-6 w-6" />
+          <span className="sr-only">Close</span>
+        </Button>
         <div className="relative pt-16">
           {trailerKey ? (
             <>
