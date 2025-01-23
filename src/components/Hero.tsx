@@ -67,11 +67,6 @@ export const Hero = ({
     if (onPlayEnd) onPlayEnd();
   };
 
-  const handleSeasonChange = (season: string) => {
-    setSelectedSeason(parseInt(season));
-    setSelectedEpisode(1);
-  };
-
   return (
     <>
       <div className="relative h-[50vh] md:h-[70vh] mb-8">
@@ -104,18 +99,9 @@ export const Hero = ({
           movie={movie}
           showModal={showModal}
           trailerKey={trailerKey}
-          movieDetails={movieDetails}
-          seasonDetails={seasonDetails}
-          selectedSeason={selectedSeason}
-          selectedEpisode={selectedEpisode}
+          movieDetails={movieDetails || { ...movie, videos: { results: [] } }}
           onClose={() => handleModalOpen(false)}
           onPlayClick={() => {
-            handleModalOpen(false);
-            setShowPlayer(true);
-          }}
-          onSeasonChange={handleSeasonChange}
-          onEpisodeSelect={(episodeNumber) => {
-            setSelectedEpisode(episodeNumber);
             handleModalOpen(false);
             setShowPlayer(true);
           }}

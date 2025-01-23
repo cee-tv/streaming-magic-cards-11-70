@@ -1,4 +1,4 @@
-import { Movie } from "@/services/tmdb";
+import { Movie, MovieDetails } from "@/services/tmdb";
 import { Button } from "../ui/button";
 import { DialogContent, DialogTitle, DialogDescription } from "../ui/dialog";
 import { Play, Download, Plus, Check } from "lucide-react";
@@ -13,7 +13,7 @@ interface HeroModalProps {
   movie: Movie;
   showModal: boolean;
   trailerKey: string | null;
-  movieDetails: any;
+  movieDetails: MovieDetails;
   onClose: () => void;
   onPlayClick: () => void;
 }
