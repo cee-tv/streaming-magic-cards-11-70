@@ -118,7 +118,19 @@ export const TVShowHeaderModal = ({
         </div>
       </div>
       <div className="bg-black p-4">
-        <h2 className="text-2xl font-bold mb-2 text-white">{show.name}</h2>
+        <div className="flex items-center gap-2 mb-2">
+          <h2 className="text-2xl font-bold text-white">{show.name}</h2>
+          {releaseYear && <span className="text-gray-400">({releaseYear})</span>}
+        </div>
+        <div className="flex items-center gap-4 mb-4">
+          <span className="text-green-500 font-bold">{votePercentage}% Match</span>
+          {showDetails?.number_of_seasons && (
+            <span className="text-gray-400">{showDetails.number_of_seasons} Seasons</span>
+          )}
+          {showDetails?.genres?.map((genre: { id: number; name: string }) => (
+            <span key={genre.id} className="text-gray-400">{genre.name}</span>
+          ))}
+        </div>
         <p className="text-gray-400">{show.overview}</p>
       </div>
       <div className="p-4">
