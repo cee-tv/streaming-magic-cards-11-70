@@ -10,6 +10,8 @@ import { Button } from "./ui/button";
 import { X } from "lucide-react";
 import { MediaModalContent } from "./shared/MediaModalContent";
 import { EpisodesList } from "./movie/EpisodesList";
+import { useWatchlist } from "@/contexts/WatchlistContext";
+import { toast } from "sonner";
 
 interface MovieCardProps {
   movie: Movie;
@@ -20,6 +22,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
   const [showPlayer, setShowPlayer] = useState(false);
   const [selectedSeason, setSelectedSeason] = useState(1);
   const [selectedEpisode, setSelectedEpisode] = useState(1);
+  const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
 
   const { data: movieDetails } = useQuery({
     queryKey: ["movie", movie.id, movie.media_type],
@@ -32,6 +35,16 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
     queryFn: () => tmdb.getTVSeasonDetails(movie.id, selectedSeason),
     enabled: showModal && movie.media_type === 'tv',
   });
+
+  const handleWatchlistToggle = () => {
+    if (isInWatchlist(movie.id)) {
+      removeFromWatchlist(movie.id);
+      toast.success("Removed from watchlist");
+    } else {
+      addToWatchlist(movie);
+      toast.success("Added to watchlist");
+    }
+  };
 
   const trailerKey = movieDetails?.videos ? tmdb.getTrailerKey(movieDetails.videos) : null;
   const embedUrl = movie.media_type === 'movie' 
@@ -74,6 +87,8 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
               movie={movie}
               onPlay={() => setShowPlayer(true)}
               onMoreInfo={() => setShowModal(true)}
+              onWatchlistToggle={handleWatchlistToggle}
+              isInWatchlist={isInWatchlist(movie.id)}
             />
           </div>
         </div>
@@ -93,10 +108,10 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
               <X className="h-6 w-6" />
               <span className="sr-only">Close</span>
             </Button>
-            <div className="relative pt-16"> {/* Added pt-16 for top spacing */}
-              {trailerKey ? (
+            <div className="relative pt-16">
+              {movieDetails && trailerKey ? (
                 <MediaModalContent
-                  media={movie}
+                  media={movieDetails}
                   trailerKey={trailerKey}
                   selectedSeason={selectedSeason}
                   selectedEpisode={selectedEpisode}

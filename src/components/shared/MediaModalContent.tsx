@@ -1,11 +1,11 @@
-import { Movie } from "@/services/tmdb";
+import { Movie, MovieDetails } from "@/services/tmdb";
 import { Button } from "../ui/button";
 import { Play, Plus, Check, Download } from "lucide-react";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { toast } from "sonner";
 
 interface MediaModalContentProps {
-  media: Movie;
+  media: MovieDetails;
   trailerKey: string | null;
   selectedSeason?: number;
   selectedEpisode?: number;
@@ -95,7 +95,7 @@ export const MediaModalContent = ({
           {media.runtime && (
             <span className="text-gray-400">{media.runtime} min</span>
           )}
-          {media.genres?.map((genre: { id: number; name: string }) => (
+          {media.genres?.map((genre) => (
             <span key={genre.id} className="text-gray-400">{genre.name}</span>
           ))}
         </div>
