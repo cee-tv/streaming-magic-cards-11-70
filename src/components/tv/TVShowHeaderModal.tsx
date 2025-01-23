@@ -45,6 +45,12 @@ export const TVShowHeaderModal = ({
     }
   };
 
+  const releaseYear = show.first_air_date 
+    ? new Date(show.first_air_date).getFullYear()
+    : null;
+
+  const votePercentage = Math.round(show.vote_average * 10);
+
   return (
     <DialogContent className="max-w-3xl h-[45vh] p-0 bg-black overflow-y-auto">
       <DialogTitle className="sr-only">{show.name}</DialogTitle>
@@ -107,6 +113,22 @@ export const TVShowHeaderModal = ({
             <p className="text-white">No trailer available</p>
           </div>
         )}
+        <div className="bg-black p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <h2 className="text-2xl font-bold text-white">{show.name}</h2>
+            {releaseYear && <span className="text-gray-400">({releaseYear})</span>}
+          </div>
+          <div className="flex items-center gap-4 mb-4">
+            <span className="text-green-500 font-bold">{votePercentage}% Match</span>
+            {showDetails?.genres?.map((genre: { id: number; name: string }) => (
+              <span key={genre.id} className="text-gray-400">{genre.name}</span>
+            ))}
+          </div>
+          <p className="text-gray-400">{show.overview}</p>
+          {showDetails?.tagline && (
+            <p className="text-gray-500 mt-2 italic">{showDetails.tagline}</p>
+          )}
+        </div>
       </div>
       <div className="p-4">
         {showDetails?.seasons && seasonDetails?.episodes && (
