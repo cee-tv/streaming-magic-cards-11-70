@@ -7,25 +7,25 @@ import { toast } from "sonner";
 import { EpisodesList } from "../movie/EpisodesList";
 import { getVideoConfig } from "@/utils/videoConfig";
 
-interface HeroModalProps {
-  movie: Movie;
+interface MediaModalContentProps {
+  media: Movie;
   showModal: boolean;
   trailerKey: string | null;
-  movieDetails: any;
-  seasonDetails: any;
-  selectedSeason: number;
-  selectedEpisode: number;
+  mediaDetails: any;
+  seasonDetails?: any;
+  selectedSeason?: number;
+  selectedEpisode?: number;
   onClose: () => void;
   onPlayClick: () => void;
-  onSeasonChange: (season: string) => void;
-  onEpisodeSelect: (episodeNumber: number) => void;
+  onSeasonChange?: (season: string) => void;
+  onEpisodeSelect?: (episodeNumber: number) => void;
 }
 
-export const HeroModal = ({
-  movie,
+export const MediaModalContent = ({
+  media,
   showModal,
   trailerKey,
-  movieDetails,
+  mediaDetails,
   seasonDetails,
   selectedSeason,
   selectedEpisode,
@@ -33,32 +33,32 @@ export const HeroModal = ({
   onPlayClick,
   onSeasonChange,
   onEpisodeSelect,
-}: HeroModalProps) => {
+}: MediaModalContentProps) => {
   const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
   const videoConfig = getVideoConfig();
 
   const handleWatchlistToggle = () => {
-    if (isInWatchlist(movie.id)) {
-      removeFromWatchlist(movie.id);
+    if (isInWatchlist(media.id)) {
+      removeFromWatchlist(media.id);
       toast.success("Removed from watchlist");
     } else {
-      addToWatchlist(movie);
+      addToWatchlist(media);
       toast.success("Added to watchlist");
     }
   };
 
-  const releaseYear = movie.release_date 
-    ? new Date(movie.release_date).getFullYear()
-    : movie.first_air_date 
-    ? new Date(movie.first_air_date).getFullYear()
+  const releaseYear = media.release_date 
+    ? new Date(media.release_date).getFullYear()
+    : media.first_air_date 
+    ? new Date(media.first_air_date).getFullYear()
     : null;
 
-  const votePercentage = Math.round(movie.vote_average * 10);
+  const votePercentage = Math.round(media.vote_average * 10);
 
   return (
     <DialogContent className="max-w-3xl h-[45vh] p-0 bg-black overflow-y-auto">
-      <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
-      <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
+      <DialogTitle className="sr-only">{media.title || media.name}</DialogTitle>
+      <DialogDescription className="sr-only">Details for {media.title || media.name}</DialogDescription>
       <div className="relative">
         <Button
           variant="ghost"
@@ -94,7 +94,7 @@ export const HeroModal = ({
                       className="rounded-full border-white hover:border-white bg-black/30 text-white"
                       onClick={handleWatchlistToggle}
                     >
-                      {isInWatchlist(movie.id) ? (
+                      {isInWatchlist(media.id) ? (
                         <Check className="h-4 w-4" />
                       ) : (
                         <Plus className="h-4 w-4" />
@@ -105,9 +105,9 @@ export const HeroModal = ({
                       size="icon"
                       className="rounded-full border-white hover:border-white bg-black/30 text-white"
                       onClick={() => {
-                        const downloadUrl = movie.media_type === 'movie'
-                          ? `https://dl.vidsrc.vip/movie/${movie.id}`
-                          : `https://dl.vidsrc.vip/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
+                        const downloadUrl = media.media_type === 'movie'
+                          ? `https://dl.vidsrc.vip/movie/${media.id}`
+                          : `https://dl.vidsrc.vip/tv/${media.id}/${selectedSeason}/${selectedEpisode}`;
                         window.open(downloadUrl, '_blank');
                       }}
                     >
@@ -118,21 +118,21 @@ export const HeroModal = ({
               </div>
               <div className="bg-black p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <h2 className="text-2xl font-bold text-white">{movie.title || movie.name}</h2>
+                  <h2 className="text-2xl font-bold text-white">{media.title || media.name}</h2>
                   {releaseYear && <span className="text-gray-400">({releaseYear})</span>}
                 </div>
                 <div className="flex items-center gap-4 mb-4">
                   <span className="text-green-500 font-bold">{votePercentage}% Match</span>
-                  {movieDetails?.runtime && (
-                    <span className="text-gray-400">{movieDetails.runtime} min</span>
+                  {mediaDetails?.runtime && (
+                    <span className="text-gray-400">{mediaDetails.runtime} min</span>
                   )}
-                  {movieDetails?.genres?.map((genre: { id: number; name: string }) => (
+                  {mediaDetails?.genres?.map((genre: { id: number; name: string }) => (
                     <span key={genre.id} className="text-gray-400">{genre.name}</span>
                   ))}
                 </div>
-                <p className="text-gray-400">{movie.overview}</p>
-                {movieDetails?.tagline && (
-                  <p className="text-gray-500 mt-2 italic">{movieDetails.tagline}</p>
+                <p className="text-gray-400">{media.overview}</p>
+                {mediaDetails?.tagline && (
+                  <p className="text-gray-500 mt-2 italic">{mediaDetails.tagline}</p>
                 )}
               </div>
             </>
@@ -144,9 +144,9 @@ export const HeroModal = ({
         </div>
       </div>
       <div className="p-4">
-        {movie.media_type === 'tv' && movieDetails?.seasons && seasonDetails?.episodes && (
+        {media.media_type === 'tv' && mediaDetails?.seasons && seasonDetails?.episodes && (
           <EpisodesList
-            seasons={movieDetails.seasons}
+            seasons={mediaDetails.seasons}
             selectedSeason={selectedSeason}
             onSeasonChange={onSeasonChange}
             episodes={seasonDetails.episodes}
