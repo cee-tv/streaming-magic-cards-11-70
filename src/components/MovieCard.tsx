@@ -104,7 +104,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
         <DialogContent className="max-w-3xl h-[45vh] p-0 bg-black overflow-y-auto">
           <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
           <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
-          <div className="relative">
+          <div className="relative pt-14"> {/* Added pt-14 for top spacing */}
             <Button
               variant="ghost"
               size="icon"
@@ -114,96 +114,79 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
               <X className="h-6 w-6" />
               <span className="sr-only">Close</span>
             </Button>
-            <div className="relative">
-              {trailerKey ? (
-                <>
-                  <div className="relative">
-                    <iframe
-                      className="w-full aspect-video"
-                      src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3`}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-                      <div className="flex items-center gap-4">
-                        <Button 
-                          className="rounded-full bg-white hover:bg-white/90 text-black"
-                          onClick={() => {
-                            setShowModal(false);
-                            setShowPlayer(true);
-                          }}
-                        >
-                          <Play className="h-4 w-4 mr-2" />
-                          Play
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="rounded-full border-white hover:border-white bg-black/30 text-white"
-                          onClick={handleWatchlistToggle}
-                        >
-                          {isInWatchlist(movie.id) ? (
-                            <Check className="h-4 w-4" />
-                          ) : (
-                            <Plus className="h-4 w-4" />
-                          )}
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="rounded-full border-white hover:border-white bg-black/30 text-white"
-                          onClick={() => {
-                            const downloadUrl = movie.media_type === 'movie'
-                              ? `https://dl.vidsrc.vip/movie/${movie.id}`
-                              : `https://dl.vidsrc.vip/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
-                            window.open(downloadUrl, '_blank');
-                          }}
-                        >
-                          <Download className="h-4 w-4" />
-                        </Button>
-                      </div>
+            {trailerKey ? (
+              <>
+                <div className="relative">
+                  <iframe
+                    className="w-full aspect-video"
+                    src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3`}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                    <div className="flex items-center gap-4">
+                      <Button 
+                        className="rounded-full bg-white hover:bg-white/90 text-black"
+                        onClick={() => {
+                          setShowModal(false);
+                          setShowPlayer(true);
+                        }}
+                      >
+                        <Play className="h-4 w-4 mr-2" />
+                        Play
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="rounded-full border-white hover:border-white bg-black/30 text-white"
+                        onClick={handleWatchlistToggle}
+                      >
+                        {isInWatchlist(movie.id) ? (
+                          <Check className="h-4 w-4" />
+                        ) : (
+                          <Plus className="h-4 w-4" />
+                        )}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="rounded-full border-white hover:border-white bg-black/30 text-white"
+                        onClick={() => {
+                          const downloadUrl = movie.media_type === 'movie'
+                            ? `https://dl.vidsrc.vip/movie/${movie.id}`
+                            : `https://dl.vidsrc.vip/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
+                          window.open(downloadUrl, '_blank');
+                        }}
+                      >
+                        <Download className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
-                  <div className="bg-black p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <h2 className="text-2xl font-bold text-white">{movie.title || movie.name}</h2>
-                      {releaseYear && <span className="text-gray-400">({releaseYear})</span>}
-                    </div>
-                    <div className="flex items-center gap-4 mb-4">
-                      <span className="text-green-500 font-bold">{votePercentage}% Match</span>
-                      {movieDetails?.runtime && (
-                        <span className="text-gray-400">{movieDetails.runtime} min</span>
-                      )}
-                      {movieDetails?.genres?.map((genre: { id: number; name: string }) => (
-                        <span key={genre.id} className="text-gray-400">{genre.name}</span>
-                      ))}
-                    </div>
-                    <p className="text-gray-400">{movie.overview}</p>
-                    {movieDetails?.tagline && (
-                      <p className="text-gray-500 mt-2 italic">{movieDetails.tagline}</p>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <div className="w-full aspect-video bg-gray-900 flex items-center justify-center">
-                  <p className="text-white">No trailer available</p>
                 </div>
-              )}
-            </div>
-          </div>
-          <div className="p-4">
-            {movie.media_type === 'tv' && movieDetails?.seasons && seasonDetails?.episodes && (
-              <EpisodesList
-                seasons={movieDetails.seasons}
-                selectedSeason={selectedSeason}
-                onSeasonChange={handleSeasonChange}
-                episodes={seasonDetails.episodes}
-                onEpisodeSelect={(episodeNumber) => {
-                  setSelectedEpisode(episodeNumber);
-                  setShowModal(false);
-                  setShowPlayer(true);
-                }}
-              />
+                <div className="bg-black p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h2 className="text-2xl font-bold text-white">{movie.title || movie.name}</h2>
+                    {releaseYear && <span className="text-gray-400">({releaseYear})</span>}
+                  </div>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="text-green-500 font-bold">{votePercentage}% Match</span>
+                    {movieDetails?.runtime && (
+                      <span className="text-gray-400">{movieDetails.runtime} min</span>
+                    )}
+                    {movieDetails?.genres?.map((genre: { id: number; name: string }) => (
+                      <span key={genre.id} className="text-gray-400">{genre.name}</span>
+                    ))}
+                  </div>
+                  <p className="text-gray-400">{movie.overview}</p>
+                  {movieDetails?.tagline && (
+                    <p className="text-gray-500 mt-2 italic">{movieDetails.tagline}</p>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="w-full aspect-video bg-gray-900 flex items-center justify-center">
+                <p className="text-white">No trailer available</p>
+              </div>
             )}
           </div>
         </DialogContent>
