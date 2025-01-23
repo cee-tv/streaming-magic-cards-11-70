@@ -51,6 +51,7 @@ export const Hero = ({
   const handleModalOpen = (open: boolean) => {
     setShowModal(open);
     if (open) {
+      console.log('Opening modal for:', movie.title || movie.name, 'ID:', movie.id);
       if (onModalOpen) onModalOpen();
     } else {
       if (onModalClose) onModalClose();
@@ -73,6 +74,8 @@ export const Hero = ({
   };
 
   console.log('Hero component - Current movie:', movie.title || movie.name, 'ID:', movie.id);
+  console.log('Hero component - Modal state:', showModal);
+  console.log('Hero component - Movie details:', movieDetails);
 
   return (
     <>
