@@ -22,9 +22,8 @@ export const TVShowHeader = ({
           alt={show.title}
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-netflix-black via-netflix-black/80 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-netflix-black via-netflix-black/60 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-netflix-black to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-netflix-black via-netflix-black/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-netflix-black via-netflix-black/25 to-transparent" />
       </div>
       <div className="absolute bottom-0 left-0 p-4 md:p-8 max-w-2xl">
         <h1 className="text-3xl md:text-6xl font-bold text-white mb-2 md:mb-4">
