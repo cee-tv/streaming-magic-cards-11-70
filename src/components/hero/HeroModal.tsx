@@ -54,7 +54,7 @@ export const HeroModal = ({
   const votePercentage = Math.round(movie.vote_average * 10);
 
   return (
-    <DialogContent className="max-w-3xl h-[45vh] p-0 bg-black overflow-y-auto">
+    <DialogContent className="max-w-full w-full h-screen p-0 bg-black overflow-y-auto m-0">
       <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
       <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
       <div className="relative">
@@ -67,7 +67,7 @@ export const HeroModal = ({
           <X className="h-6 w-6" />
           <span className="sr-only">Close</span>
         </Button>
-        <div className="relative pt-16"> {/* Added pt-16 for top spacing */}
+        <div className="relative pt-16">
           {trailerKey ? (
             <>
               <div className="relative">
