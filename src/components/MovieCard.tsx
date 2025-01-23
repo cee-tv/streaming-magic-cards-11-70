@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "./ui/dial
 import { Button } from "./ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { tmdb } from "@/services/tmdb";
-import { ArrowLeft, Play, Plus, Check, Download, X } from "lucide-react";
+import { ArrowLeft, Play, Plus, Check, Download } from "lucide-react";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { toast } from "sonner";
 import { MovieButtons } from "./movie/MovieButtons";
@@ -105,15 +105,6 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
           <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
           <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
           <div className="relative">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-4 top-4 z-50 text-white hover:bg-white/20 h-12 w-12"
-              onClick={() => setShowModal(false)}
-            >
-              <X className="h-6 w-6" />
-              <span className="sr-only">Close</span>
-            </Button>
             <div className="relative pt-16"> {/* Added pt-16 for top spacing */}
               {trailerKey ? (
                 <>

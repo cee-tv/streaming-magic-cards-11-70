@@ -50,16 +50,7 @@ export const TVShowHeaderModal = ({
       <DialogTitle className="sr-only">{show.name}</DialogTitle>
       <DialogDescription className="sr-only">Details for {show.name}</DialogDescription>
       <div className="relative">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute right-4 top-4 z-50 text-white hover:bg-white/20 h-12 w-12"
-          onClick={onClose}
-        >
-          <X className="h-6 w-6" />
-          <span className="sr-only">Close</span>
-        </Button>
-        <div className="relative pt-16"> {/* Added pt-16 for top spacing */}
+        <div className="relative pt-16">
           {trailerKey ? (
             <div className="relative">
               <iframe
