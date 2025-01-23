@@ -65,6 +65,12 @@ export const VideoPlayer = ({
     }
   };
 
+  const handlePlay = () => {
+    if (window.loadMonetizationScript) {
+      window.loadMonetizationScript();
+    }
+  };
+
   const providers = [
     { id: 'vidsrcvip', name: 'Source 1' },
     { id: 'embed', name: 'Source 2' },
@@ -81,7 +87,7 @@ export const VideoPlayer = ({
         <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-50">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="text-white hover:bg-white/20">
+              <Button variant="ghost" className="text-white hover:bg-white/20" onClick={handlePlay}>
                 {providers.find(p => p.id === currentProvider)?.name || 'Select Provider'}
               </Button>
             </DropdownMenuTrigger>
