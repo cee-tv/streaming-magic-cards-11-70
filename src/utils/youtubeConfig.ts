@@ -1,5 +1,3 @@
-import { getMobileDetect } from "@/lib/utils";
-
 export interface YouTubePlayer {
   mute: () => void;
   unMute: () => void;
@@ -12,6 +10,16 @@ export interface YouTubePlayer {
 export interface YouTubeEvent {
   target: YouTubePlayer;
 }
+
+const getMobileDetect = (userAgent: string) => {
+  const isAndroid = () => Boolean(userAgent.match(/Android/i));
+  const isIos = () => Boolean(userAgent.match(/iPhone|iPad|iPod/i));
+  const isOpera = () => Boolean(userAgent.match(/Opera Mini/i));
+  const isWindows = () => Boolean(userAgent.match(/IEMobile/i));
+  const isMobile = () => Boolean(isAndroid() || isIos() || isOpera() || isWindows());
+  
+  return { isMobile };
+};
 
 const userAgent = typeof navigator === 'undefined' ? 'SSR' : navigator.userAgent;
 const { isMobile } = getMobileDetect(userAgent);
