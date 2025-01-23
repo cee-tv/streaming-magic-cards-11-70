@@ -55,12 +55,6 @@ export const TVShowHeaderModal = ({
     }
   };
 
-  const releaseYear = show.first_air_date 
-    ? new Date(show.first_air_date).getFullYear()
-    : null;
-
-  const votePercentage = Math.round(show.vote_average * 10);
-
   return (
     <DialogContent className="max-w-full w-full h-screen p-0 bg-black overflow-y-auto m-0">
       <DialogTitle className="sr-only">{show.name}</DialogTitle>
@@ -123,10 +117,9 @@ export const TVShowHeaderModal = ({
       </div>
       <div className="p-4">
         <Tabs defaultValue="episodes" className="w-full">
-          <TabsList className="bg-white/10 text-white w-full h-14 text-lg">
-            <TabsTrigger value="episodes" className="data-[state=active]:bg-white/20 flex-1 h-full">Episodes</TabsTrigger>
-            <TabsTrigger value="more" className="data-[state=active]:bg-white/20 flex-1 h-full">More Like This</TabsTrigger>
-            <TabsTrigger value="details" className="data-[state=active]:bg-white/20 flex-1 h-full">Details</TabsTrigger>
+          <TabsList className="bg-white/10 text-white">
+            <TabsTrigger value="episodes" className="data-[state=active]:bg-white/20">Episodes</TabsTrigger>
+            <TabsTrigger value="more" className="data-[state=active]:bg-white/20">More Like This</TabsTrigger>
           </TabsList>
           <TabsContent value="episodes">
             {showDetails?.seasons && seasonDetails?.episodes && (
@@ -146,57 +139,6 @@ export const TVShowHeaderModal = ({
                   <MovieCard movie={movie} />
                 </div>
               ))}
-            </div>
-          </TabsContent>
-          <TabsContent value="details" className="text-white space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-xl font-semibold mb-4">Show Information</h3>
-                <div className="space-y-2">
-                  {releaseYear && (
-                    <p><span className="text-gray-400">Release Year:</span> {releaseYear}</p>
-                  )}
-                  <p><span className="text-gray-400">Rating:</span> {votePercentage}%</p>
-                  {showDetails?.status && (
-                    <p><span className="text-gray-400">Status:</span> {showDetails.status}</p>
-                  )}
-                  {showDetails?.number_of_seasons && (
-                    <p><span className="text-gray-400">Seasons:</span> {showDetails.number_of_seasons}</p>
-                  )}
-                  {showDetails?.number_of_episodes && (
-                    <p><span className="text-gray-400">Episodes:</span> {showDetails.number_of_episodes}</p>
-                  )}
-                </div>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-4">Additional Details</h3>
-                <div className="space-y-2">
-                  {showDetails?.genres && (
-                    <p>
-                      <span className="text-gray-400">Genres:</span>{' '}
-                      {showDetails.genres.map((genre: any) => genre.name).join(', ')}
-                    </p>
-                  )}
-                  {showDetails?.networks && showDetails.networks.length > 0 && (
-                    <p>
-                      <span className="text-gray-400">Networks:</span>{' '}
-                      {showDetails.networks.map((network: any) => network.name).join(', ')}
-                    </p>
-                  )}
-                  {showDetails?.production_companies && showDetails.production_companies.length > 0 && (
-                    <p>
-                      <span className="text-gray-400">Production:</span>{' '}
-                      {showDetails.production_companies.map((company: any) => company.name).join(', ')}
-                    </p>
-                  )}
-                  {showDetails?.original_language && (
-                    <p>
-                      <span className="text-gray-400">Original Language:</span>{' '}
-                      {showDetails.original_language.toUpperCase()}
-                    </p>
-                  )}
-                </div>
-              </div>
             </div>
           </TabsContent>
         </Tabs>

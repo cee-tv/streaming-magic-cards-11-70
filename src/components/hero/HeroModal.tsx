@@ -1,21 +1,23 @@
-import { Movie, MovieDetails } from "@/services/tmdb";
+import { Movie } from "@/services/tmdb";
 import { Button } from "../ui/button";
 import { DialogContent, DialogTitle, DialogDescription } from "../ui/dialog";
 import { Play, Download, Plus, Check } from "lucide-react";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { toast } from "sonner";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { MovieCard } from "../MovieCard";
-import { useQuery } from "@tanstack/react-query";
-import { tmdb } from "@/services/tmdb";
+import { EpisodesList } from "../movie/EpisodesList";
 
 interface HeroModalProps {
   movie: Movie;
   showModal: boolean;
   trailerKey: string | null;
-  movieDetails: MovieDetails;
+  movieDetails: any;
+  seasonDetails: any;
+  selectedSeason: number;
+  selectedEpisode: number;
   onClose: () => void;
   onPlayClick: () => void;
+  onSeasonChange: (season: string) => void;
+  onEpisodeSelect: (episodeNumber: number) => void;
 }
 
 export const HeroModal = ({
@@ -23,16 +25,15 @@ export const HeroModal = ({
   showModal,
   trailerKey,
   movieDetails,
+  seasonDetails,
+  selectedSeason,
+  selectedEpisode,
   onClose,
   onPlayClick,
+  onSeasonChange,
+  onEpisodeSelect,
 }: HeroModalProps) => {
   const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
-
-  const { data: similarMovies } = useQuery({
-    queryKey: ["similar", movie.id, movie.media_type],
-    queryFn: () => tmdb.getSimilar(movie.id, movie.media_type as 'movie' | 'tv'),
-    enabled: showModal,
-  });
 
   const handleWatchlistToggle = () => {
     if (isInWatchlist(movie.id)) {
@@ -46,12 +47,14 @@ export const HeroModal = ({
 
   const releaseYear = movie.release_date 
     ? new Date(movie.release_date).getFullYear()
+    : movie.first_air_date 
+    ? new Date(movie.first_air_date).getFullYear()
     : null;
 
   const votePercentage = Math.round(movie.vote_average * 10);
 
   return (
-    <DialogContent className="max-w-full w-full h-screen p-0 bg-black overflow-y-auto m-0">
+    <DialogContent className="max-w-full w-full h-full p-0 bg-black overflow-y-auto m-0">
       <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
       <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
       <div className="relative">
@@ -91,7 +94,7 @@ export const HeroModal = ({
                       size="icon"
                       className="rounded-full border-white hover:border-white bg-black/30 text-white"
                       onClick={() => {
-                        const downloadUrl = `https://dl.vidsrc.vip/movie/${movie.id}`;
+                        const downloadUrl = `https://dl.vidsrc.vip/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
                         window.open(downloadUrl, '_blank');
                       }}
                     >
@@ -128,73 +131,15 @@ export const HeroModal = ({
         </div>
       </div>
       <div className="p-4">
-        <Tabs defaultValue="more" className="w-full">
-          <TabsList className="bg-white/10 text-white w-full h-14 text-lg">
-            <TabsTrigger value="more" className="data-[state=active]:bg-white/20 flex-1 h-full">More Like This</TabsTrigger>
-            <TabsTrigger value="details" className="data-[state=active]:bg-white/20 flex-1 h-full">Details</TabsTrigger>
-          </TabsList>
-          <TabsContent value="more">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-4">
-              {similarMovies?.map((similarMovie) => (
-                <MovieCard key={similarMovie.id} movie={similarMovie} />
-              ))}
-            </div>
-          </TabsContent>
-          <TabsContent value="details" className="text-white space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-xl font-semibold mb-4">Movie Information</h3>
-                <div className="space-y-2">
-                  {releaseYear && (
-                    <p><span className="text-gray-400">Release Year:</span> {releaseYear}</p>
-                  )}
-                  <p><span className="text-gray-400">Rating:</span> {votePercentage}%</p>
-                  {movieDetails?.status && (
-                    <p><span className="text-gray-400">Status:</span> {movieDetails.status}</p>
-                  )}
-                  {movieDetails?.runtime && (
-                    <p><span className="text-gray-400">Runtime:</span> {movieDetails.runtime} minutes</p>
-                  )}
-                  {movieDetails?.budget > 0 && (
-                    <p><span className="text-gray-400">Budget:</span> ${movieDetails.budget.toLocaleString()}</p>
-                  )}
-                  {movieDetails?.revenue > 0 && (
-                    <p><span className="text-gray-400">Revenue:</span> ${movieDetails.revenue.toLocaleString()}</p>
-                  )}
-                </div>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-4">Additional Details</h3>
-                <div className="space-y-2">
-                  {movieDetails?.genres && (
-                    <p>
-                      <span className="text-gray-400">Genres:</span>{' '}
-                      {movieDetails.genres.map((genre: any) => genre.name).join(', ')}
-                    </p>
-                  )}
-                  {movieDetails?.production_companies && movieDetails.production_companies.length > 0 && (
-                    <p>
-                      <span className="text-gray-400">Production:</span>{' '}
-                      {movieDetails.production_companies.map((company: any) => company.name).join(', ')}
-                    </p>
-                  )}
-                  {movieDetails?.production_countries && movieDetails.production_countries.length > 0 && (
-                    <p>
-                      <span className="text-gray-400">Countries:</span>{' '}
-                      {movieDetails.production_countries.map((country: any) => country.name).join(', ')}
-                    </p>
-                  )}
-                  {movieDetails?.original_language && (
-                    <p>
-                      <span className="text-gray-400">Original Language:</span>{' '}
-                      {movieDetails.original_language.toUpperCase()}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
+        {movie.media_type === 'tv' && movieDetails?.seasons && seasonDetails?.episodes && (
+          <EpisodesList
+            seasons={movieDetails.seasons}
+            selectedSeason={selectedSeason}
+            onSeasonChange={onSeasonChange}
+            episodes={seasonDetails.episodes}
+            onEpisodeSelect={onEpisodeSelect}
+          />
+        )}
       </div>
     </DialogContent>
   );
