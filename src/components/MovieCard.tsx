@@ -10,6 +10,9 @@ import { toast } from "sonner";
 import { MovieButtons } from "./movie/MovieButtons";
 import { VideoPlayer } from "./movie/VideoPlayer";
 import { EpisodesList } from "./movie/EpisodesList";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { SimilarContent } from "./movie/SimilarContent";
+import { DetailsTabContent } from "./movie/DetailsTabContent";
 
 interface MovieCardProps {
   movie: Movie;
@@ -32,6 +35,12 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
     queryKey: ["season", movie.id, selectedSeason],
     queryFn: () => tmdb.getTVSeasonDetails(movie.id, selectedSeason),
     enabled: showModal && movie.media_type === 'tv',
+  });
+
+  const { data: similarContent = [] } = useQuery({
+    queryKey: ["similar", movie.id, movie.media_type],
+    queryFn: () => tmdb.getSimilar(movie.id, movie.media_type as 'movie' | 'tv'),
+    enabled: showModal,
   });
 
   const trailerKey = movieDetails?.videos ? tmdb.getTrailerKey(movieDetails.videos) : null;
@@ -105,13 +114,13 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
           <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
           <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
           <div className="relative">
-            <div className="relative pt-16"> {/* Added pt-16 for top spacing */}
+            <div className="relative pt-16">
               {trailerKey ? (
                 <>
                   <div className="relative">
                     <iframe
                       className="w-full aspect-video"
-                      src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3`}
+                      src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0`}
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                     />
@@ -183,19 +192,48 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
             </div>
           </div>
           <div className="p-4">
-            {movie.media_type === 'tv' && movieDetails?.seasons && seasonDetails?.episodes && (
-              <EpisodesList
-                seasons={movieDetails.seasons}
-                selectedSeason={selectedSeason}
-                onSeasonChange={handleSeasonChange}
-                episodes={seasonDetails.episodes}
-                onEpisodeSelect={(episodeNumber) => {
-                  setSelectedEpisode(episodeNumber);
-                  setShowModal(false);
-                  setShowPlayer(true);
-                }}
-              />
-            )}
+            <Tabs defaultValue={movie.media_type === 'tv' ? "episodes" : "more"} className="w-full">
+              <TabsList className="bg-white/10 text-white w-full h-14 text-lg">
+                {movie.media_type === 'tv' && (
+                  <TabsTrigger value="episodes" className="data-[state=active]:bg-white/20 flex-1 h-full">
+                    Episodes
+                  </TabsTrigger>
+                )}
+                <TabsTrigger value="more" className="data-[state=active]:bg-white/20 flex-1 h-full">
+                  More Like This
+                </TabsTrigger>
+                <TabsTrigger value="details" className="data-[state=active]:bg-white/20 flex-1 h-full">
+                  Details
+                </TabsTrigger>
+              </TabsList>
+              {movie.media_type === 'tv' && (
+                <TabsContent value="episodes">
+                  {movieDetails?.seasons && seasonDetails?.episodes && (
+                    <EpisodesList
+                      seasons={movieDetails.seasons}
+                      selectedSeason={selectedSeason}
+                      onSeasonChange={handleSeasonChange}
+                      episodes={seasonDetails.episodes}
+                      onEpisodeSelect={(episodeNumber) => {
+                        setSelectedEpisode(episodeNumber);
+                        setShowModal(false);
+                        setShowPlayer(true);
+                      }}
+                    />
+                  )}
+                </TabsContent>
+              )}
+              <TabsContent value="more">
+                <SimilarContent similarContent={similarContent} />
+              </TabsContent>
+              <TabsContent value="details">
+                <DetailsTabContent 
+                  details={movieDetails}
+                  releaseYear={releaseYear}
+                  votePercentage={votePercentage}
+                />
+              </TabsContent>
+            </Tabs>
           </div>
         </DialogContent>
       </Dialog>

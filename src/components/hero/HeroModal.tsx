@@ -5,6 +5,11 @@ import { Play, Download, Plus, Check } from "lucide-react";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { toast } from "sonner";
 import { EpisodesList } from "../movie/EpisodesList";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { SimilarContent } from "../movie/SimilarContent";
+import { DetailsTabContent } from "../movie/DetailsTabContent";
+import { useQuery } from "@tanstack/react-query";
+import { tmdb } from "@/services/tmdb";
 
 interface HeroModalProps {
   movie: Movie;
@@ -34,6 +39,11 @@ export const HeroModal = ({
   onEpisodeSelect,
 }: HeroModalProps) => {
   const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
+  const { data: similarContent = [] } = useQuery({
+    queryKey: ["similar", movie.id, movie.media_type],
+    queryFn: () => tmdb.getSimilar(movie.id, movie.media_type as 'movie' | 'tv'),
+    enabled: showModal,
+  });
 
   const handleWatchlistToggle = () => {
     if (isInWatchlist(movie.id)) {
@@ -54,7 +64,7 @@ export const HeroModal = ({
   const votePercentage = Math.round(movie.vote_average * 10);
 
   return (
-    <DialogContent className="max-w-full w-full h-full p-0 bg-black overflow-y-auto m-0">
+    <DialogContent className="max-w-full w-full h-screen p-0 bg-black overflow-y-auto m-0">
       <DialogTitle className="sr-only">{movie.title || movie.name}</DialogTitle>
       <DialogDescription className="sr-only">Details for {movie.title || movie.name}</DialogDescription>
       <div className="relative">
@@ -94,7 +104,9 @@ export const HeroModal = ({
                       size="icon"
                       className="rounded-full border-white hover:border-white bg-black/30 text-white"
                       onClick={() => {
-                        const downloadUrl = `https://dl.vidsrc.vip/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
+                        const downloadUrl = movie.media_type === 'movie'
+                          ? `https://dl.vidsrc.vip/movie/${movie.id}`
+                          : `https://dl.vidsrc.vip/tv/${movie.id}/${selectedSeason}/${selectedEpisode}`;
                         window.open(downloadUrl, '_blank');
                       }}
                     >
@@ -131,15 +143,44 @@ export const HeroModal = ({
         </div>
       </div>
       <div className="p-4">
-        {movie.media_type === 'tv' && movieDetails?.seasons && seasonDetails?.episodes && (
-          <EpisodesList
-            seasons={movieDetails.seasons}
-            selectedSeason={selectedSeason}
-            onSeasonChange={onSeasonChange}
-            episodes={seasonDetails.episodes}
-            onEpisodeSelect={onEpisodeSelect}
-          />
-        )}
+        <Tabs defaultValue={movie.media_type === 'tv' ? "episodes" : "more"} className="w-full">
+          <TabsList className="bg-white/10 text-white w-full h-14 text-lg">
+            {movie.media_type === 'tv' && (
+              <TabsTrigger value="episodes" className="data-[state=active]:bg-white/20 flex-1 h-full">
+                Episodes
+              </TabsTrigger>
+            )}
+            <TabsTrigger value="more" className="data-[state=active]:bg-white/20 flex-1 h-full">
+              More Like This
+            </TabsTrigger>
+            <TabsTrigger value="details" className="data-[state=active]:bg-white/20 flex-1 h-full">
+              Details
+            </TabsTrigger>
+          </TabsList>
+          {movie.media_type === 'tv' && (
+            <TabsContent value="episodes">
+              {movieDetails?.seasons && seasonDetails?.episodes && (
+                <EpisodesList
+                  seasons={movieDetails.seasons}
+                  selectedSeason={selectedSeason}
+                  onSeasonChange={onSeasonChange}
+                  episodes={seasonDetails.episodes}
+                  onEpisodeSelect={onEpisodeSelect}
+                />
+              )}
+            </TabsContent>
+          )}
+          <TabsContent value="more">
+            <SimilarContent similarContent={similarContent} />
+          </TabsContent>
+          <TabsContent value="details">
+            <DetailsTabContent 
+              details={movieDetails}
+              releaseYear={releaseYear}
+              votePercentage={votePercentage}
+            />
+          </TabsContent>
+        </Tabs>
       </div>
     </DialogContent>
   );
